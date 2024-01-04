@@ -1,0 +1,65 @@
+name: flutter_demo
+description: A new Flutter project.
+
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=2.19.4 <3.0.0'
+
+dependencies:
+  autocomplete_textfield: ^2.0.1
+  cupertino_icons: ^1.0.2
+  dio: ^5.1.2
+  dotted_border: ^2.0.0+3
+  dropdown_button2: ^2.0.0
+  email_validator: ^2.1.17
+  fad_bio:
+    git:
+      url: git@gitlab.com:NAATTechnologies/flutter-bio-plugin.git
+      ref: 0.0.1
+  firebase_core: ^2.9.0
+  firebase_crashlytics: ^3.1.0
+  flutter:
+    sdk: flutter
+  flutter_cache_manager: ^3.3.0
+  get: ^4.6.5
+  google_nav_bar: ^5.0.6
+  http: ^0.13.5
+  http_parser: ^4.0.2
+  image_cropper: ^3.0.2
+  image_picker: ^0.8.7
+  intl: ^0.18.0
+  json_annotation: ^4.8.0
+  mask_text_input_formatter: ^2.4.0
+  page_transition: ^2.0.9
+  path_provider: ^2.0.2
+  percent_indicator: ^4.2.3
+  plugin:
+    git:
+      url: git@gitlab.com:NAATTechnologies/flutter-multisign-plugin.git
+      ref: 0.0.1
+  shared_preferences: ^2.0.18
+  url_launcher: ^6.1.10
+  webview_flutter: ^4.0.7
+
+dev_dependencies:
+  flutter_lints: ^2.0.0
+  flutter_test:
+    sdk: flutter  
+  flutter_launcher_icons: ^0.13.1
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icon/icon.png"
+  adaptive_icon_background: "assets/icon/icon.png"
+  min_sdk_android: 21 # android min sdk min:16, default 21
+
+flutter:
+
+  uses-material-design: true
+  assets:
+    - assets/
+    - assets/images/CRMs/CreditosDeSalud/

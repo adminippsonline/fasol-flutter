@@ -350,42 +350,6 @@ class MyCustomFormFinRegMedico31State
       SegundoNombre,
       ApellidoPaterno,
       ApellidoMaterno) async {
-    // dev.log(Pantalla.toString());
-    // dev.log(IDMedico);
-    // dev.log(TipoDePersona.toString());
-    // dev.log(Profesion.toString());
-    // dev.log(Ocupacion.toString());
-    // dev.log(ActividadEconomica.toString());
-    // dev.log(Especialidad.toString());
-    // dev.log(CedulaProfecional.toString());
-    // dev.log(CedulaDeEspecialidad.toString());
-    // dev.log(FirmaElectronica.toString());
-    // dev.log(NumeroFirmaElectronica.toString());
-    // dev.log(OrigenDeLosRecursos.toString());
-    // dev.log(Especifique.toString());
-    // dev.log(Destino.toString());
-    // dev.log(NombreDelConsultorio.toString());
-    // dev.log(NombreConsultorioLaboras.toString());
-    // dev.log(AntiguedadConsultorio.toString());
-    // dev.log(AntiguedadConsultorioTiempo.toString());
-    // dev.log(CP.toString());
-    // dev.log(Pais.toString());
-    // dev.log(Ciudad.toString());
-    // dev.log(Calle.toString());
-    // dev.log(NumExt.toString());
-    // dev.log(NumInt.toString());
-    // dev.log(EntCall.toString());
-    // dev.log(Estado.toString());
-    // dev.log(MunDel.toString());
-    // dev.log(Colonia.toString());
-    // dev.log(CargoPolitico.toString());
-    // dev.log(Cargo.toString());
-    // dev.log(PeriodoDelCargo.toString());
-    // dev.log(EsConyugue.toString());
-    // dev.log(PrimerNombre.toString());
-    // dev.log(SegundoNombre.toString());
-    // dev.log(ApellidoPaterno.toString());
-    // dev.log(ApellidoMaterno.toString());
     try {
       if (AntiguedadConsultorioTiempo == "" ||
           AntiguedadConsultorioTiempo == null) {
@@ -401,7 +365,7 @@ class MyCustomFormFinRegMedico31State
         'Ocupacion': Ocupacion,
         'ActividadEconomica': ActividadEconomica,
         'Especialidad': Especialidad,
-        'CedulaProfecional': CedulaProfecional,
+        'CedulaProfesional': CedulaProfecional,
         'CedulaDeEspecialidad': CedulaDeEspecialidad,
         'FirmaElectronica': FirmaElectronica,
         'NumeroFirmaElectronica': NumeroFirmaElectronica,
@@ -434,20 +398,18 @@ class MyCustomFormFinRegMedico31State
       };
       //print(req);
       var url = Uri.https('fasoluciones.mx', 'api/Medico/Agregar');
-      var request = await http.MultipartRequest('POST', url);
+      var client = http.Client();
+      var request = http.MultipartRequest('POST', url);
       request = jsonToFormData(request, req);
-      final response = await request.send();
+      final response = await client.send(request);
       dev.log(response.statusCode.toString());
-
       final responseData = await response.stream.bytesToString();
       dev.log(responseData.toString());
 
       var responseString = responseData;
-      dev.log(responseString.toString());
+
       final datos = json.decode(responseString);
       var status = datos['status'].toString();
-      dev.log("datosss");
-      dev.log(status.toString());
 
       if (status == "OK") {
         //print('si existe aqui -----');
@@ -530,9 +492,6 @@ class MyCustomFormFinRegMedico31State
       //         //   }
       //         )
       //     .timeout(const Duration(seconds: 90));
-      // dev.log("llego aqui 111");
-      // dev.log(response.statusCode.toString());
-      // dev.log(response.body.toString());
 
       // if (response.body != "0" && response.body != "") {
       //   var Respuesta = jsonDecode(response.body);
@@ -586,8 +545,6 @@ class MyCustomFormFinRegMedico31State
             );
           });
     } on Error catch (e) {
-      //print('http error');
-      dev.log(e.stackTrace.toString());
       showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -640,7 +597,7 @@ class MyCustomFormFinRegMedico31State
 
     if (response.statusCode == 200) {
       var jsonData = json.decode(response.body);
-      dev.log(jsonData.toString());
+
       setState(() {
         _opcionesProfesiones = jsonData;
       });
@@ -656,7 +613,7 @@ class MyCustomFormFinRegMedico31State
 
     if (response.statusCode == 200) {
       var jsonData = json.decode(response.body);
-      dev.log(jsonData.toString());
+
       setState(() {
         _opcionesOcupaciones = jsonData;
       });
@@ -671,7 +628,7 @@ class MyCustomFormFinRegMedico31State
 
     if (response.statusCode == 200) {
       var jsonData = json.decode(response.body);
-      dev.log(jsonData.toString());
+
       setState(() {
         _opcionesActividadesEconomicas = jsonData;
       });
@@ -686,7 +643,7 @@ class MyCustomFormFinRegMedico31State
 
     if (response.statusCode == 200) {
       var jsonData = json.decode(response.body);
-      dev.log(jsonData.toString());
+
       setState(() {
         _opcionesEspecialidades = jsonData;
       });
@@ -731,7 +688,6 @@ class MyCustomFormFinRegMedico31State
                     ElevatedButton(
                         child: Text("Cédula Profesional (Archivo)"),
                         onPressed: () async {
-                          dev.log("cedula");
                           setState(() {
                             dialog(context);
                           });
@@ -1139,7 +1095,6 @@ class MyCustomFormFinRegMedico31State
                         imagePath = _pickedFile.path;
                       });
                       setState(() {
-                        print("aqui estoy en imagen");
                         imagePath = _pickedFile.path;
                         imagen = File(_pickedFile.name);
                         final bytes = File(imagePath!).readAsBytesSync();
@@ -2005,7 +1960,6 @@ class MyCustomFormFinRegMedico31State
 
   List<dynamic> _colonyList = [];
   Future obtenerCP(var codigo) async {
-    dev.log("t");
     final req = {"CP": codigo};
     var url =
         Uri.parse('https://fasoluciones.mx/api/Solicitud/Catalogos/CP/$codigo');
@@ -2038,7 +1992,6 @@ class MyCustomFormFinRegMedico31State
         validator: ObligatorioCP,
         onChanged: (value) {
           if (value.length == 5) {
-            dev.log("algo");
             obtenerCP(value);
           } else if (value.length < 4) {
             _selectedColony = null;
@@ -2440,7 +2393,6 @@ class MyCustomFormFinRegMedico31State
       padding: EdgeInsets.all(10),
       child: ElevatedButton(
           onPressed: () {
-            dev.log(dropdownvalueOcupacion.toString());
             if (_formKey.currentState!.validate()) {
               PantallaRecibe = Pantalla.text;
               IDMedicoRecibe = IDMedico.text;
@@ -2468,7 +2420,7 @@ class MyCustomFormFinRegMedico31State
                       );
                     });
               }
-              dev.log(ProfesionRecibe);
+
               String? OcupacionRecibe =
                   dropdownvalueOcupacion.toString(); // SelectedListaOcupacion;
               if (OcupacionRecibe == "") {
@@ -2494,8 +2446,7 @@ class MyCustomFormFinRegMedico31State
               }
               print(ActividadEconomicaRecibe);
               String? EspecialidadRecibe = dropdownvalueEspecialidad.toString();
-              dev.log("esp");
-              dev.log(EspecialidadRecibe);
+
               if (EspecialidadRecibe == "") {
                 showDialog(
                     context: context,

@@ -104,16 +104,16 @@ class MyCustomFormFinRegMedico33_1State
         String status = Respuesta['status'];
         if (status == "OK") {
           //print('si existe aqui -----');
-          showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: Text('Registrado correctamente'),
-                );
-              });
-          Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (_) => FinRegMedico33_1()));
-          FocusScope.of(context).unfocus();
+          // showDialog(
+          //     context: context,
+          //     builder: (BuildContext context) {
+          //       return AlertDialog(
+          //         title: Text('Registrado correctamente'),
+          //       );
+          //     });
+          // Navigator.of(context).pushReplacement(
+          //     MaterialPageRoute(builder: (_) => FinRegMedico33_1()));
+          // FocusScope.of(context).unfocus();
         } else {
           //print('Error en el registro');
           showDialog(
@@ -218,7 +218,7 @@ class MyCustomFormFinRegMedico33_1State
 
     // setState(() {
     //   dev.log("***");
-    //   dev.log(globalimageUpdate);
+
     //   dev.log("***");
     //   if (globalimageUpdate != null) {
     //     imagen = File(pickedFile.path);
@@ -276,52 +276,75 @@ class MyCustomFormFinRegMedico33_1State
   Future<void> subir_imagen() async {
     try {
       final req = {
-        'Pantalla': "FinSolicitar33_1",
+        'Pantalla': 'FinSolicitar33_1',
         'id_medico': "$id_medico",
-        'file': globalimageUpdate
+        //'file': globalimageUpdate
       };
 
       var url = Uri.https('fasoluciones.mx', 'api/Medico/Agregar');
-      var request = await http.MultipartRequest('POST', url);
-      request = jsonToFormData(request, req);
-      try {
-        final response = await request.send();
+      var request = await http.post(url,
+          body: jsonEncode(<String, String>{
+            'Pantalla': 'FinSolicitar33_1',
+            'id_medico': id_medico.toString(),
+          }));
+      dev.log(request.body.toString());
 
-        if (response.statusCode == 302) {
-          // Manejar redirección obteniendo la nueva ubicación
-          var redirectUrl = response.headers['location'];
-          if (redirectUrl != null) {
-            var redirectUri = Uri.parse(redirectUrl);
-            var redirectRequest =
-                await http.MultipartRequest('POST', redirectUri);
-            redirectRequest = jsonToFormData(redirectRequest, req);
-            final redirectResponse = await redirectRequest.send();
-            dev.log(redirectResponse.statusCode.toString());
-          } else {
-            dev.log('Error: Redirección sin URL de ubicación');
-          }
-        } else {
-          dev.log(response.statusCode.toString());
-        }
-      } catch (error) {
-        dev.log("error");
-      }
+      // var client = http.Client();
+      // var request = http.MultipartRequest('POST', url);
+      // request = jsonToFormData(request, req);
 
-      if (imagen == null) {
-        dev.log("esta vacio");
-        dev.log(globalimageUpdate.toString());
-        showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text('Por favor selecciona una imagen'),
-              );
-            });
-      } else {
-        dev.log("tiene imagen");
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (_) => FinRegMedico34()));
-      }
+      // request.fields.addAll(req);
+
+      // var file = await http.MultipartFile.fromString('file', globalimageUpdate);
+      // request.files.add(file);
+
+      // final response = await client.send(request);
+
+      // if (response.statusCode == 302) {
+      //   var redirectUrl = response.headers['location'];
+      //   if (redirectUrl != null) {
+      //     var redirectResponse = await http.post(url);
+      //     final responseData = redirectResponse.body;
+      //     dev.log(responseData.toString());
+      //   }
+      // }
+      // request = jsonToFormData(request, req);
+      // try {
+      //   final respons = await client.send(request);
+      //   dev.log(respons.statusCode.toString());
+
+      //   if (response.statusCode == 302) {
+      //     dev.log("e");
+      //     // Manejar redirección obteniendo la nueva ubicación
+      //     var redirectUrl = respons.headers['location'];
+      //     if (redirectUrl != null) {
+      //       var redirectUri = Uri.parse(redirectUrl);
+      //       var redirectRequest = http.MultipartRequest('POST', redirectUri);
+      //       redirectRequest = jsonToFormData(redirectRequest, req);
+      //       final redirectResponse = await redirectRequest.send();
+      //       dev.log(redirectResponse.statusCode.toString());
+      //     } else {
+      //       dev.log('Error: Redirección sin URL de ubicación');
+      //     }
+      //   } else {
+      //     dev.log(response.statusCode.toString());
+      //   }
+      // } catch (error) {
+      //   dev.log("error");
+      // }
+
+      // if (imagen == null) {
+      //   showDialog(
+      //       context: context,
+      //       builder: (BuildContext context) {
+      //         return AlertDialog(
+      //           title: Text('Por favor selecciona una imagen'),
+      //         );
+      //       });
+      // } else {
+      //   Navigator.of(context).pushReplacement(
+      //       MaterialPageRoute(builder: (_) => FinRegMedico34()));
+      // }
     } catch (e) {
       dev.log("as");
       dev.log(e.toString());
@@ -468,7 +491,6 @@ class MyCustomFormFinRegMedico33_1State
                 imagen == null ? Center() : Image.file(imagen!),
                 ElevatedButton(
                     onPressed: () {
-                      dev.log("entrando");
                       subir_imagen();
                     },
                     child: Text('Siguiente',
@@ -538,7 +560,7 @@ class MyCustomFormFinRegMedico33_1State
               }
             }
           },
-          child: const Text('Siguiente')),
+          child: const Text('Siguientes')),
     );
   }
 

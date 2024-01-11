@@ -425,22 +425,25 @@ class MyCustomFormFinRegMedico31State
         'CargoPolitico': CargoPolitico,
         'Cargo': Cargo,
         'PeriodoDelCargo': PeriodoDelCargo,
-        'EsConyugue': EsConyugue,
+        'EsConyuge': EsConyugue,
         'PrimerNombre': PrimerNombre,
         'SegundoNombre': SegundoNombre,
         'ApellidoPaterno': ApellidoPaterno,
         'ApellidoMaterno': ApellidoMaterno,
         'CedulaProfesionalArchivo': globalimageUpdate //" "
       };
-      //print(req); 
+      //print(req);
       var url = Uri.https('fasoluciones.mx', 'api/Medico/Agregar');
       var request = await http.MultipartRequest('POST', url);
       request = jsonToFormData(request, req);
       final response = await request.send();
+      dev.log(response.statusCode.toString());
 
       final responseData = await response.stream.bytesToString();
+      dev.log(responseData.toString());
 
       var responseString = responseData;
+      dev.log(responseString.toString());
       final datos = json.decode(responseString);
       var status = datos['status'].toString();
       dev.log("datosss");
@@ -632,8 +635,8 @@ class MyCustomFormFinRegMedico31State
 
   //funcion para obtener profesiones
   Future obtenerOpciones() async {
-    final response = await http.get(
-        Uri.parse('https://fasoluciones.mx/api/Solicitud/Catalogos/Profesiones'));
+    final response = await http.get(Uri.parse(
+        'https://fasoluciones.mx/api/Solicitud/Catalogos/Profesiones'));
 
     if (response.statusCode == 200) {
       var jsonData = json.decode(response.body);
@@ -648,8 +651,8 @@ class MyCustomFormFinRegMedico31State
 
   //funcion para obtener ocupaciones
   Future obtenerOcupacion() async {
-    final response = await http.get(
-        Uri.parse('https://fasoluciones.mx/api/Solicitud/Catalogos/Ocupaciones'));
+    final response = await http.get(Uri.parse(
+        'https://fasoluciones.mx/api/Solicitud/Catalogos/Ocupaciones'));
 
     if (response.statusCode == 200) {
       var jsonData = json.decode(response.body);
@@ -720,7 +723,7 @@ class MyCustomFormFinRegMedico31State
                 _ActividadEconomica(),
                 _Especialidad(),
                 _CedulaProfecional(),
-                
+
                 SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -741,7 +744,7 @@ class MyCustomFormFinRegMedico31State
                         "${imagen!.path.toString()}",
                         style: TextStyle(color: Colors.black),
                       ),
-                _CedulaDeEspecialidad(),      
+                _CedulaDeEspecialidad(),
                 SizedBox(
                   height: 20,
                 ),
@@ -1109,7 +1112,7 @@ class MyCustomFormFinRegMedico31State
               ]),
         ));
   }
- 
+
   //ImagePicker picker = ImagePicker();
   final picker = ImagePicker();
 
@@ -1127,7 +1130,9 @@ class MyCustomFormFinRegMedico31State
                     child: Text("Galeria"),
                     onTap: () async {
                       final ImagePicker _picker = ImagePicker();
-                      XFile? _pickedFile = await _picker.pickImage(source: ImageSource.gallery,requestFullMetadata: false);
+                      XFile? _pickedFile = await _picker.pickImage(
+                          source: ImageSource.gallery,
+                          requestFullMetadata: false);
                       imagePath = _pickedFile!.path;
                       imagen = File(_pickedFile.path);
                       _pickedFile.readAsBytes().then((value) {
@@ -1145,8 +1150,9 @@ class MyCustomFormFinRegMedico31State
                     },
                   ),
                   SizedBox(height: 20),
-                  GestureDetector(child: Text("Tomar foto"), 
-                    onTap: ()  {},
+                  GestureDetector(
+                    child: Text("Tomar foto"),
+                    onTap: () {},
                   )
                 ],
               ),
@@ -1191,7 +1197,6 @@ class MyCustomFormFinRegMedico31State
         ));
   }
 
-  
   Widget _TipoDePersona() {
     return Container(
       padding: EdgeInsets.all(10),
@@ -1283,7 +1288,6 @@ class MyCustomFormFinRegMedico31State
               borderRadius: BorderRadius.circular(5),
             ),
           ),
-          
           isExpanded: true,
           hint: Text(
             'Profesiones',
@@ -1299,7 +1303,6 @@ class MyCustomFormFinRegMedico31State
             height: 50,
             padding: EdgeInsets.only(left: 0, right: 9),
           ),
-          
           onChanged: (newVal) {
             setState(() {
               dropdownvalue = newVal;
@@ -2004,22 +2007,14 @@ class MyCustomFormFinRegMedico31State
   Future obtenerCP(var codigo) async {
     dev.log("t");
     final req = {"CP": codigo};
-    var url = Uri.parse('https://fasoluciones.mx/api/Solicitud/Catalogos/CP/');
+    var url =
+        Uri.parse('https://fasoluciones.mx/api/Solicitud/Catalogos/CP/$codigo');
 
-    var request = await http.MultipartRequest('POST', url);
-    request = jsonToFormData(request, req);
-
-    final response = await request.send();
+    var response = await http.get(url);
     if (response.statusCode == 200) {
-      final responseData =
-          await response.stream.bytesToString(); //response.stream.toBytes();
-      //dev.log(responseData.toString());
-
-      var responseString = responseData;
-      final dat = json.decode(responseString);
-      dev.log("adata");
-      dev.log(dat.toString());
-      var data = json.decode(responseString)['data'][0];
+      final dat = json.decode(response.body);
+      var data = json.decode(response.body)['data'][0];
+      dev.log(data.toString());
       setState(() {
         // Colonia.text = data['Estado'].toString();
         MunDel.text = data['MunDel'].toString();
@@ -2526,7 +2521,7 @@ class MyCustomFormFinRegMedico31State
                             Text('La opción firma electrónica es obligatoria'),
                       );
                     });
-                    FirmaElectronicaRecibe="";
+                FirmaElectronicaRecibe = "";
               }
 
               NumeroFirmaElectronicaRecibe = NumeroFirmaElectronica.text;
@@ -2612,7 +2607,7 @@ class MyCustomFormFinRegMedico31State
                         title: Text('La opción cargo político es obligatoria'),
                       );
                     });
-                    CargoPoliticoRecibe="";
+                CargoPoliticoRecibe = "";
               }
               CargoRecibe = Cargo.text;
               PeriodoDelCargoRecibe = PeriodoDelCargo.text;
@@ -2626,7 +2621,7 @@ class MyCustomFormFinRegMedico31State
                             'Definir si tu conyugue ha ejercido en política es obligatoria'),
                       );
                     });
-                    EsConyugueRecibe="";
+                EsConyugueRecibe = "";
               }
               PrimerNombreRecibe = PrimerNombre.text;
               SegundoNombreRecibe = SegundoNombre.text;
@@ -2644,7 +2639,7 @@ class MyCustomFormFinRegMedico31State
                         title: Text('La colonia es obligatoria'),
                       );
                     });
-                ColoniaRecibe="";    
+                ColoniaRecibe = "";
               }
 
               if (PantallaRecibe == "" ||
@@ -2671,8 +2666,10 @@ class MyCustomFormFinRegMedico31State
                   MunDelRecibe == "" ||
                   ColoniaRecibe == "" ||
                   ColoniaRecibe == null ||
-                  CargoPoliticoRecibe == "" || CargoPoliticoRecibe == null ||
-                  EsConyugueRecibe == "" || EsConyugueRecibe == null) {
+                  CargoPoliticoRecibe == "" ||
+                  CargoPoliticoRecibe == null ||
+                  EsConyugueRecibe == "" ||
+                  EsConyugueRecibe == null) {
                 showDialog(
                     context: context,
                     builder: (BuildContext context) {
@@ -2724,6 +2721,7 @@ class MyCustomFormFinRegMedico31State
           child: const Text('Siguiente')),
     );
   }
+
   Widget _Avanzar() {
     return Container(
       width: double.infinity,

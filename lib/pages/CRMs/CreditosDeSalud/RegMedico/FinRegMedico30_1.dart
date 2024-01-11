@@ -142,8 +142,8 @@ class MyCustomFormFinRegMedico30_1State
   String MunDelRecibe = "";
   String ColoniaRecibe = "";
 
-  void Ingresar(Pantalla, IDMedico, CP, Pais, Ciudad, Calle, NumExt,
-      NumInt, EntCall, Estado, MunDel, Colonia) async {
+  void Ingresar(Pantalla, IDMedico, CP, Pais, Ciudad, Calle, NumExt, NumInt,
+      EntCall, Estado, MunDel, Colonia) async {
     try {
       var url = Uri.https('fasoluciones.mx', 'api/Medico/Agregar');
       var response = await http.post(url, body: {
@@ -266,28 +266,19 @@ class MyCustomFormFinRegMedico30_1State
   String selectedValue = "";
   List<String> _colonias = [];
   //funcion para obtener profesiones
-  List<Data> colonias = []; 
+  List<Data> colonias = [];
 
   List<dynamic> _colonyList = [];
   Future obtenerCP(var codigo) async {
-    dev.log("t");
+    dev.log(codigo);
     final req = {"": codigo};
-    var url = Uri.parse('https://fasoluciones.mx/api/Solicitud/Catalogos/CP/');
-
-    var request = await http.MultipartRequest('POST', url);
-    request = jsonToFormData(request, req);
-
-    final response = await request.send();
+    var url =
+        Uri.parse('https://fasoluciones.mx/api/Solicitud/Catalogos/CP/$codigo');
+    var response = await http.get(url);
     if (response.statusCode == 200) {
-      final responseData =
-          await response.stream.bytesToString(); //response.stream.toBytes();
-      //dev.log(responseData.toString());
-
-      var responseString = responseData;
-      final dat = json.decode(responseString);
-      dev.log("adata");
-      dev.log(dat.toString());
-      var data = json.decode(responseString)['data'][0];
+      final dat = json.decode(response.body);
+      var data = json.decode(response.body)['data'][0];
+      dev.log(data.toString());
       setState(() {
         // Colonia.text = data['Estado'].toString();
         MunDel.text = data['MunDel'].toString();
@@ -299,67 +290,96 @@ class MyCustomFormFinRegMedico30_1State
             List<String>.from(dat['data'].map((address) => address['Colonia']));
       });
       setState(() {});
-      // List<Data> coloniaList = data.map((item) => Data.fromJson(item)).toList();
-
-      // setState(() {
-      //   colonias = coloniaList;
-      // });
-      // List<dynamic> colonias = jsonData;
-      // colonias.addAll(jsonData.map((item) => Data(
-      //     idCP: item['id_cp'],
-      //     cP: item["CP"],
-      //     colonia: item["Colonia"],
-      //     dTipoAsenta: item["dtipoasenta"],
-      //     munDel: item["MunDel"],
-      //     estado: item["Estado"],
-      //     ciudad: item["Ciudad"],
-      //     dCP: item["d_CP"],
-      //     cEstado: item["c_estado"],
-      //     cOficina: item["c_oficina"],
-      //     cCP: item["c_CP"],
-      //     cTipoAsenta: item["c_tipo_asenta"],
-      //     cMnpio: item["c_mnpio"],
-      //     idAsentaCpcons: item["id_asenta_cpcons"],
-      //     dZona: item["d_zona"],
-      //     cCveCiudad: item["c_cve_ciudad"])));
-      // dev.log("al");
-      // dev.log(colonias.toString());
-      // dev.log("messages");
-      // dev.log(jsonData["data"].toString());
-      // List obten = jsonData["data"];
-      // var colonia, munDel, estado, ciudad;
-      // //dev.log(obten.toString());
-      // var cpData = obten.toList();
-      // dev.log(cpData.toString());
-      // dev.log("message");
-      // dev.log(cpData.toString());
-
-      //List listcolonias = List<String>.from(obten["Colonia"]);
-
-      // for (var a in obten) {
-      //   setState(() {
-      //     _coloniaf.add(a["Colonia"].toString());
-      //     colonia = a["Colonia"].toString();
-      //     munDel = a["MunDel"].toString();
-      //     estado = a["Estado"].toString();
-      //     ciudad = a["Ciudad"].toString();
-      //     Colonia.text = colonia;
-      //     MunDel.text = munDel;
-      //     Estado.text = estado;
-      //     Ciudad.text = ciudad;
-      //   });
-      // }
-      // setState(() {
-      //   _coloniaf.clear();
-      // });
-      // if (codigo = !codigo) {
-      //   setState(() {
-      //     _coloniaf.clear();
-      //   });
-      // }
     } else {
       throw Exception('Error al obtener las opciones');
     }
+
+    // var request = await http.MultipartRequest('POST', url);
+    // request = jsonToFormData(request, req);
+
+    // final response = await request.send();
+    // if (response.statusCode == 200) {
+    //   final responseData =
+    //       await response.stream.bytesToString(); //response.stream.toBytes();
+    //   //dev.log(responseData.toString());
+
+    //   var responseString = responseData;
+    //   final dat = json.decode(responseString);
+    //   dev.log("adata");
+    //   dev.log(dat.toString());
+    //   var data = json.decode(responseString)['data'][0];
+    //   setState(() {
+    //     // Colonia.text = data['Estado'].toString();
+    //     MunDel.text = data['MunDel'].toString();
+    //     Estado.text = data['Estado'].toString();
+    //     // EstadoRecibe = data['Estado'].toString();
+    //     Ciudad.text = data['Ciudad'].toString();
+
+    //     _colonyList =
+    //         List<String>.from(dat['data'].map((address) => address['Colonia']));
+    //   });
+    //   setState(() {});
+    //   // List<Data> coloniaList = data.map((item) => Data.fromJson(item)).toList();
+
+    //   // setState(() {
+    //   //   colonias = coloniaList;
+    //   // });
+    //   // List<dynamic> colonias = jsonData;
+    //   // colonias.addAll(jsonData.map((item) => Data(
+    //   //     idCP: item['id_cp'],
+    //   //     cP: item["CP"],
+    //   //     colonia: item["Colonia"],
+    //   //     dTipoAsenta: item["dtipoasenta"],
+    //   //     munDel: item["MunDel"],
+    //   //     estado: item["Estado"],
+    //   //     ciudad: item["Ciudad"],
+    //   //     dCP: item["d_CP"],
+    //   //     cEstado: item["c_estado"],
+    //   //     cOficina: item["c_oficina"],
+    //   //     cCP: item["c_CP"],
+    //   //     cTipoAsenta: item["c_tipo_asenta"],
+    //   //     cMnpio: item["c_mnpio"],
+    //   //     idAsentaCpcons: item["id_asenta_cpcons"],
+    //   //     dZona: item["d_zona"],
+    //   //     cCveCiudad: item["c_cve_ciudad"])));
+    //   // dev.log("al");
+    //   // dev.log(colonias.toString());
+    //   // dev.log("messages");
+    //   // dev.log(jsonData["data"].toString());
+    //   // List obten = jsonData["data"];
+    //   // var colonia, munDel, estado, ciudad;
+    //   // //dev.log(obten.toString());
+    //   // var cpData = obten.toList();
+    //   // dev.log(cpData.toString());
+    //   // dev.log("message");
+    //   // dev.log(cpData.toString());
+
+    //   //List listcolonias = List<String>.from(obten["Colonia"]);
+
+    //   // for (var a in obten) {
+    //   //   setState(() {
+    //   //     _coloniaf.add(a["Colonia"].toString());
+    //   //     colonia = a["Colonia"].toString();
+    //   //     munDel = a["MunDel"].toString();
+    //   //     estado = a["Estado"].toString();
+    //   //     ciudad = a["Ciudad"].toString();
+    //   //     Colonia.text = colonia;
+    //   //     MunDel.text = munDel;
+    //   //     Estado.text = estado;
+    //   //     Ciudad.text = ciudad;
+    //   //   });
+    //   // }
+    //   // setState(() {
+    //   //   _coloniaf.clear();
+    //   // });
+    //   // if (codigo = !codigo) {
+    //   //   setState(() {
+    //   //     _coloniaf.clear();
+    //   //   });
+    //   // }
+    // } else {
+    //   throw Exception('Error al obtener las opciones');
+    // }
   }
 
   jsonToFormData(http.MultipartRequest request, Map<String, dynamic> data) {
@@ -371,8 +391,8 @@ class MyCustomFormFinRegMedico30_1State
 
   @override
   Widget build(BuildContext context) {
-    return BuildScreens('${NombreCompletoSession}', '', '', 'Información Personal',
-        '', _formulario());
+    return BuildScreens('${NombreCompletoSession}', '', '',
+        'Información Personal', '', _formulario());
   }
 
   Widget _formulario() {
@@ -478,8 +498,6 @@ class MyCustomFormFinRegMedico30_1State
           ),
         ));
   }
-
-  
 
   FocusNode _focus = FocusNode();
 
@@ -839,7 +857,7 @@ class MyCustomFormFinRegMedico30_1State
                         title: Text('La colonia es obligatoria'),
                       );
                     });
-                    ColoniaRecibe="";
+                ColoniaRecibe = "";
               }
 
               if (PantallaRecibe == "" ||

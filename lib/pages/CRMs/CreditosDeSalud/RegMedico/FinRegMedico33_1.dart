@@ -284,12 +284,28 @@ class MyCustomFormFinRegMedico33_1State
       var url = Uri.https('fasoluciones.mx', 'api/Medico/Agregar');
       var request = await http.MultipartRequest('POST', url);
       request = jsonToFormData(request, req);
-      final response = await request.send();
-      final responseData = await response.stream.bytesToString();
-      var responseString = responseData;
-      final datos = json.decode(responseString);
-      dev.log("datosasasas");
-      dev.log(datos.toString());
+      try {
+        final response = await request.send();
+
+        if (response.statusCode == 302) {
+          // Manejar redirección obteniendo la nueva ubicación
+          var redirectUrl = response.headers['location'];
+          if (redirectUrl != null) {
+            var redirectUri = Uri.parse(redirectUrl);
+            var redirectRequest =
+                await http.MultipartRequest('POST', redirectUri);
+            redirectRequest = jsonToFormData(redirectRequest, req);
+            final redirectResponse = await redirectRequest.send();
+            dev.log(redirectResponse.statusCode.toString());
+          } else {
+            dev.log('Error: Redirección sin URL de ubicación');
+          }
+        } else {
+          dev.log(response.statusCode.toString());
+        }
+      } catch (error) {
+        dev.log("error");
+      }
 
       if (imagen == null) {
         dev.log("esta vacio");
@@ -405,22 +421,23 @@ class MyCustomFormFinRegMedico33_1State
     return Form(
         key: _formKey,
         child: SingleChildScrollView(
-          child: Column(mainAxisAlignment: MainAxisAlignment.start, 
-          children: <Widget>[
-            // headerTop("Médicos", 'Estado de cuenta'),
-            SubitleCards('Estado de cuenta'),
-            SizedBox(height: 20),
-        
-            Container(
-              child: Align(
-                alignment: Alignment.topRight,
-                child: Column(children: const <Widget>[
-                  Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                          'Selecciona la imagen de tus archivos o tomale foto')),
-                  SizedBox(height: 10),
-                  /*Align(
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                // headerTop("Médicos", 'Estado de cuenta'),
+                SubitleCards('Estado de cuenta'),
+                SizedBox(height: 20),
+
+                Container(
+                  child: Align(
+                    alignment: Alignment.topRight,
+                    child: Column(children: const <Widget>[
+                      Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                              'Selecciona la imagen de tus archivos o tomale foto')),
+                      SizedBox(height: 10),
+                      /*Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
                           '* Coloca la credencial sobre una superficie oscura para un mejor contraste')),
@@ -430,34 +447,35 @@ class MyCustomFormFinRegMedico33_1State
                       child: Text(
                           '* Evita reflejos del sol y luces (lámparas o focos)')),
                           */
-                ]),
-              ),
-            ),
+                    ]),
+                  ),
+                ),
 
-            _Pantalla(),
-            _IDMedico(),
-            ElevatedButton(
-                onPressed: () {
-                  opciones(context);
-                },
-                child: Text('Selecciona una imagen',
-                    style: TextStyle(color: Colors.white))),
+                _Pantalla(),
+                _IDMedico(),
+                ElevatedButton(
+                    onPressed: () {
+                      opciones(context);
+                    },
+                    child: Text('Selecciona una imagen',
+                        style: TextStyle(color: Colors.white))),
 
-            SizedBox(
-              height: 20,
-            ),
-            //imagen == null
-            //imagen==null ? Center()
-            imagen == null ? Center() : Image.file(imagen!),
-            ElevatedButton(
-                onPressed: () {
-                  dev.log("entrando");
-                  subir_imagen();
-                },
-                child: Text('Siguiente', style: TextStyle(color: Colors.white))),
-            //_BotonEnviar(),
-            _Avanzar()
-          ]),
+                SizedBox(
+                  height: 20,
+                ),
+                //imagen == null
+                //imagen==null ? Center()
+                imagen == null ? Center() : Image.file(imagen!),
+                ElevatedButton(
+                    onPressed: () {
+                      dev.log("entrando");
+                      subir_imagen();
+                    },
+                    child: Text('Siguiente',
+                        style: TextStyle(color: Colors.white))),
+                //_BotonEnviar(),
+                _Avanzar()
+              ]),
         ));
   }
 
@@ -497,8 +515,6 @@ class MyCustomFormFinRegMedico33_1State
         ));
   }
 
-  
-
   Widget _BotonEnviar() {
     return Container(
       width: double.infinity,
@@ -509,8 +525,7 @@ class MyCustomFormFinRegMedico33_1State
               PantallaRecibe = Pantalla.text;
               IDMedicoRecibe = IDMedico.text;
 
-              if (PantallaRecibe == "" ||
-                  IDMedicoRecibe == "") {
+              if (PantallaRecibe == "" || IDMedicoRecibe == "") {
                 showDialog(
                     context: context,
                     builder: (BuildContext context) {
@@ -526,6 +541,7 @@ class MyCustomFormFinRegMedico33_1State
           child: const Text('Siguiente')),
     );
   }
+
   Widget _Avanzar() {
     return Container(
       width: double.infinity,

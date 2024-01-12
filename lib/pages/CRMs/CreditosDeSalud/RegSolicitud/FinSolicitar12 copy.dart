@@ -85,11 +85,9 @@ class MyCustomFormFinSolicitar12State
   var MasccaraPeriodo = new MaskTextInputFormatter(
       mask: '0000-0000', filter: {"0": RegExp(r'[0-9]')});
 
-      
   String? _opcionesTipoDePersona;
-  bool _opcionTipoAsalariado= false;
-  bool _opcionTipoEmpresarialOIndependiente=false;
-
+  bool _opcionTipoAsalariado = false;
+  bool _opcionTipoEmpresarialOIndependiente = false;
 
   void SeleccionadoOrigenDeLosRecursos(value) {
     setState(() {
@@ -97,38 +95,25 @@ class MyCustomFormFinSolicitar12State
       if (_opcionesTipoDePersona == "Asalariado") {
         _opcionTipoAsalariado = true;
         _opcionTipoEmpresarialOIndependiente = false;
-      }
-      else if ( _opcionesTipoDePersona == "Independiente") {
+      } else if (_opcionesTipoDePersona == "Independiente") {
         _opcionTipoEmpresarialOIndependiente = true;
         _opcionTipoAsalariado = false;
-      }
-      else if (_opcionesTipoDePersona == "Persona Física con actividad empresarial y profesional") {
+      } else if (_opcionesTipoDePersona ==
+          "Persona Física con actividad empresarial y profesional") {
         _opcionTipoEmpresarialOIndependiente = true;
         _opcionTipoAsalariado = false;
       }
     });
   }
 
-  final List<String> ListaAntiguedadTiempo = [
-    'Años',
-    'Meses'
-  ];
+  final List<String> ListaAntiguedadTiempo = ['Años', 'Meses'];
   String? SelectedListaAntiguedadTiempo;
 
-
-  final List<String> ListaAntiguedadPFTiempo = [
-    'Años',
-    'Meses'
-  ];
+  final List<String> ListaAntiguedadPFTiempo = ['Años', 'Meses'];
   String? SelectedListaAntiguedadPFTiempo;
 
-   final List<String> ListaSector = [
-    'Comercial',
-    'Servicio',
-    'Producción'
-  ];
+  final List<String> ListaSector = ['Comercial', 'Servicio', 'Producción'];
   String? SelectedListaSector;
-
 
   String? _opcionesFirmaElectronica;
   bool _siFirmaElectronica = false;
@@ -300,7 +285,7 @@ class MyCustomFormFinSolicitar12State
   String ApellidoPaternoRecibe = "";
   String ApellidoMaternoRecibe = "";
 
-  int GastosMensualesEntero=0;
+  int GastosMensualesEntero = 0;
 
   void Ingresar(
       Pantalla,
@@ -418,8 +403,6 @@ print("****");
     }
   }
 
-
-
   //Esto es un metodo
   //se usa para mostrar los datos del estado
   int id_solicitud = 0;
@@ -445,8 +428,7 @@ print("****");
   void mostrar_datos() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      NombreCompletoSession =
-          prefs.getString('NombreCompletoSession') ?? '';
+      NombreCompletoSession = prefs.getString('NombreCompletoSession') ?? '';
       id_solicitud = prefs.getInt('id_solicitud') ?? 0;
       id_credito = prefs.getInt('id_credito') ?? 0;
     });
@@ -458,8 +440,8 @@ print("****");
 
   //funcion para obtener profesiones
   Future obtenerOpciones() async {
-    final response = await http.get(
-        Uri.parse('https://fasoluciones.mx/api/Solicitud/Catalogos/Profesiones'));
+    final response = await http.get(Uri.parse(
+        'https://fasoluciones.mx/api/Solicitud/Catalogos/Profesiones'));
 
     if (response.statusCode == 200) {
       var jsonData = json.decode(response.body);
@@ -474,8 +456,8 @@ print("****");
 
   //funcion para obtener ocupaciones
   Future obtenerOcupacion() async {
-    final response = await http.get(
-        Uri.parse('https://fasoluciones.mx/api/Solicitud/Catalogos/Ocupaciones'));
+    final response = await http.get(Uri.parse(
+        'https://fasoluciones.mx/api/Solicitud/Catalogos/Ocupaciones'));
 
     if (response.statusCode == 200) {
       var jsonData = json.decode(response.body);
@@ -503,36 +485,32 @@ print("****");
     }
   }
 
-
-
-  @override 
+  @override
   Widget build(BuildContext context) {
     return BuildScreens(
         'Solicitud', '', '', 'Datos de la solicitud', '', _formulario());
-  } 
+  }
 
-
-  Widget _formulario() { 
-    return  Form(
-            key: _formKey,
-            child: SingleChildScrollView(
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    SubitleCards("A cerca de ti "),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _Pantalla(),
-                    _IDLR(),
-                    _IDInfo(),
-                    _TipoDePersona(),
-                    _Ocupacion(),
-                    _Profesion(),
-                    _ActividadEconomica(),
-                    
-                    if (_opcionTipoAsalariado)
-                      Container(
+  Widget _formulario() {
+    return Form(
+        key: _formKey,
+        child: SingleChildScrollView(
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                SubitleCards("A cerca de ti "),
+                SizedBox(
+                  height: 20,
+                ),
+                _Pantalla(),
+                _IDLR(),
+                _IDInfo(),
+                _TipoDePersona(),
+                _Ocupacion(),
+                _Profesion(),
+                _ActividadEconomica(),
+                if (_opcionTipoAsalariado)
+                  Container(
                       padding: EdgeInsets.only(left: 1.0),
                       width: double.infinity,
                       decoration: BoxDecoration(
@@ -568,9 +546,8 @@ print("****");
                           ),
                         ],
                       )),
-
-                    if (_opcionTipoEmpresarialOIndependiente)
-                      Container(
+                if (_opcionTipoEmpresarialOIndependiente)
+                  Container(
                       padding: EdgeInsets.only(left: 1.0),
                       width: double.infinity,
                       decoration: BoxDecoration(
@@ -607,28 +584,26 @@ print("****");
                               ),
                             ],
                           ),
-
                           SizedBox(
-                          height: 20,
-                        ),
+                            height: 20,
+                          ),
                           Container(
-                          padding: EdgeInsets.only(left: 10.0),
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                              //border: Border.all(
-                              //color: Colors.blueAccent
-                              //)
-                              ),
-                          child: Text(
-                            "Domicilio del negocio",
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              fontSize: 17,
-                              //color: Colors.blue
-                            ),
-                            textScaleFactor: 1,
-                          )),
-                          
+                              padding: EdgeInsets.only(left: 10.0),
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                  //border: Border.all(
+                                  //color: Colors.blueAccent
+                                  //)
+                                  ),
+                              child: Text(
+                                "Domicilio del negocio",
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  fontSize: 17,
+                                  //color: Colors.blue
+                                ),
+                                textScaleFactor: 1,
+                              )),
                           Row(
                             children: <Widget>[
                               Expanded(
@@ -637,12 +612,10 @@ print("****");
                               Expanded(
                                 child: _Pais(),
                               ),
-                              
                             ],
                           ),
                           Row(
                             children: <Widget>[
-                              
                               Expanded(
                                 child: _Calle(),
                               ),
@@ -653,7 +626,6 @@ print("****");
                           ),
                           Row(
                             children: <Widget>[
-                              
                               Expanded(
                                 child: _NumInt(),
                               ),
@@ -670,7 +642,6 @@ print("****");
                               Expanded(
                                 child: _MunDel(),
                               ),
-                              
                             ],
                           ),
                           Row(
@@ -681,255 +652,254 @@ print("****");
                               Expanded(
                                 child: _Colonia(),
                               ),
-                              
                             ],
                           ),
                         ],
                       )),
-                    SizedBox(
-                      height: 20,
+                SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: _Ingresos(),
                     ),
-                    Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: _Ingresos(),
+                    Expanded(
+                      child: _GastosMensuales(),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 30,
+                ),
+                Container(
+                    padding: EdgeInsets.only(left: 10.0),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        //border: Border.all(
+                        //color: Colors.blueAccent
+                        //)
                         ),
-                        Expanded(
-                          child: _GastosMensuales(),
+                    child: Text(
+                      "¿Cuentas con firma electrónica?",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontSize: 17,
+                        //color: Colors.blue
+                      ),
+                      textScaleFactor: 1,
+                    )),
+                Container(
+                  padding: EdgeInsets.all(10),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: RadioListTile(
+                          title: const Text('Si',
+                              style: TextStyle(
+                                fontSize: 17,
+                                color: Color.fromARGB(255, 126, 126, 126),
+                              )),
+                          value: "Si",
+                          groupValue: _opcionesFirmaElectronica,
+                          onChanged: SeleccionadoFirmaElectronica,
                         ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    Container(
-                        padding: EdgeInsets.only(left: 10.0),
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            //border: Border.all(
-                            //color: Colors.blueAccent
-                            //)
-                            ),
-                        child: Text(
-                          "¿Cuentas con firma electrónica?",
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            fontSize: 17,
-                            //color: Colors.blue
-                          ),
-                          textScaleFactor: 1,
-                        )),
-                    Container(
-                      padding: EdgeInsets.all(10),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: RadioListTile(
-                              title: const Text('Si',
-                                  style: TextStyle(
-                                    fontSize: 17,
-                                    color: Color.fromARGB(255, 126, 126, 126),
-                                  )),
-                              value: "Si",
-                              groupValue: _opcionesFirmaElectronica,
-                              onChanged: SeleccionadoFirmaElectronica,
-                            ),
-                          ),
-                          Expanded(
-                              child: RadioListTile(
-                            title: const Text('No',
-                                style: TextStyle(
-                                  fontSize: 17,
-                                  color: Color.fromARGB(255, 126, 126, 126),
-                                )),
-                            value: "No",
-                            groupValue: _opcionesFirmaElectronica,
-                            onChanged: SeleccionadoFirmaElectronica,
-                          )),
-                        ],
                       ),
-                    ),
-                    if (_siFirmaElectronica)
-                      Container(
-                          padding: EdgeInsets.only(left: 1.0),
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                              //border: Border.all(
-                              //color: Colors.blueAccent
-                              //)
-                              ),
-                          child: _NumeroFirmaElectronica()),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Container(
-                        padding: EdgeInsets.only(left: 10.0),
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            //border: Border.all(
-                            //color: Colors.blueAccent
-                            //)
-                            ),
-                        child: Text(
-                          "¿Usted desempeña o ha desempeñado en los últimos 12 meses un cargo público o político en territorio nacional o en un país extranjero?",
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            fontSize: 17,
-                            //color: Colors.blue
+                      Expanded(
+                          child: RadioListTile(
+                        title: const Text('No',
+                            style: TextStyle(
+                              fontSize: 17,
+                              color: Color.fromARGB(255, 126, 126, 126),
+                            )),
+                        value: "No",
+                        groupValue: _opcionesFirmaElectronica,
+                        onChanged: SeleccionadoFirmaElectronica,
+                      )),
+                    ],
+                  ),
+                ),
+                if (_siFirmaElectronica)
+                  Container(
+                      padding: EdgeInsets.only(left: 1.0),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          //border: Border.all(
+                          //color: Colors.blueAccent
+                          //)
                           ),
-                          textScaleFactor: 1,
-                        )),
-                    Container(
-                      padding: EdgeInsets.all(10),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: RadioListTile(
-                              title: const Text('Si',
-                                  style: TextStyle(
-                                    fontSize: 17,
-                                    color: Color.fromARGB(255, 126, 126, 126),
-                                  )),
-                              value: "Si",
-                              groupValue: _opcionesCargoPolitico,
-                              onChanged: SeleccionadoCargoPolitico,
-                            ),
-                          ),
-                          Expanded(
-                              child: RadioListTile(
-                            title: const Text('No',
-                                style: TextStyle(
-                                  fontSize: 17,
-                                  color: Color.fromARGB(255, 126, 126, 126),
-                                )),
-                            value: "No",
-                            groupValue: _opcionesCargoPolitico,
-                            onChanged: SeleccionadoCargoPolitico,
-                          )),
-                        ],
+                      child: _NumeroFirmaElectronica()),
+                SizedBox(
+                  height: 20,
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Container(
+                    padding: EdgeInsets.only(left: 10.0),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        //border: Border.all(
+                        //color: Colors.blueAccent
+                        //)
+                        ),
+                    child: Text(
+                      "¿Usted desempeña o ha desempeñado en los últimos 12 meses un cargo público o político en territorio nacional o en un país extranjero?",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontSize: 17,
+                        //color: Colors.blue
                       ),
-                    ),
-                    if (_siCargoPolitico)
-                      Container(
-                          padding: EdgeInsets.only(left: 1.0),
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                              //border: Border.all(
-                              //color: Colors.blueAccent
-                              //)
+                      textScaleFactor: 1,
+                    )),
+                Container(
+                  padding: EdgeInsets.all(10),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: RadioListTile(
+                          title: const Text('Si',
+                              style: TextStyle(
+                                fontSize: 17,
+                                color: Color.fromARGB(255, 126, 126, 126),
+                              )),
+                          value: "Si",
+                          groupValue: _opcionesCargoPolitico,
+                          onChanged: SeleccionadoCargoPolitico,
+                        ),
+                      ),
+                      Expanded(
+                          child: RadioListTile(
+                        title: const Text('No',
+                            style: TextStyle(
+                              fontSize: 17,
+                              color: Color.fromARGB(255, 126, 126, 126),
+                            )),
+                        value: "No",
+                        groupValue: _opcionesCargoPolitico,
+                        onChanged: SeleccionadoCargoPolitico,
+                      )),
+                    ],
+                  ),
+                ),
+                if (_siCargoPolitico)
+                  Container(
+                      padding: EdgeInsets.only(left: 1.0),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          //border: Border.all(
+                          //color: Colors.blueAccent
+                          //)
+                          ),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: _Cargo(),
                               ),
-                          child: Column(
-                            children: [
-                              Row(
-                                children: <Widget>[
-                                  Expanded(
-                                    child: _Cargo(),
-                                  ),
-                                  Expanded(
-                                    child: _PeriodoDelCargo(),
-                                  ),
-                                ],
+                              Expanded(
+                                child: _PeriodoDelCargo(),
                               ),
                             ],
-                          )),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Container(
-                        padding: EdgeInsets.only(left: 10.0),
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            //border: Border.all(
-                            //color: Colors.blueAccent
-                            //)
-                            ),
-                        child: Text(
-                          "¿Es Usted Cónyuge, Concubino (a), Hijo (a), Hermano (a), Abuelo, Padre, Primo (a) o Nieto (a) de alguna persona que desempeñe o han desempeñado cargo público o político?",
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            fontSize: 17,
-                            //color: Colors.blue
                           ),
-                          textScaleFactor: 1,
-                        )),
-                    Container(
-                      padding: EdgeInsets.all(10),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: RadioListTile(
-                              title: const Text('Si',
-                                  style: TextStyle(
-                                    fontSize: 17,
-                                    color: Color.fromARGB(255, 126, 126, 126),
-                                  )),
-                              value: "Si",
-                              groupValue: _opcionesEsConyugue,
-                              onChanged: SeleccionadoEsConyugue,
-                            ),
-                          ),
-                          Expanded(
-                              child: RadioListTile(
-                            title: const Text('No',
-                                style: TextStyle(
-                                  fontSize: 17,
-                                  color: Color.fromARGB(255, 126, 126, 126),
-                                )),
-                            value: "No",
-                            groupValue: _opcionesEsConyugue,
-                            onChanged: SeleccionadoEsConyugue,
-                          )),
                         ],
+                      )),
+                SizedBox(
+                  height: 20,
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Container(
+                    padding: EdgeInsets.only(left: 10.0),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        //border: Border.all(
+                        //color: Colors.blueAccent
+                        //)
+                        ),
+                    child: Text(
+                      "¿Es Usted Cónyuge, Concubino (a), Hijo (a), Hermano (a), Abuelo, Padre, Primo (a) o Nieto (a) de alguna persona que desempeñe o han desempeñado cargo público o político?",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontSize: 17,
+                        //color: Colors.blue
                       ),
-                    ),
-                    if (_siEsConyugue)
-                      Container(
-                          padding: EdgeInsets.only(left: 1.0),
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                              //border: Border.all(
-                              //color: Colors.blueAccent
-                              //)
+                      textScaleFactor: 1,
+                    )),
+                Container(
+                  padding: EdgeInsets.all(10),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: RadioListTile(
+                          title: const Text('Si',
+                              style: TextStyle(
+                                fontSize: 17,
+                                color: Color.fromARGB(255, 126, 126, 126),
+                              )),
+                          value: "Si",
+                          groupValue: _opcionesEsConyugue,
+                          onChanged: SeleccionadoEsConyugue,
+                        ),
+                      ),
+                      Expanded(
+                          child: RadioListTile(
+                        title: const Text('No',
+                            style: TextStyle(
+                              fontSize: 17,
+                              color: Color.fromARGB(255, 126, 126, 126),
+                            )),
+                        value: "No",
+                        groupValue: _opcionesEsConyugue,
+                        onChanged: SeleccionadoEsConyugue,
+                      )),
+                    ],
+                  ),
+                ),
+                if (_siEsConyugue)
+                  Container(
+                      padding: EdgeInsets.only(left: 1.0),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          //border: Border.all(
+                          //color: Colors.blueAccent
+                          //)
+                          ),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: _PrimerNombre(),
                               ),
-                          child: Column(
-                            children: [
-                              Row(
-                                children: <Widget>[
-                                  Expanded(
-                                    child: _PrimerNombre(),
-                                  ),
-                                  Expanded(
-                                    child: _SegundoNombre(),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                children: <Widget>[
-                                  Expanded(
-                                    child: _ApellidoPaterno(),
-                                  ),
-                                  Expanded(
-                                    child: _ApellidoMaterno(),
-                                  ),
-                                ],
+                              Expanded(
+                                child: _SegundoNombre(),
                               ),
                             ],
-                          )),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _BotonEnviar(),
-                    SizedBox(
-                      height: 20,
-                    ),
-                  ]),
-            ));
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: _ApellidoPaterno(),
+                              ),
+                              Expanded(
+                                child: _ApellidoMaterno(),
+                              ),
+                            ],
+                          ),
+                        ],
+                      )),
+                SizedBox(
+                  height: 20,
+                ),
+                _BotonEnviar(),
+                SizedBox(
+                  height: 20,
+                ),
+              ]),
+        ));
   }
 
   Widget _Pantalla() {
@@ -954,36 +924,36 @@ print("****");
     return Visibility(
         //visible: false,
         child: Container(
-          padding: EdgeInsets.all(10),
-          child: TextFormField(
-            keyboardType: TextInputType.text,
-            controller: IDLR,
-            decoration: InputDecoration(
-                labelText: 'IDLR',
-                border: OutlineInputBorder(),
-                isDense: false,
-                contentPadding: EdgeInsets.all(10),
-                hintText: ''),
-          ),
-        ));
+      padding: EdgeInsets.all(10),
+      child: TextFormField(
+        keyboardType: TextInputType.text,
+        controller: IDLR,
+        decoration: InputDecoration(
+            labelText: 'IDLR',
+            border: OutlineInputBorder(),
+            isDense: false,
+            contentPadding: EdgeInsets.all(10),
+            hintText: ''),
+      ),
+    ));
   }
 
   Widget _IDInfo() {
     return Visibility(
         //visible: false,
         child: Container(
-          padding: EdgeInsets.all(10),
-          child: TextFormField(
-            keyboardType: TextInputType.text,
-            controller: IDInfo,
-            decoration: InputDecoration(
-                labelText: 'IDInfo',
-                border: OutlineInputBorder(),
-                isDense: false,
-                contentPadding: EdgeInsets.all(10),
-                hintText: ''),
-          ),
-        ));
+      padding: EdgeInsets.all(10),
+      child: TextFormField(
+        keyboardType: TextInputType.text,
+        controller: IDInfo,
+        decoration: InputDecoration(
+            labelText: 'IDInfo',
+            border: OutlineInputBorder(),
+            isDense: false,
+            contentPadding: EdgeInsets.all(10),
+            hintText: ''),
+      ),
+    ));
   }
 
   Widget _TipoDePersona() {
@@ -1044,7 +1014,6 @@ print("****");
     );
   }
 
-
   Widget _NombreEmpresaLaboras() {
     return Container(
       padding: EdgeInsets.all(10),
@@ -1061,6 +1030,7 @@ print("****");
       ),
     );
   }
+
   Widget _CargoLaboras() {
     return Container(
       padding: EdgeInsets.all(10),
@@ -1077,6 +1047,7 @@ print("****");
       ),
     );
   }
+
   Widget _Antiguedad() {
     return Container(
       padding: EdgeInsets.all(10),
@@ -1093,7 +1064,7 @@ print("****");
       ),
     );
   }
-  
+
   Widget _AntiguedadTiempo() {
     return Container(
       padding: EdgeInsets.all(10),
@@ -1113,16 +1084,15 @@ print("****");
               'Tiempo',
               style: TextStyle(fontSize: 14),
             ),
-            items:
-                ListaAntiguedadTiempo.map((item) => DropdownMenuItem<String>(
-                      value: item,
-                      child: Text(
-                        item,
-                        style: const TextStyle(
-                          fontSize: 14,
-                        ),
-                      ),
-                    )).toList(),
+            items: ListaAntiguedadTiempo.map((item) => DropdownMenuItem<String>(
+                  value: item,
+                  child: Text(
+                    item,
+                    style: const TextStyle(
+                      fontSize: 14,
+                    ),
+                  ),
+                )).toList(),
             validator: ObligatorioSelect,
             onChanged: (value) {
               SelectedListaAntiguedadTiempo = value;
@@ -1150,7 +1120,6 @@ print("****");
     );
   }
 
-
   /////////////////
   ///
   Widget _GiroDelNegocio() {
@@ -1169,6 +1138,7 @@ print("****");
       ),
     );
   }
+
   Widget _NombreEmpresa() {
     return Container(
       padding: EdgeInsets.all(10),
@@ -1185,6 +1155,7 @@ print("****");
       ),
     );
   }
+
   Widget _AntiguedadPF() {
     return Container(
       padding: EdgeInsets.all(10),
@@ -1201,7 +1172,7 @@ print("****");
       ),
     );
   }
-  
+
   Widget _AntiguedadPFTiempo() {
     return Container(
       padding: EdgeInsets.all(10),
@@ -1221,16 +1192,15 @@ print("****");
               'Tiempo',
               style: TextStyle(fontSize: 14),
             ),
-            items:
-                ListaAntiguedadTiempo.map((item) => DropdownMenuItem<String>(
-                      value: item,
-                      child: Text(
-                        item,
-                        style: const TextStyle(
-                          fontSize: 14,
-                        ),
-                      ),
-                    )).toList(),
+            items: ListaAntiguedadTiempo.map((item) => DropdownMenuItem<String>(
+                  value: item,
+                  child: Text(
+                    item,
+                    style: const TextStyle(
+                      fontSize: 14,
+                    ),
+                  ),
+                )).toList(),
             validator: ObligatorioSelect,
             onChanged: (value) {
               SelectedListaAntiguedadPFTiempo = value;
@@ -1277,16 +1247,15 @@ print("****");
               'Sector',
               style: TextStyle(fontSize: 14),
             ),
-            items:
-                ListaSector.map((item) => DropdownMenuItem<String>(
-                      value: item,
-                      child: Text(
-                        item,
-                        style: const TextStyle(
-                          fontSize: 14,
-                        ),
-                      ),
-                    )).toList(),
+            items: ListaSector.map((item) => DropdownMenuItem<String>(
+                  value: item,
+                  child: Text(
+                    item,
+                    style: const TextStyle(
+                      fontSize: 14,
+                    ),
+                  ),
+                )).toList(),
             validator: ObligatorioSelect,
             onChanged: (value) {
               SelectedListaSector = value;
@@ -1318,7 +1287,8 @@ print("****");
   Future obtenerCP(var codigo) async {
     //dev.log("t");
     final req = {"CP": codigo};
-    var url = Uri.parse('https://fasoluciones.mx/api/Solicitud/Catalogos/CP/');
+    var url =
+        Uri.parse('https://fasoluciones.mx/api/Solicitud/Catalogos/CP/$codigo');
 
     var request = await http.MultipartRequest('POST', url);
     request = jsonToFormData(request, req);
@@ -1650,7 +1620,6 @@ print("****");
         ));
   }
 
-
   String? _opcionSeleccionada;
   var dropdownvalue;
   Widget _Profesion() {
@@ -1668,7 +1637,6 @@ print("****");
               borderRadius: BorderRadius.circular(5),
             ),
           ),
-          
           isExpanded: true,
           hint: Text(
             'Profesiones',
@@ -1684,7 +1652,6 @@ print("****");
             height: 50,
             padding: EdgeInsets.only(left: 0, right: 9),
           ),
-          
           onChanged: (newVal) {
             setState(() {
               dropdownvalue = newVal;
@@ -1887,6 +1854,7 @@ print("****");
       ),
     );
   }
+
   Widget _GastosMensuales() {
     return Container(
       padding: EdgeInsets.all(10),
@@ -2061,7 +2029,8 @@ print("****");
                     });
               }
 
-              String? AntiguedadPFTiempoRecibe = SelectedListaAntiguedadPFTiempo;
+              String? AntiguedadPFTiempoRecibe =
+                  SelectedListaAntiguedadPFTiempo;
               //print(AntiguedadPFTiempoRecibe);
               if (AntiguedadPFTiempoRecibe == "") {
                 showDialog(
@@ -2146,8 +2115,7 @@ print("****");
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: Text(
-                            'Definir el cargo político es obligatoria'),
+                        title: Text('Definir el cargo político es obligatoria'),
                       );
                     });
               }

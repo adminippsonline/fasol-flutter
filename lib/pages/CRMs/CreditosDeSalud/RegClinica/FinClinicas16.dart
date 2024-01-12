@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'dart:developer' as dev;
 import '../Includes/widgets/build_screen.dart';
 import '../Includes/widgets/text.dart';
@@ -230,6 +233,7 @@ class MyCustomFormFinClinicas16State extends State<MyCustomFormFinClinicas16> {
   String MunDelRecibe = "";
   String ColoniaRecibe = "";
 
+  File? imagenPoderDelRepresentante = null;
   void Ingresar(
       Pantalla,
       IDClinica,
@@ -264,9 +268,9 @@ class MyCustomFormFinClinicas16State extends State<MyCustomFormFinClinicas16> {
         'id_clinica': IDClinica,
         'PrimerNombre': PrimerNombre,
         'SegundoNombre': SegundoNombre,
-        'PrimerApellido': PrimerApellido,
-        'SegundoApellido': SegundoApellido,
-        'FechaDeNacimiento': FechaDeNacimiento,
+        'ApellidoPaterno': PrimerApellido,
+        'ApellidoMaterno': SegundoApellido,
+        'FechaNacimiento': FechaDeNacimiento,
         'Genero': Genero,
         'PaisDeNacimiento': PaisDeNacimiento,
         'EstadoDeNacimiento': EstadoDeNacimiento,
@@ -275,7 +279,7 @@ class MyCustomFormFinClinicas16State extends State<MyCustomFormFinClinicas16> {
         'RFC': RFC,
         'Correo': Correo,
         'Celular': Celular,
-        'FirmaElectronica': FirmaElectronica,
+        'NoFirmaElectronica': FirmaElectronica,
         'CP': CP,
         'Pais': Pais,
         'Ciudad': Ciudad,
@@ -285,7 +289,8 @@ class MyCustomFormFinClinicas16State extends State<MyCustomFormFinClinicas16> {
         'EntCall': EntCall,
         'Estado': Estado,
         'MunDel': MunDel,
-        'Colonia': Colonia
+        'Colonia': Colonia,
+        'INE_Pasaporte': globalimage
       };
       var request = await http.MultipartRequest('POST', url);
       request = jsonToFormData(request, data);
@@ -293,6 +298,7 @@ class MyCustomFormFinClinicas16State extends State<MyCustomFormFinClinicas16> {
 
       final responseData = await response.stream.bytesToString();
       var responseString = responseData;
+      dev.log(responseString);
       final datos = json.decode(responseString);
       var status = datos['status'].toString();
 
@@ -441,7 +447,10 @@ class MyCustomFormFinClinicas16State extends State<MyCustomFormFinClinicas16> {
   Widget build(BuildContext context) {
     return BuildScreens(
         'Clínica', '', '', 'Datos de la clínica', '', _formulario());
-  } 
+  }
+
+  var globalimage = "";
+  String? imagePath;
   Widget _formulario() {
     return Form(
         key: _formKey,
@@ -465,10 +474,10 @@ class MyCustomFormFinClinicas16State extends State<MyCustomFormFinClinicas16> {
                         fontSize: 12, color: Color.fromARGB(255, 56, 56, 56)),
                   ),
                 ),
-               _PrimerNombre(),
+                _PrimerNombre(),
                 _SegundoNombre(),
-                    _PrimerApellido(),
-                    _SegundoApellido(),
+                _PrimerApellido(),
+                _SegundoApellido(),
                 const SizedBox(
                   height: 20,
                 ),
@@ -537,9 +546,9 @@ class MyCustomFormFinClinicas16State extends State<MyCustomFormFinClinicas16> {
                   height: 20,
                 ),
                 _FechaDeNacimiento(),
-                      _PaisDeNacimiento(),
-                      _EstadoDeNacimiento(),
-                      _Nacionalidad(),
+                _PaisDeNacimiento(),
+                _EstadoDeNacimiento(),
+                _Nacionalidad(),
                 /*SizedBox(
                       height: 20,
                     ),*/
@@ -590,6 +599,25 @@ class MyCustomFormFinClinicas16State extends State<MyCustomFormFinClinicas16> {
                     ),
                   ],
                 ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                        child: Text("Cargar INE/Pasaporte"),
+                        onPressed: () async {
+                          dev.log("PoderDelRepresentante");
+                          setState(() {
+                            dialogPoderDelRepresentante(context);
+                          });
+                        }),
+                  ],
+                ),
+                imagenPoderDelRepresentante == null
+                    ? Center()
+                    : Text(
+                        "${imagenPoderDelRepresentante!.path.toString()}",
+                        style: TextStyle(color: Colors.black),
+                      ),
                 SizedBox(
                   height: 20,
                 ),
@@ -600,6 +628,46 @@ class MyCustomFormFinClinicas16State extends State<MyCustomFormFinClinicas16> {
                 _Avanzar()
               ]),
         ));
+  }
+
+  Future<void> dialogPoderDelRepresentante(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Obtener Imagen"),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: [
+                  GestureDetector(
+                    child: Text("Galería"),
+                    onTap: () async {
+                      final ImagePicker _picker = ImagePicker();
+                      XFile? _pickedFile = await _picker.pickImage(
+                          source: ImageSource.gallery,
+                          requestFullMetadata: false);
+                      imagePath = _pickedFile!.path;
+                      imagenPoderDelRepresentante = File(_pickedFile.path);
+                      _pickedFile.readAsBytes().then((value) {
+                        imagePath = _pickedFile.path;
+                      });
+                      setState(() {
+                        imagePath = _pickedFile.path;
+                        imagenPoderDelRepresentante = File(_pickedFile.name);
+                        final bytes = File(imagePath!).readAsBytesSync();
+                        // dev.log(bytes.toString());
+                        globalimage = base64Encode(bytes);
+                      });
+                      Navigator.pop(context);
+                    },
+                  ),
+                  SizedBox(height: 20),
+                  GestureDetector(child: Text("Tomar foto"), onTap: () {})
+                ],
+              ),
+            ),
+          );
+        });
   }
 
   /*String? _validarGenero(String? value) {
@@ -644,8 +712,6 @@ class MyCustomFormFinClinicas16State extends State<MyCustomFormFinClinicas16> {
           ),
         ));
   }
-
-  
 
   Widget _PrimerNombre() {
     return Container(
@@ -1048,22 +1114,14 @@ class MyCustomFormFinClinicas16State extends State<MyCustomFormFinClinicas16> {
   Future obtenerCP(var codigo) async {
     dev.log("t");
     final req = {"CP": codigo};
-    var url = Uri.parse('https://fasoluciones.mx/api/Solicitud/Catalogos/CP/');
+    var url =
+        Uri.parse('https://fasoluciones.mx/api/Solicitud/Catalogos/CP/$codigo');
 
-    var request = await http.MultipartRequest('POST', url);
-    request = jsonToFormData(request, req);
-
-    final response = await request.send();
+    var response = await http.get(url);
     if (response.statusCode == 200) {
-      final responseData =
-          await response.stream.bytesToString(); //response.stream.toBytes();
-      //dev.log(responseData.toString());
-
-      var responseString = responseData;
-      final dat = json.decode(responseString);
-      dev.log("adata");
-      dev.log(dat.toString());
-      var data = json.decode(responseString)['data'][0];
+      final dat = json.decode(response.body);
+      var data = json.decode(response.body)['data'][0];
+      dev.log(data.toString());
       setState(() {
         // Colonia.text = data['Estado'].toString();
         MunDel.text = data['MunDel'].toString();
@@ -1380,8 +1438,7 @@ class MyCustomFormFinClinicas16State extends State<MyCustomFormFinClinicas16> {
                     });
               }
               MunDelRecibe = MunDel.text;
-              
-              
+
               String? ColoniaRecibe = _selectedColony;
 
               print(ColoniaRecibe);
@@ -1393,7 +1450,7 @@ class MyCustomFormFinClinicas16State extends State<MyCustomFormFinClinicas16> {
                         title: Text('La colonia es obligatoria'),
                       );
                     });
-                    ColoniaRecibe="";
+                ColoniaRecibe = "";
               }
 
 /*
@@ -1403,33 +1460,32 @@ class MyCustomFormFinClinicas16State extends State<MyCustomFormFinClinicas16> {
               print(PantallaRecibe);
               print(IDClinicaRecibe);
               if (PantallaRecibe == "" ||
-                      IDClinicaRecibe == "" ||
-                      PrimerNombreRecibe == "" ||
-                      PrimerApellidoRecibe == "" ||
-                      SegundoApellidoRecibe == "" ||
-                      GeneroRecibe == "" ||
-                      GeneroRecibe == null ||
-                      FechaDeNacimientoRecibe == "" ||
-                      PaisDeNacimientoRecibe == "" ||
-                      EstadoDeNacimientoRecibe == "" ||
-                      NacionalidadRecibe == "" ||
-                      CURPRecibe == "" ||
-                      RFCRecibe == "" ||
-                      CorreoRecibe == "" ||
-                      CelularRecibe == "" ||
-                      FirmaElectronicaRecibe == "" ||
-                      CPRecibe == "" ||
-                      PaisRecibe == "" ||
-                      CiudadRecibe == "" ||
-                      CalleRecibe == "" ||
-                      NumExtRecibe == "" ||
-                      NumIntRecibe == "" ||
-                      EntCallRecibe == "" ||
-                      EstadoRecibe == "" ||
-                      MunDelRecibe == "" ||
-                      ColoniaRecibe == "" ||
-                      ColoniaRecibe == null
-                  ) {
+                  IDClinicaRecibe == "" ||
+                  PrimerNombreRecibe == "" ||
+                  PrimerApellidoRecibe == "" ||
+                  SegundoApellidoRecibe == "" ||
+                  GeneroRecibe == "" ||
+                  GeneroRecibe == null ||
+                  FechaDeNacimientoRecibe == "" ||
+                  PaisDeNacimientoRecibe == "" ||
+                  EstadoDeNacimientoRecibe == "" ||
+                  NacionalidadRecibe == "" ||
+                  CURPRecibe == "" ||
+                  RFCRecibe == "" ||
+                  CorreoRecibe == "" ||
+                  CelularRecibe == "" ||
+                  FirmaElectronicaRecibe == "" ||
+                  CPRecibe == "" ||
+                  PaisRecibe == "" ||
+                  CiudadRecibe == "" ||
+                  CalleRecibe == "" ||
+                  NumExtRecibe == "" ||
+                  NumIntRecibe == "" ||
+                  EntCallRecibe == "" ||
+                  EstadoRecibe == "" ||
+                  MunDelRecibe == "" ||
+                  ColoniaRecibe == "" ||
+                  ColoniaRecibe == null) {
                 showDialog(
                     context: context,
                     builder: (BuildContext context) {
@@ -1471,6 +1527,7 @@ class MyCustomFormFinClinicas16State extends State<MyCustomFormFinClinicas16> {
           child: const Text('Siguiente')),
     );
   }
+
   Widget _Avanzar() {
     return Container(
       width: double.infinity,

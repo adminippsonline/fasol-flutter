@@ -18,7 +18,7 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 
 import 'FinClinicas12.dart';
-import 'Finclinicas14.dart';
+import 'FinClinicas14.dart';
 
 import 'package:intl/intl.dart';
 
@@ -310,9 +310,9 @@ class MyCustomFormFinClinicas10State extends State<MyCustomFormFinClinicas10> {
 
   @override
   Widget build(BuildContext context) {
-    return BuildScreens(
-        'Clínica', '', '', 'Datos de la clínica', 'Información adicional', _formulario());
-  } 
+    return BuildScreens('Clínica', '', '', 'Datos de la clínica',
+        'Información adicional', _formulario());
+  }
 
   Widget _formulario() {
     return Form(
@@ -712,8 +712,6 @@ class MyCustomFormFinClinicas10State extends State<MyCustomFormFinClinicas10> {
         ));
   }
 
-  
-
   Widget _Cargo() {
     return Container(
       padding: EdgeInsets.all(10),
@@ -1037,6 +1035,7 @@ class MyCustomFormFinClinicas10State extends State<MyCustomFormFinClinicas10> {
           child: const Text('Siguiente')),
     );
   }
+
   Widget _Avanzar() {
     return Container(
       width: double.infinity,

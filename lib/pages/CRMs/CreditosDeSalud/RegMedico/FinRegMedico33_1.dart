@@ -88,20 +88,28 @@ class MyCustomFormFinRegMedico33_1State
   String PantallaRecibe = "";
   String IDMedicoRecibe = "";
 
-  void Ingresar(Pantalla, IDMedico) async {
+  void Ingresar(Pantalla, IDMedicoRecibe, imagen) async {
+    dev.log(Pantalla);
+    dev.log(IDMedicoRecibe.toString());
     try {
       var url = Uri.https('fasoluciones.mx', 'api/Medico/Agregar');
+      // 'Pantalla': 'FinSolicitar33_1',
+      //       'id_medico': id_medico.toString(),
       var response = await http.post(url, body: {
         'Pantalla': Pantalla,
-        'id_medico': IDMedico
-      }).timeout(const Duration(seconds: 90));
-      //print("llego aqui 111");
-      //print(response.body);
+        'id_medico': IDMedicoRecibe,
+        'file': imagen
+      });
+      dev.log("hola");
+      dev.log(response.body.toString());
 
       if (response.body != "0" && response.body != "") {
-        var Respuesta = jsonDecode(response.body);
-        dev.log(Respuesta);
-        String status = Respuesta['status'];
+        dev.log("hola if");
+
+        Map<String, dynamic> decodedJson = await jsonDecode(response.body);
+        String status = decodedJson['status'];
+        dev.log(status);
+
         if (status == "OK") {
           //print('si existe aqui -----');
           // showDialog(
@@ -111,8 +119,8 @@ class MyCustomFormFinRegMedico33_1State
           //         title: Text('Registrado correctamente'),
           //       );
           //     });
-          // Navigator.of(context).pushReplacement(
-          //     MaterialPageRoute(builder: (_) => FinRegMedico33_1()));
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (_) => FinRegMedico34()));
           // FocusScope.of(context).unfocus();
         } else {
           //print('Error en el registro');
@@ -176,7 +184,7 @@ class MyCustomFormFinRegMedico33_1State
       id_medico = prefs.getInt('id_medico') ?? 0;
     });
 
-    Pantalla.text = 'FinSolicitar35';
+    Pantalla.text = 'FinSolicitar33_1';
     IDMedico.text = "$id_medico";
   }
 
@@ -272,92 +280,6 @@ class MyCustomFormFinRegMedico33_1State
     }
   }*/
 
-  Dio dio = new Dio();
-  Future<void> subir_imagen() async {
-    try {
-      final req = {
-        'Pantalla': 'FinSolicitar33_1',
-        'id_medico': "$id_medico",
-        //'file': globalimageUpdate
-      };
-
-      var url = Uri.https('fasoluciones.mx', 'api/Medico/Agregar');
-      var request = await http.post(url,
-          body: jsonEncode(<String, String>{
-            'Pantalla': 'FinSolicitar33_1',
-            'id_medico': id_medico.toString(),
-          }));
-      dev.log(request.body.toString());
-
-      // var client = http.Client();
-      // var request = http.MultipartRequest('POST', url);
-      // request = jsonToFormData(request, req);
-
-      // request.fields.addAll(req);
-
-      // var file = await http.MultipartFile.fromString('file', globalimageUpdate);
-      // request.files.add(file);
-
-      // final response = await client.send(request);
-
-      // if (response.statusCode == 302) {
-      //   var redirectUrl = response.headers['location'];
-      //   if (redirectUrl != null) {
-      //     var redirectResponse = await http.post(url);
-      //     final responseData = redirectResponse.body;
-      //     dev.log(responseData.toString());
-      //   }
-      // }
-      // request = jsonToFormData(request, req);
-      // try {
-      //   final respons = await client.send(request);
-      //   dev.log(respons.statusCode.toString());
-
-      //   if (response.statusCode == 302) {
-      //     dev.log("e");
-      //     // Manejar redirección obteniendo la nueva ubicación
-      //     var redirectUrl = respons.headers['location'];
-      //     if (redirectUrl != null) {
-      //       var redirectUri = Uri.parse(redirectUrl);
-      //       var redirectRequest = http.MultipartRequest('POST', redirectUri);
-      //       redirectRequest = jsonToFormData(redirectRequest, req);
-      //       final redirectResponse = await redirectRequest.send();
-      //       dev.log(redirectResponse.statusCode.toString());
-      //     } else {
-      //       dev.log('Error: Redirección sin URL de ubicación');
-      //     }
-      //   } else {
-      //     dev.log(response.statusCode.toString());
-      //   }
-      // } catch (error) {
-      //   dev.log("error");
-      // }
-
-      // if (imagen == null) {
-      //   showDialog(
-      //       context: context,
-      //       builder: (BuildContext context) {
-      //         return AlertDialog(
-      //           title: Text('Por favor selecciona una imagen'),
-      //         );
-      //       });
-      // } else {
-      //   Navigator.of(context).pushReplacement(
-      //       MaterialPageRoute(builder: (_) => FinRegMedico34()));
-      // }
-    } catch (e) {
-      dev.log("as");
-      dev.log(e.toString());
-    }
-  }
-
-  jsonToFormData(http.MultipartRequest request, Map<String, dynamic> data) {
-    for (var key in data.keys) {
-      request.fields[key] = data[key].toString();
-    }
-    return request;
-  }
-
   opciones(context) {
     showDialog(
         context: context,
@@ -448,7 +370,7 @@ class MyCustomFormFinRegMedico33_1State
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 // headerTop("Médicos", 'Estado de cuenta'),
-                SubitleCards('Estado de cuenta'),
+                SubitleCards('Estado de cuentass'),
                 SizedBox(height: 20),
 
                 Container(
@@ -491,7 +413,10 @@ class MyCustomFormFinRegMedico33_1State
                 imagen == null ? Center() : Image.file(imagen!),
                 ElevatedButton(
                     onPressed: () {
-                      subir_imagen();
+                      IDMedicoRecibe = IDMedico.text;
+                      PantallaRecibe = Pantalla.text;
+                      Ingresar(
+                          PantallaRecibe, IDMedicoRecibe, globalimageUpdate);
                     },
                     child: Text('Siguiente',
                         style: TextStyle(color: Colors.white))),
@@ -535,33 +460,6 @@ class MyCustomFormFinRegMedico33_1State
                 hintText: ''),
           ),
         ));
-  }
-
-  Widget _BotonEnviar() {
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.all(10),
-      child: ElevatedButton(
-          onPressed: () {
-            if (_formKey.currentState!.validate()) {
-              PantallaRecibe = Pantalla.text;
-              IDMedicoRecibe = IDMedico.text;
-
-              if (PantallaRecibe == "" || IDMedicoRecibe == "") {
-                showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text('Error: Todos los campos son obligatorios'),
-                      );
-                    });
-              } else {
-                Ingresar(PantallaRecibe, IDMedicoRecibe);
-              }
-            }
-          },
-          child: const Text('Siguientes')),
-    );
   }
 
   Widget _Avanzar() {

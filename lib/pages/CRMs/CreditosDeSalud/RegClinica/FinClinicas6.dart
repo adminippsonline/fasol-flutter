@@ -146,8 +146,8 @@ class MyCustomFormFinClinicas6State extends State<MyCustomFormFinClinicas6> {
   String MunDelRecibe = "";
   String ColoniaRecibe = "";
 
-  void Ingresar(Pantalla, IDClinica, CP, Pais, Ciudad, Calle, NumExt,
-      NumInt, EntCall, Estado, MunDel, Colonia) async {
+  void Ingresar(Pantalla, IDClinica, CP, Pais, Ciudad, Calle, NumExt, NumInt,
+      EntCall, Estado, MunDel, Colonia) async {
     try {
       var url = Uri.https('fasoluciones.mx', 'api/Clinica/Agregar');
       var response = await http.post(url, body: {
@@ -253,8 +253,7 @@ class MyCustomFormFinClinicas6State extends State<MyCustomFormFinClinicas6> {
   Widget build(BuildContext context) {
     return BuildScreens(
         'Clínica', '', '', 'Datos de la clínica', '', _formulario());
-  } 
-
+  }
 
   Widget _formulario() {
     return Form(
@@ -360,28 +359,18 @@ class MyCustomFormFinClinicas6State extends State<MyCustomFormFinClinicas6> {
         ));
   }
 
-  
-
   List<dynamic> _colonyList = [];
   Future obtenerCP(var codigo) async {
     dev.log("t");
     final req = {"CP": codigo};
-    var url = Uri.parse('https://fasoluciones.mx/api/Solicitud/Catalogos/CP/');
 
-    var request = await http.MultipartRequest('POST', url);
-    request = jsonToFormData(request, req);
-
-    final response = await request.send();
+    var url =
+        Uri.parse('https://fasoluciones.mx/api/Solicitud/Catalogos/CP/$codigo');
+    var response = await http.get(url);
     if (response.statusCode == 200) {
-      final responseData =
-          await response.stream.bytesToString(); //response.stream.toBytes();
-      //dev.log(responseData.toString());
-
-      var responseString = responseData;
-      final dat = json.decode(responseString);
-      dev.log("adata");
-      dev.log(dat.toString());
-      var data = json.decode(responseString)['data'][0];
+      final dat = json.decode(response.body);
+      var data = json.decode(response.body)['data'][0];
+      dev.log(data.toString());
       setState(() {
         // Colonia.text = data['Estado'].toString();
         MunDel.text = data['MunDel'].toString();
@@ -617,7 +606,7 @@ class MyCustomFormFinClinicas6State extends State<MyCustomFormFinClinicas6> {
               newValue = newValue;
               _selectedColony = newValue;
             });
-          }, 
+          },
           validator: ObligatorioSelect,
           decoration: InputDecoration(
             isDense: true,
@@ -689,7 +678,7 @@ class MyCustomFormFinClinicas6State extends State<MyCustomFormFinClinicas6> {
                         title: Text('La colonia es obligatoria'),
                       );
                     });
-                    ColoniaRecibe="";
+                ColoniaRecibe = "";
               }
 
               if (PantallaRecibe == "" ||
@@ -731,6 +720,7 @@ class MyCustomFormFinClinicas6State extends State<MyCustomFormFinClinicas6> {
           child: const Text('Siguiente')),
     );
   }
+
   Widget _Avanzar() {
     return Container(
       width: double.infinity,
@@ -743,8 +733,8 @@ class MyCustomFormFinClinicas6State extends State<MyCustomFormFinClinicas6> {
         )),
         onTap: () {
           Navigator.of(context).pop();
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => FinClinicas7()));
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => FinClinicas7()));
         },
       ),
     );

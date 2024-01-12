@@ -28,8 +28,6 @@ import 'package:email_validator/email_validator.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 
-
-
 import 'package:intl/intl.dart';
 
 import 'package:fad_bio/fad_bio.dart';
@@ -124,8 +122,6 @@ class MyCustomFormFinClinicas5_1_VideoState
     return "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA5PxZ3DLj+zP6T6HFgzzk\nM77LdzP3fojBoLasw7EfzvLMnJNUlyRb5m8e5QyyJxI+wRjsALHvFgLzGwxM8ehz\nDqqBZed+f4w33GgQXFZOS4AOvyPbALgCYoLehigLAbbCNTkeY5RDcmmSI/sbp+s6\nmAiAKKvCdIqe17bltZ/rfEoL3gPKEfLXeN549LTj3XBp0hvG4loQ6eC1E1tRzSkf\nGJD4GIVvR+j12gXAaftj3ahfYxioBH7F7HQxzmWkwDyn3bqU54eaiB7f0ftsPpWM\nceUaqkL2DZUvgN0efEJjnWy5y1/Gkq5GGWCROI9XG/SwXJ30BbVUehTbVcD70+ZF\n8QIDAQAB\n-----END PUBLIC KEY-----";
   }
 
-  
-
   //Los controladores para los input
   final Pantalla = TextEditingController();
   final IDClinica = TextEditingController();
@@ -149,11 +145,9 @@ class MyCustomFormFinClinicas5_1_VideoState
       dev.log('Código de estado: ${response.statusCode}');
       dev.log('Cuerpo de la respuesta: ${response.data}');
 
-      Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (_) => FinClinicas5()));
-        FocusScope.of(context).unfocus();
-
-
+      Navigator.of(context)
+          .pushReplacement(MaterialPageRoute(builder: (_) => FinClinicas5()));
+      FocusScope.of(context).unfocus();
 
       // var videoFile = http.MultipartFile.fromBytes('video', videoBytes,
       //     contentType: MediaType('video', 'mp4'));
@@ -265,19 +259,17 @@ class MyCustomFormFinClinicas5_1_VideoState
     }
   }
 
-  void Consultar(
-    
-      IDClinica
-      ) async {
+  void Consultar(IDClinica) async {
     try {
       var url = Uri.https('fasoluciones.mx', 'api/Clinica/Agregar');
-      var data ={
+      var data = {
         'Pantalla': "FinClinicas5_1",
         'SubPantalla': 'FinClinicas5_1_VideoInfo',
         'id_clinica': IDClinica
       };
       print(data);
-      var response = await http.post(url, body: data).timeout(const Duration(seconds: 90));
+      var response =
+          await http.post(url, body: data).timeout(const Duration(seconds: 90));
       print("llego aqui 111");
       print(response.body);
 
@@ -287,7 +279,6 @@ class MyCustomFormFinClinicas5_1_VideoState
         String status = Respuesta['status'];
         if (status == "OK") {
           //print('si existe aqui -----');
-          
         } else {
           //print('Error en el registro');
           showDialog(
@@ -374,8 +365,6 @@ class MyCustomFormFinClinicas5_1_VideoState
         'Información Personal', '', _formulario());
   }
 
- 
- 
   jsonToFormData(http.MultipartRequest request, Map<String, dynamic> data) {
     for (var key in data.keys) {
       request.fields[key] = data[key].toString();
@@ -416,46 +405,47 @@ class MyCustomFormFinClinicas5_1_VideoState
                     ]),
                   ),
                 ),
-               
+
                 _Pantalla(),
                 _IDClinica(),
                 SizedBox(height: 30),
-                if (_fadResponse=="") 
-                ElevatedButton(
-                  onPressed: () {
-                    initVideoAgreement();
-                  },
-                  child: const Text('Iniciar Acuerdo Video'),
-                ),
-                if (_fadResponse!="") 
-                ElevatedButton(
-                  onPressed: () {
-                    initVideoAgreement();
-                  },
-                  child: const Text('Actulizar Acuerdo video'),
-                ),
+                if (_fadResponse == "")
+                  ElevatedButton(
+                    onPressed: () {
+                      initVideoAgreement();
+                    },
+                    child: const Text('Iniciar Acuerdo Video'),
+                  ),
+                if (_fadResponse != "")
+                  ElevatedButton(
+                    onPressed: () {
+                      initVideoAgreement();
+                    },
+                    child: const Text('Actulizar Acuerdo video'),
+                  ),
 
                 SizedBox(
                   height: 20,
                 ),
-                if (_fadResponse!="" && _fadResponse != "Cancelado por el usuario") 
-                Container(
-                    padding: EdgeInsets.only(left: 10.0),
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                        //border: Border.all(
-                        //color: Colors.blueAccent
-                        //)
+                if (_fadResponse != "" &&
+                    _fadResponse != "Cancelado por el usuario")
+                  Container(
+                      padding: EdgeInsets.only(left: 10.0),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          //border: Border.all(
+                          //color: Colors.blueAccent
+                          //)
+                          ),
+                      child: Text(
+                        "Listo, puedes avanzar",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 17,
+                          //color: Colors.blue
                         ),
-                    child: Text(
-                      "Listo, puedes avanzar",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 17,
-                        //color: Colors.blue
-                      ),
-                      textScaleFactor: 1,
-                    )),
+                        textScaleFactor: 1,
+                      )),
                 // Container(
                 //   margin: EdgeInsets.all(16),
                 //   child: SingleChildScrollView(
@@ -472,109 +462,105 @@ class MyCustomFormFinClinicas5_1_VideoState
                   width: double.infinity,
                   padding: EdgeInsets.all(10),
                   child: ElevatedButton(
-                    onPressed: () async {
-                      if (_fadResponse == "") {
-                        showDialog(
+                      onPressed: () async {
+                        if (_fadResponse == "") {
+                          showDialog(
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
                                   title: Text('Error: Graba tu video'),
                                 );
-                              }); 
-                      }
-                      else if (_fadResponse == "Cancelado por el usuario") {
-                        showDialog(
+                              });
+                        } else if (_fadResponse == "Cancelado por el usuario") {
+                          showDialog(
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
-                                  title: Text('Error: Cancelado por el usuario'),
+                                  title:
+                                      Text('Error: Cancelado por el usuario'),
                                 );
-                              }); 
-                      }
-                      else{
+                              });
+                        } else {
+                          dev.log(_fadResponse);
+                          String ine = "";
 
+                          var res = json.decode(_fadResponse);
+                          // dev.log(res.toString());
+                          // dev.log(res['videoAgreementResult'].toString());
+                          // dev.log(res['videoAgreementResult']['file']
+                          //         ['videoAgreement.mp4']
+                          //     .toString());
+                          final bytes = File(res['videoAgreementResult']['file']
+                                  ['videoAgreement.mp4'])
+                              .readAsBytesSync();
 
-                        dev.log(_fadResponse);
-                        String ine = ""; 
+                          // dev.log(bytes.toString());
 
-                        var res = json.decode(_fadResponse);
-                        // dev.log(res.toString());
-                        // dev.log(res['videoAgreementResult'].toString());
-                        // dev.log(res['videoAgreementResult']['file']
-                        //         ['videoAgreement.mp4']
-                        //     .toString());
-                        final bytes = File(res['videoAgreementResult']['file']
-                                ['videoAgreement.mp4'])
-                            .readAsBytesSync();
+                          setState(() {
+                            globalVideoUpdate = bytes;
+                            //print(globalimageUpdate);
+                            PantallaRecibe = Pantalla.text;
+                            IDClinicaRecibe = IDClinica.text;
+                            Ingresar(PantallaRecibe, IDClinicaRecibe, bytes);
+                          });
 
-                            
-                        // dev.log(bytes.toString());
+                          // final bytes = await blobToBytes(
+                          //     res['videoAgreementResult']['file']
+                          //         ['videoAgreement.mp4']);
+                          // final directory =
+                          //     await getApplicationDocumentsDirectory();
+                          // final filePath = '${directory.path}/video.mp4';
 
-                        setState(() {
-                          globalVideoUpdate = bytes;
-                           //print(globalimageUpdate);
-                          PantallaRecibe = Pantalla.text;
-                          IDClinicaRecibe = IDClinica.text;
-                          Ingresar(PantallaRecibe, IDClinicaRecibe, bytes);
-                        });
+                          // final bytes = File(res['videoAgreementResult']['file']
+                          //     ['videoAgreement.mp4']);
 
-                        // final bytes = await blobToBytes(
-                        //     res['videoAgreementResult']['file']
-                        //         ['videoAgreement.mp4']);
-                        // final directory =
-                        //     await getApplicationDocumentsDirectory();
-                        // final filePath = '${directory.path}/video.mp4';
+                          // dev.log(bytes.toString());
 
-                        // final bytes = File(res['videoAgreementResult']['file']
-                        //     ['videoAgreement.mp4']);
+                          // final blob = new Blob(await bytes.readAsBytes());
 
-                        // dev.log(bytes.toString());
+                          // for (var j in res['videoAgreementResult']) {
+                          //   dev.log(j.toString());
+                          //   // dev.log(j['videoAgreement.mp4']);
+                          // }
+                          //dev.log(res['faceB64'].toString());
+                          // var respuesta = res['faceB64'].toString();
+                          // String imagen = respuesta;
+                          // globalVideoUpdate = imagen;
+                          // dev.log("imag");
+                          // dev.log(globalVideoUpdate);
 
-                        // final blob = new Blob(await bytes.readAsBytes());
+                          // setState(() {
+                          //   String imagen = respuesta;
+                          //   globalVideoUpdate = imagen;
+                          // });
 
-                        // for (var j in res['videoAgreementResult']) {
-                        //   dev.log(j.toString());
-                        //   // dev.log(j['videoAgreement.mp4']);
-                        // }
-                        //dev.log(res['faceB64'].toString());
-                        // var respuesta = res['faceB64'].toString();
-                        // String imagen = respuesta;
-                        // globalVideoUpdate = imagen;
-                        // dev.log("imag");
-                        // dev.log(globalVideoUpdate);
+                          // for (var j in res['documents']) {
+                          //   dev.log(j['captures']['ineAnverso.png'].toString());
+                          //   //  ine = j['data'].toString();
+                          //   //bytes = base64Encode(j['captures']);
+                          //   // setState(() {
+                          //   //   ine = j['data'].toString();
+                          //   // });
 
-                        // setState(() {
-                        //   String imagen = respuesta;
-                        //   globalVideoUpdate = imagen;
-                        // });
+                          //   var bytes =
+                          //       File(j['captures']['ineAnverso.png']).readAsBytes();
+                          //   dev.log(bytes.toString());
 
-                        // for (var j in res['documents']) {
-                        //   dev.log(j['captures']['ineAnverso.png'].toString());
-                        //   //  ine = j['data'].toString();
-                        //   //bytes = base64Encode(j['captures']);
-                        //   // setState(() {
-                        //   //   ine = j['data'].toString();
-                        //   // });
+                          //   // base64Encode(j['captures']['ineAnverso.png']);
+                          //   // enviarINE(bytes, id_clinica, id_info);
 
-                        //   var bytes =
-                        //       File(j['captures']['ineAnverso.png']).readAsBytes();
-                        //   dev.log(bytes.toString());
+                          //   //ESTE ES EL BUENO
+                          //   //enviarINE(j['data'].toString(), id_clinica, id_info);
+                          // }
 
-                        //   // base64Encode(j['captures']['ineAnverso.png']);
-                        //   // enviarINE(bytes, id_clinica, id_info);
-
-                        //   //ESTE ES EL BUENO
-                        //   //enviarINE(j['data'].toString(), id_clinica, id_info);
-                        // }
-
-                        // var resp = _fadResponse.toString();
-                        // var respuesta = json.encode(_fadResponse);
-                        // dev.log("obtebiendo");
-                        // dev.log(respuesta);
-                      }
-                    },
-                    child: Text("Siguiente")),
-                ),   
+                          // var resp = _fadResponse.toString();
+                          // var respuesta = json.encode(_fadResponse);
+                          // dev.log("obtebiendo");
+                          // dev.log(respuesta);
+                        }
+                      },
+                      child: Text("Siguiente")),
+                ),
                 SizedBox(
                   height: 20,
                 ),
@@ -664,7 +650,6 @@ class MyCustomFormFinClinicas5_1_VideoState
         ));
   }
 
-  
   Widget _BotonEnviar() {
     return Container(
       width: double.infinity,
@@ -687,8 +672,7 @@ class MyCustomFormFinClinicas5_1_VideoState
               PantallaRecibe = Pantalla.text;
               IDClinicaRecibe = IDClinica.text;
 
-              if (PantallaRecibe == "" ||
-                  IDClinicaRecibe == "" ) {
+              if (PantallaRecibe == "" || IDClinicaRecibe == "") {
                 showDialog(
                     context: context,
                     builder: (BuildContext context) {
@@ -699,8 +683,7 @@ class MyCustomFormFinClinicas5_1_VideoState
               } else {
                 // dev.log(videoBytes.toString());
                 // dev.log("aquis arribas hay bytes");
-                Ingresar(
-                    PantallaRecibe, IDClinicaRecibe, videoBytes);
+                Ingresar(PantallaRecibe, IDClinicaRecibe, videoBytes);
               }
             }
           },
@@ -720,8 +703,8 @@ class MyCustomFormFinClinicas5_1_VideoState
         )),
         onTap: () {
           Navigator.of(context).pop();
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => FinClinicas5()));
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => FinClinicas5()));
         },
       ),
     );

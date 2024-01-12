@@ -40,7 +40,6 @@ class _FinSolicitar15State extends State<FinSolicitar15> {
   String CorreoSession = "";
   String TelefonoSession = "";
 
-  
   @override
   void initState() {
     super.initState();
@@ -80,7 +79,7 @@ class MyCustomFormFinSolicitar15State
 
   final List<String> ListaPais = ['México'];
   String? SelectedListaPais;
-  
+
   final List<String> ListaEstado = [
     'Aguascalientes',
     'Baja California',
@@ -273,7 +272,6 @@ class MyCustomFormFinSolicitar15State
   String CorreoSession = "";
   String TelefonoSession = "";
 
-
   List _coloniaf = [];
 
   @override
@@ -298,13 +296,10 @@ class MyCustomFormFinSolicitar15State
     dev.log("Focus: ${_focus.hasFocus.toString()}");
   }
 
-  
-
   void mostrar_datos() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      NombreCompletoSession =
-          prefs.getString('NombreCompletoSession') ?? '';
+      NombreCompletoSession = prefs.getString('NombreCompletoSession') ?? '';
       id_solicitud = prefs.getInt('id_solicitud') ?? 0;
       id_credito = prefs.getInt('id_credito') ?? 0;
     });
@@ -323,7 +318,8 @@ class MyCustomFormFinSolicitar15State
   Future obtenerCP(var codigo) async {
     dev.log("t");
     final req = {"CP": codigo};
-    var url = Uri.parse('https://fasoluciones.mx/api/Solicitud/Catalogos/CP/');
+    var url =
+        Uri.parse('https://fasoluciones.mx/api/Solicitud/Catalogos/CP/$codigo');
 
     var request = await http.MultipartRequest('POST', url);
     request = jsonToFormData(request, req);
@@ -420,99 +416,98 @@ class MyCustomFormFinSolicitar15State
     return request;
   }
 
-  @override 
+  @override
   Widget build(BuildContext context) {
     return BuildScreens(
         'Solicitud', '', '', 'Datos de la solicitud', '', _formulario());
-  } 
-
+  }
 
   Widget _formulario() {
     return Form(
-            key: _formKey,
-            child: SingleChildScrollView(
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
+        key: _formKey,
+        child: SingleChildScrollView(
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                SubitleCards("Solicitar un crédito "),
+                SizedBox(
+                  height: 20,
+                ),
+                _Pantalla(),
+                _idLR(),
+                _IDInfo(),
+                Row(
                   children: <Widget>[
-                    SubitleCards("Solicitar un crédito "),
-                    SizedBox(
-                      height: 20,
+                    Expanded(
+                      child: _CP(),
                     ),
-                    _Pantalla(),
-                    _idLR(),
-                    _IDInfo(),
-                    Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: _CP(),
-                        ),
-                        Expanded(
-                          child: _Pais(),
-                        ),
-                      ],
+                    Expanded(
+                      child: _Pais(),
                     ),
-                    _Calle(),
-                    Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: _NumExt(),
-                        ),
-                        Expanded(
-                          child: _NumInt(),
-                        ),
-                      ],
+                  ],
+                ),
+                _Calle(),
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: _NumExt(),
                     ),
-                    _EntCall(),
-                    Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: _Estado(),
-                        ),
-                        Expanded(
-                          child: _Ciudad(),
-                        ),
-                      ],
+                    Expanded(
+                      child: _NumInt(),
                     ),
-                    Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: _MunDel(),
-                        ),
-                        Expanded(
-                          child: _Colonia(),
-                        ),
-                      ],
+                  ],
+                ),
+                _EntCall(),
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: _Estado(),
                     ),
-                    Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: _TipodeVivienda(),
-                        ),
-                      ],
+                    Expanded(
+                      child: _Ciudad(),
                     ),
-                    Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: _Antiguedad(),
-                        ),
-                        Expanded(
-                          child: _AntiguedadTiempo(),
-                        ),
-                      ],
+                  ],
+                ),
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: _MunDel(),
                     ),
-                    SizedBox(
-                      height: 20,
+                    Expanded(
+                      child: _Colonia(),
                     ),
-                    _BotonEnviar(),
-                    SizedBox(
-                      height: 20,
+                  ],
+                ),
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: _TipodeVivienda(),
                     ),
-                    _Avanzar()
-                  ]),
-            ));
+                  ],
+                ),
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: _Antiguedad(),
+                    ),
+                    Expanded(
+                      child: _AntiguedadTiempo(),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                _BotonEnviar(),
+                SizedBox(
+                  height: 20,
+                ),
+                _Avanzar()
+              ]),
+        ));
   }
 
-  Widget _Pantalla() { 
+  Widget _Pantalla() {
     return Visibility(
         visible: false,
         child: Container(
@@ -566,7 +561,7 @@ class MyCustomFormFinSolicitar15State
         ));
   }
 
- FocusNode _focus = FocusNode();
+  FocusNode _focus = FocusNode();
 
   Widget _CP() {
     return Container(
@@ -1059,21 +1054,21 @@ class MyCustomFormFinSolicitar15State
                     });
               }
 
-print(PantallaRecibe);
-print(idLRRecibe);
-print(IDInfoRecibe);
-print(CPRecibe);
-print(PaisRecibe);
-print(CiudadRecibe);
-print(CalleRecibe);
-print(NumExtRecibe);
-print(NumIntRecibe);
-print(EntCallRecibe);
-print(EstadoRecibe);
-print(MunDelRecibe);
-print(TipodeViviendaRecibe);
-print(AntiguedadRecibe);
-print(AntiguedadTiempoRecibe);
+              print(PantallaRecibe);
+              print(idLRRecibe);
+              print(IDInfoRecibe);
+              print(CPRecibe);
+              print(PaisRecibe);
+              print(CiudadRecibe);
+              print(CalleRecibe);
+              print(NumExtRecibe);
+              print(NumIntRecibe);
+              print(EntCallRecibe);
+              print(EstadoRecibe);
+              print(MunDelRecibe);
+              print(TipodeViviendaRecibe);
+              print(AntiguedadRecibe);
+              print(AntiguedadTiempoRecibe);
 
               if (PantallaRecibe == "" ||
                   idLRRecibe == "" ||
@@ -1121,6 +1116,7 @@ print(AntiguedadTiempoRecibe);
           child: const Text('Siguiente')),
     );
   }
+
   Widget _Avanzar() {
     return Container(
       width: double.infinity,

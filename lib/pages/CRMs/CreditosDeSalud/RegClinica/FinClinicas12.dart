@@ -77,8 +77,7 @@ class MyCustomFormFinClinicas12 extends StatefulWidget {
   }
 }
 
-class MyCustomFormFinClinicas12State
-    extends State<MyCustomFormFinClinicas12> {
+class MyCustomFormFinClinicas12State extends State<MyCustomFormFinClinicas12> {
   //el fomrKey para formulario
   final _formKey = GlobalKey<FormState>();
 
@@ -113,7 +112,6 @@ class MyCustomFormFinClinicas12State
     );
   }
 
-
   String? _opcionesEsSocioAccionista;
   bool _siEsSocioAccionista = false;
 
@@ -135,6 +133,7 @@ class MyCustomFormFinClinicas12State
       child: Text("generar formulario Socios"),
     );
   }
+
   /////////////
   String? _opcionesEstadoCivil;
   bool _casadoEstadoCivil = false;
@@ -168,8 +167,6 @@ class MyCustomFormFinClinicas12State
       _siElPadreVive = value == "Si";
     });
   }
-
-  
 
   ////////////////////////////
 
@@ -246,44 +243,43 @@ class MyCustomFormFinClinicas12State
   String EsSocioAccionistaRecibe = "";
   String CuantasEmpresasRecibe = "";
 
-  String jsonStringHihos="";
-  String jsonStringSocios="";
+  String jsonStringHihos = "";
+  String jsonStringSocios = "";
   void Ingresar(
-    Pantalla,
-    IDClinica,
-    NombreEmpresa,
-    TipoFondo,
-    IngresoMensual,
-    ConHijos,
-    CuantosHijos,
-    Hijos,
-    EstadoCivil,
-    Conyuge_PrimerNombre,
-    Conyuge_SegundoNombre,
-    Conyuge_ApellidoPaterno,
-    Conyuge_ApellidoMaterno,
-    Conyuge_Direccion,
-    LaMadreVive,
-    Madre_PrimerNombre,
-    Madre_SegundoNombre,
-    Madre_ApellidoPaterno,
-    Madre_ApellidoMaterno,
-    Madre_Direccion,
-    ElPadreVive,
-    Padre_PrimerNombre,
-    Padre_SegundoNombre,
-    Padre_ApellidoPaterno,
-    Padre_ApellidoMaterno,
-    Padre_Direccion,
-    EsSocioAccionista,
-    CuantasEmpresas,
-    Socios
-  ) async {
+      Pantalla,
+      IDClinica,
+      NombreEmpresa,
+      TipoFondo,
+      IngresoMensual,
+      ConHijos,
+      CuantosHijos,
+      Hijos,
+      EstadoCivil,
+      Conyuge_PrimerNombre,
+      Conyuge_SegundoNombre,
+      Conyuge_ApellidoPaterno,
+      Conyuge_ApellidoMaterno,
+      Conyuge_Direccion,
+      LaMadreVive,
+      Madre_PrimerNombre,
+      Madre_SegundoNombre,
+      Madre_ApellidoPaterno,
+      Madre_ApellidoMaterno,
+      Madre_Direccion,
+      ElPadreVive,
+      Padre_PrimerNombre,
+      Padre_SegundoNombre,
+      Padre_ApellidoPaterno,
+      Padre_ApellidoMaterno,
+      Padre_Direccion,
+      EsSocioAccionista,
+      CuantasEmpresas,
+      Socios) async {
     //print("xxxxx");
     try {
       var url = Uri.https('fasoluciones.mx', 'api/Clinica/Agregar');
       //print(Hijos);
-       
+
       //final MandarHijos = json.decode(Hijos);
       final MandarHijos = "";
       //final MandarSocios = json.decode(Socios);
@@ -299,7 +295,7 @@ class MyCustomFormFinClinicas12State
         'IngresoMensual': IngresoMensual,
         'ConHijos': ConHijos,
         'CuantosHijos': CuantosHijos,
-        'Hijos':MandarHijos, 
+        'Hijos': jsonHijosCodificados,
         'EstadoCivil': EstadoCivil,
         'Conyuge_PrimerNombre': Conyuge_PrimerNombre,
         'Conyuge_SegundoNombre': Conyuge_SegundoNombre,
@@ -319,18 +315,17 @@ class MyCustomFormFinClinicas12State
         'Padre_ApellidoMaterno': Padre_ApellidoMaterno,
         'Padre_Direccion': Padre_Direccion,
         'EsSocioAccionista': EsSocioAccionista,
-        'CuantasEmpresas': CuantasEmpresas,
-        'Socios': MandarSocios,
+        'CuantasEmpresas': numSocios.toString(),
+        'SocioOAccionista': jsonSociosCodificados,
       };
       /*print("**");
       print(Mandar);
       print("**");*/
-
-      var response = await http
-          .post(url, body: Mandar)
-          .timeout(const Duration(seconds: 90));
-      //print("llego aqui 111");
-      //print(response.body);
+      // dev.log("mandar");
+      // dev.log(Mandar.toString());
+      var response = await http.post(url, body: Mandar);
+      dev.log(response.statusCode.toString());
+      dev.log(response.body);
 
       if (response.body != "0" && response.body != "") {
         var Respuesta = jsonDecode(response.body);
@@ -412,7 +407,7 @@ class MyCustomFormFinClinicas12State
       id_clinica = prefs.getInt('id_clinica') ?? 0;
     });
 
-    Pantalla.text = 'FinSolicitar32';
+    Pantalla.text = 'FinClinicas12';
     IDClinica.text = "$id_clinica";
   }
 
@@ -424,6 +419,7 @@ class MyCustomFormFinClinicas12State
 
   final TextEditingController _controller = TextEditingController();
   int n = 0; // Cantidad de campos a generar
+  int numSocios = 0;
   List<HijosModel> camposData = [];
   List<Widget> campos = [];
   int selectedOption = 0; // Opción seleccionada del radio button
@@ -432,7 +428,6 @@ class MyCustomFormFinClinicas12State
   List<SociosModel> camposDataSocios = [];
   List<Widget> camposSocios = [];
   int selectedOptionSocios = 0; // Opción seleccionada del radio button
-
 
   Widget _formulario() {
     return Form(
@@ -538,6 +533,7 @@ class MyCustomFormFinClinicas12State
                 //     padding: const EdgeInsets.only(left: 0, bottom: 0),
                 //     child: _CuantosHijos(),
                 //   ),
+                // Text(datosHijos.toString()),
                 SizedBox(
                   height: 20,
                 ),
@@ -577,7 +573,6 @@ class MyCustomFormFinClinicas12State
                           onChanged: SeleccionadoEstadoCivil,
                         ),
                       ),
-                      
                       Expanded(
                           child: RadioListTile(
                         title: const Text('Casado',
@@ -591,7 +586,6 @@ class MyCustomFormFinClinicas12State
                       )),
                     ],
                   ),
-                  
                 ),
                 if (_casadoEstadoCivil)
                   Container(
@@ -878,7 +872,7 @@ class MyCustomFormFinClinicas12State
                 //     padding: const EdgeInsets.only(left: 0, bottom: 0),
                 //     child: _CuantosHijos(),
                 //   ),
-                
+
                 SizedBox(
                   height: 20,
                 ),
@@ -904,117 +898,115 @@ class MyCustomFormFinClinicas12State
           padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: SingleChildScrollView(
             child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                            labelText: 'Primer nombre',
-                          ),
-                          onChanged: (value) {
-                            setState(() {
-                              nuevoCampo.H_PrimerNombre = value;
-                            });
-                          },
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        decoration: InputDecoration(
+                          labelText: 'Primer nombre',
                         ),
+                        onChanged: (value) {
+                          setState(() {
+                            nuevoCampo.H_PrimerNombre = value;
+                          });
+                        },
                       ),
-                      SizedBox(width: 16.0),
-                      Expanded(
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                            labelText: 'Segundo nombre',
-                          ),
-                          onChanged: (value) {
-                            setState(() {
-                              nuevoCampo.H_SegundoNombre = value;
-                            });
-                          },
+                    ),
+                    SizedBox(width: 16.0),
+                    Expanded(
+                      child: TextFormField(
+                        decoration: InputDecoration(
+                          labelText: 'Segundo nombre',
                         ),
+                        onChanged: (value) {
+                          setState(() {
+                            nuevoCampo.H_SegundoNombre = value;
+                          });
+                        },
                       ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                            labelText: 'Primer apellido',
-                          ),
-                          onChanged: (value) {
-                            setState(() {
-                              nuevoCampo.H_ApellidoPaterno = value;
-                            });
-                          },
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        decoration: InputDecoration(
+                          labelText: 'Primer apellido',
                         ),
+                        onChanged: (value) {
+                          setState(() {
+                            nuevoCampo.H_ApellidoPaterno = value;
+                          });
+                        },
                       ),
-                      SizedBox(width: 16.0),
-                      Expanded(
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                            labelText: 'Segundo apellido',
-                          ),
-                          onChanged: (value) {
-                            setState(() {
-                              nuevoCampo.H_ApellidoMaterno = value;
-                            });
-                          },
+                    ),
+                    SizedBox(width: 16.0),
+                    Expanded(
+                      child: TextFormField(
+                        decoration: InputDecoration(
+                          labelText: 'Segundo apellido',
                         ),
+                        onChanged: (value) {
+                          setState(() {
+                            nuevoCampo.H_ApellidoMaterno = value;
+                          });
+                        },
                       ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                            labelText: 'Edad',
-                          ),
-                          onChanged: (value) {
-                            setState(() {
-                              nuevoCampo.H_Edad = value;
-                            });
-                          },
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        decoration: InputDecoration(
+                          labelText: 'Edad',
                         ),
+                        onChanged: (value) {
+                          setState(() {
+                            nuevoCampo.H_Edad = value;
+                          });
+                        },
                       ),
-                      SizedBox(width: 16.0),
-                      Expanded(
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                            labelText: 'Genero',
-                          ),
-                          onChanged: (value) {
-                            setState(() {
-                              nuevoCampo.H_Genero = value;
-                            });
-                          },
+                    ),
+                    SizedBox(width: 16.0),
+                    Expanded(
+                      child: TextFormField(
+                        decoration: InputDecoration(
+                          labelText: 'Genero',
                         ),
+                        onChanged: (value) {
+                          setState(() {
+                            nuevoCampo.H_Genero = value;
+                          });
+                        },
                       ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                            labelText: 'Dirección',
-                          ),
-                          onChanged: (value) {
-                            setState(() {
-                              nuevoCampo.H_Direccion = value;
-                            });
-                          },
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        decoration: InputDecoration(
+                          labelText: 'Dirección',
                         ),
+                        onChanged: (value) {
+                          setState(() {
+                            nuevoCampo.H_Direccion = value;
+                          });
+                        },
                       ),
-                    ],
-                  ),
-
-                  SizedBox(
-                    height: 20,
-                  ),
-
-                ],  
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+              ],
             ),
           ),
         ),
@@ -1035,82 +1027,83 @@ class MyCustomFormFinClinicas12State
           padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: SingleChildScrollView(
             child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextFormField(
-                          validator: ObligatorioSoloTexto,
-                          decoration: InputDecoration(
-                            labelText: 'Denominación o razón social',
-                          ),
-                          onChanged: (value) {
-                            setState(() {
-                              nuevoCampoSocios.H_NombreEsSocioAccionista = value;
-                            });
-                          },
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        validator: ObligatorioSoloTexto,
+                        decoration: InputDecoration(
+                          labelText: 'Denominación o razón social',
                         ),
+                        onChanged: (value) {
+                          setState(() {
+                            nuevoCampoSocios.H_NombreEsSocioAccionista = value;
+                          });
+                        },
                       ),
-                      SizedBox(width: 16.0),
-                      Expanded(
-                        child: TextFormField(
-                          validator: ObligatorioSoloTexto,
-                          decoration: InputDecoration(
-                            labelText: '% de Participación',
-                          ),
-                          onChanged: (value) {
-                            setState(() {
-                              nuevoCampoSocios.H_ParticipacionEsSocioAccionista = value;
-                            });
-                          },
+                    ),
+                    SizedBox(width: 16.0),
+                    Expanded(
+                      child: TextFormField(
+                        validator: ObligatorioSoloTexto,
+                        decoration: InputDecoration(
+                          labelText: '% de Participación',
                         ),
+                        onChanged: (value) {
+                          setState(() {
+                            nuevoCampoSocios.H_ParticipacionEsSocioAccionista =
+                                value;
+                          });
+                        },
                       ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextFormField(
-                          validator: ObligatorioSoloTexto,
-                          decoration: InputDecoration(
-                            labelText: 'Teléfono',
-                          ),
-                          onChanged: (value) {
-                            setState(() { 
-                              nuevoCampoSocios.H_TelefonoEsSocioAccionista = value;
-                            });
-                          },
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        validator: ObligatorioSoloTexto,
+                        decoration: InputDecoration(
+                          labelText: 'Teléfono',
                         ),
+                        onChanged: (value) {
+                          setState(() {
+                            nuevoCampoSocios.H_TelefonoEsSocioAccionista =
+                                value;
+                          });
+                        },
                       ),
-                      SizedBox(width: 16.0),
-                      Expanded(
-                        child: TextFormField(
-                          validator: ObligatorioSoloTextoYNumeros,
-                          decoration: InputDecoration(
-                            labelText: 'Dirección',
-                          ),
-                          onChanged: (value) {
-                            setState(() {
-                              nuevoCampoSocios.H_DireccionEsSocioAccionista = value;
-                            });
-                          },
+                    ),
+                    SizedBox(width: 16.0),
+                    Expanded(
+                      child: TextFormField(
+                        validator: ObligatorioSoloTextoYNumeros,
+                        decoration: InputDecoration(
+                          labelText: 'Dirección',
                         ),
+                        onChanged: (value) {
+                          setState(() {
+                            nuevoCampoSocios.H_DireccionEsSocioAccionista =
+                                value;
+                          });
+                        },
                       ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-
-                ],  
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+              ],
             ),
           ),
         ),
       );
     }
   }
-
 
   void mostrarModal(BuildContext context) {
     showDialog(
@@ -1186,6 +1179,7 @@ class MyCustomFormFinClinicas12State
                   onChanged: (value) {
                     setState(() {
                       n = int.tryParse(value) ?? 0;
+                      numSocios = int.tryParse(value) ?? 0;
                     });
                   },
                 ),
@@ -1206,27 +1200,31 @@ class MyCustomFormFinClinicas12State
     );
   }
 
-
+  String jsonHijosCodificados = "";
   var datosHijos = [];
   void guardarDatos() {
     for (var campoData in camposData) {
       //dev.log('Nombre: ${campoData.nombre}, Apellido: ${campoData.apellido}');
       //var lista = campoData.nombre + campoData.apellido;
       var lista = {
-        "PrimerNombre":campoData.H_PrimerNombre,
-        "SegundoNombre":campoData.H_SegundoNombre,
-        "ApellidoPaterno":campoData.H_ApellidoPaterno,
-        "ApellidoMaterno":campoData.H_ApellidoMaterno,
-        "Edad":campoData.H_Edad,
-        "Genero":campoData.H_Genero,
-        "Direccion":campoData.H_Direccion,
-        "ViveConmigo":''
-        };
+        "PrimerNombre": campoData.H_PrimerNombre,
+        "SegundoNombre": campoData.H_SegundoNombre,
+        "ApellidoPaterno": campoData.H_ApellidoPaterno,
+        "ApellidoMaterno": campoData.H_ApellidoMaterno,
+        "Edad": campoData.H_Edad,
+        "Genero": campoData.H_Genero,
+        "Direccion": campoData.H_Direccion,
+        "ViveConmigo": ''
+      };
       setState(() {
         datosHijos.add(lista);
       });
+      jsonHijosCodificados = jsonEncode(datosHijos);
+
       // Puedes hacer lo que desees con los datos ingresados, como almacenarlos en una base de datos o enviarlos a través de una API.
     }
+
+    // dev.log(datosHijos.toString());
     /*dev.log("sasd");
     String jsonStringHihos = jsonEncode(datosHijos);
     dev.log(jsonStringHihos.toString());
@@ -1236,23 +1234,29 @@ class MyCustomFormFinClinicas12State
     print("++++++++");*/
   }
 
+  String jsonSociosCodificados = "";
   var datosSocios = [];
   void guardarDatosSocios() {
     //print("aqui voy");
     for (var campoDataSocios in camposDataSocios) {
       //print("Recorriendo");
       //print("***");
-      dev.log('Nombre: ${campoDataSocios.H_NombreEsSocioAccionista}, Apellido: ${campoDataSocios.H_ParticipacionEsSocioAccionista}');
+      // dev.log(
+      //     'Nombre: ${campoDataSocios.H_NombreEsSocioAccionista}, Apellido: ${campoDataSocios.H_ParticipacionEsSocioAccionista}');
       //var lista = campoData.nombre + campoData.apellido;
       var listaSocios = {
-        "NombreEsSocioAccionista":campoDataSocios.H_NombreEsSocioAccionista,
-        "ParticipacionEsSocioAccionista":campoDataSocios.H_ParticipacionEsSocioAccionista,
-        "TelefonoEsSocioAccionista":campoDataSocios.H_TelefonoEsSocioAccionista,
-        "DireccionEsSocioAccionista":campoDataSocios.H_DireccionEsSocioAccionista
-        };
+        "NombreEsSocioAccionista": campoDataSocios.H_NombreEsSocioAccionista,
+        "ParticipacionEsSocioAccionista":
+            campoDataSocios.H_ParticipacionEsSocioAccionista,
+        "TelefonoEsSocioAccionista":
+            campoDataSocios.H_TelefonoEsSocioAccionista,
+        "DireccionEsSocioAccionista":
+            campoDataSocios.H_DireccionEsSocioAccionista
+      };
       setState(() {
         datosSocios.add(listaSocios);
       });
+      jsonSociosCodificados = jsonEncode(datosSocios);
       // Puedes hacer lo que desees con los datos ingresados, como almacenarlos en una base de datos o enviarlos a través de una API.
     }
     /*dev.log("sasd");
@@ -1271,8 +1275,8 @@ class MyCustomFormFinClinicas12State
         return Dialog(
           child: Container(
             padding: EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
+            child: ListView(
+              shrinkWrap: true,
               children: [
                 Text(
                   'Formulario para hijos',
@@ -1282,12 +1286,14 @@ class MyCustomFormFinClinicas12State
                   ),
                 ),
                 SizedBox(height: 16.0),
-                SingleChildScrollView(
-                  child: Column(
-                    children: campos,
-                  ),
-                ),
-                SizedBox(height: 16.0),
+                Container(
+                    height: MediaQuery.of(context).size.height * 0.6,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: campos,
+                      ),
+                    )),
                 ElevatedButton(
                   child: Text('Guardar'),
                   onPressed: () {
@@ -1355,9 +1361,9 @@ class MyCustomFormFinClinicas12State
         // Ejemplo de acción:
         for (int i = 0; i < _nombres.length; i++) {
           var nom = _HPrimerNombre.text[i];
-          dev.log(nom);
-          dev.log('Nombre ${i + 1}: ${nom[i]}');
-          dev.log('Apellido ${i + 1}: ${_apellidos[i]}');
+          // dev.log(nom);
+          // dev.log('Nombre ${i + 1}: ${nom[i]}');
+          // dev.log('Apellido ${i + 1}: ${_apellidos[i]}');
         }
       }
       _HPrimerNombre.clear();
@@ -1463,7 +1469,6 @@ class MyCustomFormFinClinicas12State
         });
   }
 
-
   Future<void> _mostrarModalFormSocios(BuildContext context) async {
     final _formKey = GlobalKey<FormState>();
     List<String> _NombreEsSocioAccionista = [];
@@ -1477,9 +1482,9 @@ class MyCustomFormFinClinicas12State
         // Ejemplo de acción:
         for (int i = 0; i < _NombreEsSocioAccionista.length; i++) {
           var nom_Socios = _HNombreEsSocioAccionista.text[i];
-          dev.log(nom_Socios);
-          dev.log('Nombre ___ ${i + 1}: ${nom_Socios[i]}');
-          dev.log('Apellido___ ${i + 1}: ${_apellidos[i]}');
+          // dev.log(nom_Socios);
+          // dev.log('Nombre ___ ${i + 1}: ${nom_Socios[i]}');
+          // dev.log('Apellido___ ${i + 1}: ${_apellidos[i]}');
         }
       }
       _HNombreEsSocioAccionista.clear();
@@ -1507,8 +1512,9 @@ class MyCustomFormFinClinicas12State
                               children: [
                                 TextFormField(
                                   controller: _HNombreEsSocioAccionista,
-                                  decoration:
-                                      InputDecoration(labelText: 'Denominación o razón social '),
+                                  decoration: InputDecoration(
+                                      labelText:
+                                          'Denominación o razón social '),
                                   validator: (value) {
                                     if (value!.isEmpty) {
                                       return 'Por favor ingresa Denominación o razón social';
@@ -1520,8 +1526,8 @@ class MyCustomFormFinClinicas12State
                                   },
                                 ),
                                 TextFormField(
-                                  decoration:
-                                      InputDecoration(labelText: '% de Participación'),
+                                  decoration: InputDecoration(
+                                      labelText: '% de Participación'),
                                   validator: (value) {
                                     if (value!.isEmpty) {
                                       return 'Por favor ingresa t% de Participación';
@@ -1590,7 +1596,6 @@ class MyCustomFormFinClinicas12State
         ));
   }
 
-  
   Widget _NombreEmpresa() {
     return Container(
       padding: EdgeInsets.all(10),
@@ -1980,12 +1985,10 @@ class MyCustomFormFinClinicas12State
           onPressed: () {
             //var hijos= jsonString;
             //print(datosHijos);
-            
+
             if (_formKey.currentState!.validate()) {
               PantallaRecibe = Pantalla.text;
               IDClinicaRecibe = IDClinica.text;
-
-              
 
               NombreEmpresaRecibe = NombreEmpresa.text;
               //ipoFondoRecibe = TipoFondo.text;
@@ -2087,8 +2090,6 @@ class MyCustomFormFinClinicas12State
               CuantasEmpresasRecibe = CuantasEmpresas.text;
 
               var SociosRecibe = datosSocios;
-              
-              
 
               if (PantallaRecibe == "" ||
                   IDClinicaRecibe == "" ||
@@ -2107,7 +2108,6 @@ class MyCustomFormFinClinicas12State
                         title: Text('Error: Todos los campos son obligatorios'),
                       );
                     });
-                    
               } else {
                 Ingresar(
                     PantallaRecibe,
@@ -2145,6 +2145,7 @@ class MyCustomFormFinClinicas12State
           child: const Text('Siguiente')),
     );
   }
+
   Widget _Avanzar() {
     return Container(
       width: double.infinity,

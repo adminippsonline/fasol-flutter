@@ -23,7 +23,6 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 
 //import 'FinRegMedico36_sui_imagen_no_irve.dart';
 
-
 import 'FinRegMedico38.dart';
 
 import 'package:intl/intl.dart';
@@ -97,24 +96,26 @@ class MyCustomFormFinRegMedico36State
   final IDMedico = TextEditingController();
   final TipoComprobante = TextEditingController();
 
-  
-
   String PantallaRecibe = "";
   String IDMedicoRecibe = "";
-  String TipoComprobanteRecibe = ""; 
+  String TipoComprobanteRecibe = "";
 
-  void Ingresar(Pantalla, IDMedico, TipoComprobante) async {
+  void Ingresar(Pantalla, IDMedico, TipoComprobante, imagen) async {
+    dev.log(Pantalla);
+    dev.log(IDMedico);
+    dev.log(TipoComprobante);
     try {
       var url = Uri.https('fasoluciones.mx', 'api/Medico/Agregar');
-      var data={
+      var data = {
         'Pantalla': Pantalla,
         'id_medico': IDMedico,
-        'TipoComprobante':TipoComprobante
+        'TipoComprobante': TipoComprobante,
+        'ComprobanteImagen': imagen
       };
       //print(data);
-      var response = await http.post(url, body: data).timeout(const Duration(seconds: 90));
+      var response = await http.post(url, body: data);
       //print("llego aqui 111");
-      print(response.body);
+      dev.log(response.body);
 
       if (response.body != "0" && response.body != "") {
         var Respuesta = jsonDecode(response.body);
@@ -305,7 +306,7 @@ class MyCustomFormFinRegMedico36State
         'Pantalla': "FinSolicitar36",
         'id_medico': "$id_medico",
         'file': globalimageUpdate,
-        'TipoComprobante':TipoComprobante
+        'TipoComprobante': TipoComprobante
       };
       print(req);
       var url = Uri.https('fasoluciones.mx', 'api/Medico/Agregar');
@@ -318,21 +319,21 @@ class MyCustomFormFinRegMedico36State
       dev.log("datosasasas");
       dev.log(datos.toString());
 
-      if (imagen == null) {
-        dev.log("esta vacio");
-        dev.log(globalimageUpdate.toString());
-        showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text('Por favor selecciona una imagen'),
-              );
-            });
-      } else {
-        dev.log("tiene imagen");
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (_) => FinRegMedico38()));
-      }
+      // if (imagen == null) {
+      //   dev.log("esta vacio");
+      //   dev.log(globalimageUpdate.toString());
+      //   showDialog(
+      //       context: context,
+      //       builder: (BuildContext context) {
+      //         return AlertDialog(
+      //           title: Text('Por favor selecciona una imagen'),
+      //         );
+      //       });
+      // } else {
+      //   dev.log("tiene imagen");
+      //   // Navigator.of(context).pushReplacement(
+      //   //     MaterialPageRoute(builder: (_) => FinRegMedico38()));
+      // }
 
       // await dio
       //     .post('http://fasoluciones.mx/ApiApp/Medico/Actualizar.php',
@@ -383,7 +384,7 @@ class MyCustomFormFinRegMedico36State
                     decoration: BoxDecoration(
                         border: Border(
                             bottom: BorderSide(width: 1, color: Colors.grey))),
-                    child: Row( 
+                    child: Row(
                       children: [
                         Expanded(
                           child: Text(
@@ -520,7 +521,8 @@ class MyCustomFormFinRegMedico36State
                 ),
 
                 if (OpcionesTipoComprobante == "CFE" ||
-                    OpcionesTipoComprobante == "Telefonia") // Mostrar el botón si se selecciona la opción 1
+                    OpcionesTipoComprobante ==
+                        "Telefonia") // Mostrar el botón si se selecciona la opción 1
                   ElevatedButton(
                       onPressed: () {
                         opciones(context);
@@ -528,12 +530,9 @@ class MyCustomFormFinRegMedico36State
                       child: Text('Selecciona una imagen',
                           style: TextStyle(color: Colors.white))),
 
-                
-
                 _Pantalla(),
                 _IDMedico(),
 
-                  
                 SizedBox(
                   height: 20,
                 ),
@@ -543,27 +542,24 @@ class MyCustomFormFinRegMedico36State
                 if (imagen != null)
                   ElevatedButton(
                       onPressed: () {
-                        subir_imagen(OpcionesTipoComprobante);
+                        //  subir_imagen(OpcionesTipoComprobante);
+                        IDMedicoRecibe = IDMedico.text;
+                        PantallaRecibe = Pantalla.text;
+                        TipoComprobanteRecibe = TipoComprobante.text;
+                        Ingresar(PantallaRecibe, IDMedicoRecibe,
+                            OpcionesTipoComprobante, globalimageUpdate);
                       },
                       child: Text('Subir Imagen',
-                          style: TextStyle(color: Colors.white))
-                          
-                ),
-                if (OpcionesTipoComprobante == "MismoINE")
-                _BotonEnviar(),
-                  /*ElevatedButton(
+                          style: TextStyle(color: Colors.white))),
+                if (OpcionesTipoComprobante == "MismoINE") _BotonEnviar(),
+                /*ElevatedButton(
                       onPressed: () {
                         // subir_imagen();
                         Navigator.of(context).pushReplacement(MaterialPageRoute(
                             builder: (_) => FinRegMedico38()));
                       },
                       child: Text("Continuar")),*/
-                _Avanzar()  
-                      
-
-                
-
-                
+                _Avanzar()
               ]),
         ));
   }
@@ -604,8 +600,6 @@ class MyCustomFormFinRegMedico36State
         ));
   }
 
-  
-
   Widget _BotonEnviar() {
     return Container(
       width: double.infinity,
@@ -618,7 +612,8 @@ class MyCustomFormFinRegMedico36State
 
               String? TipoComprobanteRecibe = OpcionesTipoComprobante;
               print(TipoComprobanteRecibe);
-              if (TipoComprobanteRecibe == "" || TipoComprobanteRecibe == null) {
+              if (TipoComprobanteRecibe == "" ||
+                  TipoComprobanteRecibe == null) {
                 showDialog(
                     context: context,
                     builder: (BuildContext context) {
@@ -638,16 +633,18 @@ class MyCustomFormFinRegMedico36State
                     builder: (BuildContext context) {
                       return AlertDialog(
                         title: Text('Error: Todos los campos son obligatorios'),
-                      ); 
+                      );
                     });
               } else {
-                Ingresar(PantallaRecibe, IDMedicoRecibe, TipoComprobanteRecibe);
+                Ingresar(PantallaRecibe, IDMedicoRecibe, TipoComprobanteRecibe,
+                    globalimageUpdate);
               }
             }
           },
           child: const Text('Siguiente')),
     );
   }
+
   Widget _Avanzar() {
     return Container(
       width: double.infinity,

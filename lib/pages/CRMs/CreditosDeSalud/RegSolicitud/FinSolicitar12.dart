@@ -85,11 +85,9 @@ class MyCustomFormFinSolicitar12State
   var MasccaraPeriodo = new MaskTextInputFormatter(
       mask: '0000-0000', filter: {"0": RegExp(r'[0-9]')});
 
-      
   String? _opcionesTipoDePersona;
-  bool _opcionTipoAsalariado= false;
-  bool _opcionTipoEmpresarialOIndependiente=false;
-
+  bool _opcionTipoAsalariado = false;
+  bool _opcionTipoEmpresarialOIndependiente = false;
 
   void SeleccionadoOrigenDeLosRecursos(value) {
     setState(() {
@@ -97,38 +95,25 @@ class MyCustomFormFinSolicitar12State
       if (_opcionesTipoDePersona == "Asalariado") {
         _opcionTipoAsalariado = true;
         _opcionTipoEmpresarialOIndependiente = false;
-      }
-      else if ( _opcionesTipoDePersona == "Independiente") {
+      } else if (_opcionesTipoDePersona == "Independiente") {
         _opcionTipoEmpresarialOIndependiente = true;
         _opcionTipoAsalariado = false;
-      }
-      else if (_opcionesTipoDePersona == "Persona Física con actividad empresarial y profesional") {
+      } else if (_opcionesTipoDePersona ==
+          "Persona Física con actividad empresarial y profesional") {
         _opcionTipoEmpresarialOIndependiente = true;
         _opcionTipoAsalariado = false;
       }
     });
   }
 
-  final List<String> ListaAntiguedadTiempo = [
-    'Años',
-    'Meses'
-  ];
+  final List<String> ListaAntiguedadTiempo = ['Años', 'Meses'];
   String? SelectedListaAntiguedadTiempo;
 
-
-  final List<String> ListaAntiguedadPFTiempo = [
-    'Años',
-    'Meses'
-  ];
+  final List<String> ListaAntiguedadPFTiempo = ['Años', 'Meses'];
   String? SelectedListaAntiguedadPFTiempo;
 
-   final List<String> ListaSector = [
-    'Comercial',
-    'Servicio',
-    'Producción'
-  ];
+  final List<String> ListaSector = ['Comercial', 'Servicio', 'Producción'];
   String? SelectedListaSector;
-
 
   String? _opcionesFirmaElectronica;
   bool _siFirmaElectronica = false;
@@ -312,28 +297,25 @@ class MyCustomFormFinSolicitar12State
       GastosMensuales,
       FirmaElectronica,
       NumeroFirmaElectronica,
-
-  NombreEmpresaLaboras,
-  CargoLaboral,
-  Antiguedad,
-  AntiguedadTiempo,
-
-  GiroDelNegocio,
-  NombreEmpresa,
-  AntiguedadPF,
-  AntiguedadPFTiempo,
-  Sector,
-  Calle,
-  NumExt,
-  NumInt,
-  CP,
-  Estado,
-  EntCall,
-  MunDel,
-  Ciudad,
-  Colonia,
-  Pais,
-      
+      NombreEmpresaLaboras,
+      CargoLaboral,
+      Antiguedad,
+      AntiguedadTiempo,
+      GiroDelNegocio,
+      NombreEmpresa,
+      AntiguedadPF,
+      AntiguedadPFTiempo,
+      Sector,
+      Calle,
+      NumExt,
+      NumInt,
+      CP,
+      Estado,
+      EntCall,
+      MunDel,
+      Ciudad,
+      Colonia,
+      Pais,
       CargoPolitico,
       Cargo,
       PeriodoDelCargo,
@@ -345,16 +327,15 @@ class MyCustomFormFinSolicitar12State
     try {
       var url = Uri.https('fasoluciones.mx', 'api/Solicitud/Agregar');
 
-if(AntiguedadTiempo==null){
-  AntiguedadTiempo="";
-}
-if(AntiguedadPFTiempo==null){
-  AntiguedadPFTiempo="";
-}
-if(Sector==null){
-  Sector="";
-}
-
+      if (AntiguedadTiempo == null) {
+        AntiguedadTiempo = "";
+      }
+      if (AntiguedadPFTiempo == null) {
+        AntiguedadPFTiempo = "";
+      }
+      if (Sector == null) {
+        Sector = "";
+      }
 
       var bodyEnviar = {
         'Pantalla': Pantalla,
@@ -368,28 +349,25 @@ if(Sector==null){
         'GastosMensuales': GastosMensuales,
         'FirmaElectronica': FirmaElectronica,
         'NumeroFirmaElectronica': NumeroFirmaElectronica,
-
-        'NombreEmpresaLaboras':NombreEmpresaLaboras,
-        'CargoLaboral':CargoLaboral,
-        'Antiguedad':Antiguedad,
-        'AntiguedadTiempo':AntiguedadTiempo,
-
-        'GiroDelNegocio':GiroDelNegocio,
-        'NombreEmpresa':NombreEmpresa,
-        'AntiguedadPF':AntiguedadPF,
-        'AntiguedadPFTiempo':AntiguedadPFTiempo,
-        'Sector':Sector,
-        'Calle':Calle,
-        'NumExt':NumExt,
-        'NumInt':NumInt,
-        'CP':CP,
-        'Estado':Estado,
-        'EntCall':EntCall,
-        'MunDel':MunDel,
-        'Ciudad':Ciudad,
-        'Colonia':Colonia,
-        'Pais':Pais,
-
+        'NombreEmpresaLaboras': NombreEmpresaLaboras,
+        'CargoLaboral': CargoLaboral,
+        'Antiguedad': Antiguedad,
+        'AntiguedadTiempo': AntiguedadTiempo,
+        'GiroDelNegocio': GiroDelNegocio,
+        'NombreEmpresa': NombreEmpresa,
+        'AntiguedadPF': AntiguedadPF,
+        'AntiguedadPFTiempo': AntiguedadPFTiempo,
+        'Sector': Sector,
+        'Calle': Calle,
+        'NumExt': NumExt,
+        'NumInt': NumInt,
+        'CP': CP,
+        'Estado': Estado,
+        'EntCall': EntCall,
+        'MunDel': MunDel,
+        'Ciudad': Ciudad,
+        'Colonia': Colonia,
+        'Pais': Pais,
         'CargoPolitico': CargoPolitico,
         'Cargo': Cargo,
         'PeriodoDelCargo': PeriodoDelCargo,
@@ -404,7 +382,7 @@ if(Sector==null){
           .post(url, body: bodyEnviar)
           .timeout(const Duration(seconds: 90));
       print(response.body);
-      
+
       if (response.body != "0" && response.body != "") {
         print(response.body);
         var Respuesta = jsonDecode(response.body);
@@ -442,9 +420,6 @@ if(Sector==null){
               );
             });
       }
-
-      
-      
     } on TimeoutException catch (e) {
       //print('Tardo muco la conexion');
       showDialog(
@@ -465,8 +440,6 @@ if(Sector==null){
           });
     }
   }
-
-
 
   //Esto es un metodo
   //se usa para mostrar los datos del estado
@@ -493,8 +466,7 @@ if(Sector==null){
   void mostrar_datos() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      NombreCompletoSession =
-          prefs.getString('NombreCompletoSession') ?? '';
+      NombreCompletoSession = prefs.getString('NombreCompletoSession') ?? '';
       id_solicitud = prefs.getInt('id_solicitud') ?? 0;
       id_credito = prefs.getInt('id_credito') ?? 0;
     });
@@ -506,8 +478,8 @@ if(Sector==null){
 
   //funcion para obtener profesiones
   Future obtenerOpciones() async {
-    final response = await http.get(
-        Uri.parse('https://fasoluciones.mx/api/Solicitud/Catalogos/Profesiones'));
+    final response = await http.get(Uri.parse(
+        'https://fasoluciones.mx/api/Solicitud/Catalogos/Profesiones'));
 
     if (response.statusCode == 200) {
       var jsonData = json.decode(response.body);
@@ -522,8 +494,8 @@ if(Sector==null){
 
   //funcion para obtener ocupaciones
   Future obtenerOcupacion() async {
-    final response = await http.get(
-        Uri.parse('https://fasoluciones.mx/api/Solicitud/Catalogos/Ocupaciones'));
+    final response = await http.get(Uri.parse(
+        'https://fasoluciones.mx/api/Solicitud/Catalogos/Ocupaciones'));
 
     if (response.statusCode == 200) {
       var jsonData = json.decode(response.body);
@@ -551,36 +523,32 @@ if(Sector==null){
     }
   }
 
-
-
-  @override 
+  @override
   Widget build(BuildContext context) {
     return BuildScreens(
         'Solicitud', '', '', 'Datos de la solicitud', '', _formulario());
-  } 
+  }
 
-
-  Widget _formulario() { 
-    return  Form(
-            key: _formKey,
-            child: SingleChildScrollView(
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    SubitleCards("A cerca de ti "),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _Pantalla(),
-                    _IDLR(),
-                    _IDInfo(),
-                    _TipoDePersona(),
-                    _Ocupacion(),
-                    _Profesion(),
-                    _ActividadEconomica(),
-                    
-                    if (_opcionTipoAsalariado)
-                      Container(
+  Widget _formulario() {
+    return Form(
+        key: _formKey,
+        child: SingleChildScrollView(
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                SubitleCards("A cerca de ti "),
+                SizedBox(
+                  height: 20,
+                ),
+                _Pantalla(),
+                _IDLR(),
+                _IDInfo(),
+                _TipoDePersona(),
+                _Ocupacion(),
+                _Profesion(),
+                _ActividadEconomica(),
+                if (_opcionTipoAsalariado)
+                  Container(
                       padding: EdgeInsets.only(left: 1.0),
                       width: double.infinity,
                       decoration: BoxDecoration(
@@ -616,9 +584,8 @@ if(Sector==null){
                           ),
                         ],
                       )),
-
-                    if (_opcionTipoEmpresarialOIndependiente)
-                      Container(
+                if (_opcionTipoEmpresarialOIndependiente)
+                  Container(
                       padding: EdgeInsets.only(left: 1.0),
                       width: double.infinity,
                       decoration: BoxDecoration(
@@ -655,28 +622,26 @@ if(Sector==null){
                               ),
                             ],
                           ),
-
                           SizedBox(
-                          height: 20,
-                        ),
+                            height: 20,
+                          ),
                           Container(
-                          padding: EdgeInsets.only(left: 10.0),
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                              //border: Border.all(
-                              //color: Colors.blueAccent
-                              //)
-                              ),
-                          child: Text(
-                            "Domicilio del negocio",
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              fontSize: 17,
-                              //color: Colors.blue
-                            ),
-                            textScaleFactor: 1,
-                          )),
-                          
+                              padding: EdgeInsets.only(left: 10.0),
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                  //border: Border.all(
+                                  //color: Colors.blueAccent
+                                  //)
+                                  ),
+                              child: Text(
+                                "Domicilio del negocio",
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  fontSize: 17,
+                                  //color: Colors.blue
+                                ),
+                                textScaleFactor: 1,
+                              )),
                           Row(
                             children: <Widget>[
                               Expanded(
@@ -685,12 +650,10 @@ if(Sector==null){
                               Expanded(
                                 child: _Pais(),
                               ),
-                              
                             ],
                           ),
                           Row(
                             children: <Widget>[
-                              
                               Expanded(
                                 child: _Calle(),
                               ),
@@ -701,7 +664,6 @@ if(Sector==null){
                           ),
                           Row(
                             children: <Widget>[
-                              
                               Expanded(
                                 child: _NumInt(),
                               ),
@@ -718,7 +680,6 @@ if(Sector==null){
                               Expanded(
                                 child: _MunDel(),
                               ),
-                              
                             ],
                           ),
                           Row(
@@ -729,256 +690,255 @@ if(Sector==null){
                               Expanded(
                                 child: _Colonia(),
                               ),
-                              
                             ],
                           ),
                         ],
                       )),
-                    SizedBox(
-                      height: 20,
+                SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: _Ingresos(),
                     ),
-                    Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: _Ingresos(),
+                    Expanded(
+                      child: _GastosMensuales(),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 30,
+                ),
+                Container(
+                    padding: EdgeInsets.only(left: 10.0),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        //border: Border.all(
+                        //color: Colors.blueAccent
+                        //)
                         ),
-                        Expanded(
-                          child: _GastosMensuales(),
+                    child: Text(
+                      "¿Cuentas con firma electrónica?",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontSize: 17,
+                        //color: Colors.blue
+                      ),
+                      textScaleFactor: 1,
+                    )),
+                Container(
+                  padding: EdgeInsets.all(10),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: RadioListTile(
+                          title: const Text('Si',
+                              style: TextStyle(
+                                fontSize: 17,
+                                color: Color.fromARGB(255, 126, 126, 126),
+                              )),
+                          value: "Si",
+                          groupValue: _opcionesFirmaElectronica,
+                          onChanged: SeleccionadoFirmaElectronica,
                         ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    Container(
-                        padding: EdgeInsets.only(left: 10.0),
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            //border: Border.all(
-                            //color: Colors.blueAccent
-                            //)
-                            ),
-                        child: Text(
-                          "¿Cuentas con firma electrónica?",
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            fontSize: 17,
-                            //color: Colors.blue
-                          ),
-                          textScaleFactor: 1,
-                        )),
-                    Container(
-                      padding: EdgeInsets.all(10),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: RadioListTile(
-                              title: const Text('Si',
-                                  style: TextStyle(
-                                    fontSize: 17,
-                                    color: Color.fromARGB(255, 126, 126, 126),
-                                  )),
-                              value: "Si",
-                              groupValue: _opcionesFirmaElectronica,
-                              onChanged: SeleccionadoFirmaElectronica,
-                            ),
-                          ),
-                          Expanded(
-                              child: RadioListTile(
-                            title: const Text('No',
-                                style: TextStyle(
-                                  fontSize: 17,
-                                  color: Color.fromARGB(255, 126, 126, 126),
-                                )),
-                            value: "No",
-                            groupValue: _opcionesFirmaElectronica,
-                            onChanged: SeleccionadoFirmaElectronica,
-                          )),
-                        ],
                       ),
-                    ),
-                    if (_siFirmaElectronica)
-                      Container(
-                          padding: EdgeInsets.only(left: 1.0),
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                              //border: Border.all(
-                              //color: Colors.blueAccent
-                              //)
-                              ),
-                          child: _NumeroFirmaElectronica()),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Container(
-                        padding: EdgeInsets.only(left: 10.0),
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            //border: Border.all(
-                            //color: Colors.blueAccent
-                            //)
-                            ),
-                        child: Text(
-                          "¿Usted desempeña o ha desempeñado en los últimos 12 meses un cargo público o político en territorio nacional o en un país extranjero?",
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            fontSize: 17,
-                            //color: Colors.blue
+                      Expanded(
+                          child: RadioListTile(
+                        title: const Text('No',
+                            style: TextStyle(
+                              fontSize: 17,
+                              color: Color.fromARGB(255, 126, 126, 126),
+                            )),
+                        value: "No",
+                        groupValue: _opcionesFirmaElectronica,
+                        onChanged: SeleccionadoFirmaElectronica,
+                      )),
+                    ],
+                  ),
+                ),
+                if (_siFirmaElectronica)
+                  Container(
+                      padding: EdgeInsets.only(left: 1.0),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          //border: Border.all(
+                          //color: Colors.blueAccent
+                          //)
                           ),
-                          textScaleFactor: 1,
-                        )),
-                    Container(
-                      padding: EdgeInsets.all(10),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: RadioListTile(
-                              title: const Text('Si',
-                                  style: TextStyle(
-                                    fontSize: 17,
-                                    color: Color.fromARGB(255, 126, 126, 126),
-                                  )),
-                              value: "Si",
-                              groupValue: _opcionesCargoPolitico,
-                              onChanged: SeleccionadoCargoPolitico,
-                            ),
-                          ),
-                          Expanded(
-                              child: RadioListTile(
-                            title: const Text('No',
-                                style: TextStyle(
-                                  fontSize: 17,
-                                  color: Color.fromARGB(255, 126, 126, 126),
-                                )),
-                            value: "No",
-                            groupValue: _opcionesCargoPolitico,
-                            onChanged: SeleccionadoCargoPolitico,
-                          )),
-                        ],
+                      child: _NumeroFirmaElectronica()),
+                SizedBox(
+                  height: 20,
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Container(
+                    padding: EdgeInsets.only(left: 10.0),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        //border: Border.all(
+                        //color: Colors.blueAccent
+                        //)
+                        ),
+                    child: Text(
+                      "¿Usted desempeña o ha desempeñado en los últimos 12 meses un cargo público o político en territorio nacional o en un país extranjero?",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontSize: 17,
+                        //color: Colors.blue
                       ),
-                    ),
-                    if (_siCargoPolitico)
-                      Container(
-                          padding: EdgeInsets.only(left: 1.0),
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                              //border: Border.all(
-                              //color: Colors.blueAccent
-                              //)
+                      textScaleFactor: 1,
+                    )),
+                Container(
+                  padding: EdgeInsets.all(10),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: RadioListTile(
+                          title: const Text('Si',
+                              style: TextStyle(
+                                fontSize: 17,
+                                color: Color.fromARGB(255, 126, 126, 126),
+                              )),
+                          value: "Si",
+                          groupValue: _opcionesCargoPolitico,
+                          onChanged: SeleccionadoCargoPolitico,
+                        ),
+                      ),
+                      Expanded(
+                          child: RadioListTile(
+                        title: const Text('No',
+                            style: TextStyle(
+                              fontSize: 17,
+                              color: Color.fromARGB(255, 126, 126, 126),
+                            )),
+                        value: "No",
+                        groupValue: _opcionesCargoPolitico,
+                        onChanged: SeleccionadoCargoPolitico,
+                      )),
+                    ],
+                  ),
+                ),
+                if (_siCargoPolitico)
+                  Container(
+                      padding: EdgeInsets.only(left: 1.0),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          //border: Border.all(
+                          //color: Colors.blueAccent
+                          //)
+                          ),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: _Cargo(),
                               ),
-                          child: Column(
-                            children: [
-                              Row(
-                                children: <Widget>[
-                                  Expanded(
-                                    child: _Cargo(),
-                                  ),
-                                  Expanded(
-                                    child: _PeriodoDelCargo(),
-                                  ),
-                                ],
+                              Expanded(
+                                child: _PeriodoDelCargo(),
                               ),
                             ],
-                          )),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Container(
-                        padding: EdgeInsets.only(left: 10.0),
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            //border: Border.all(
-                            //color: Colors.blueAccent
-                            //)
-                            ),
-                        child: Text(
-                          "¿Es Usted Cónyuge, Concubino (a), Hijo (a), Hermano (a), Abuelo, Padre, Primo (a) o Nieto (a) de alguna persona que desempeñe o han desempeñado cargo público o político?",
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            fontSize: 17,
-                            //color: Colors.blue
                           ),
-                          textScaleFactor: 1,
-                        )),
-                    Container(
-                      padding: EdgeInsets.all(10),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: RadioListTile(
-                              title: const Text('Si',
-                                  style: TextStyle(
-                                    fontSize: 17,
-                                    color: Color.fromARGB(255, 126, 126, 126),
-                                  )),
-                              value: "Si",
-                              groupValue: _opcionesEsConyugue,
-                              onChanged: SeleccionadoEsConyugue,
-                            ),
-                          ),
-                          Expanded(
-                              child: RadioListTile(
-                            title: const Text('No',
-                                style: TextStyle(
-                                  fontSize: 17,
-                                  color: Color.fromARGB(255, 126, 126, 126),
-                                )),
-                            value: "No",
-                            groupValue: _opcionesEsConyugue,
-                            onChanged: SeleccionadoEsConyugue,
-                          )),
                         ],
+                      )),
+                SizedBox(
+                  height: 20,
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Container(
+                    padding: EdgeInsets.only(left: 10.0),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        //border: Border.all(
+                        //color: Colors.blueAccent
+                        //)
+                        ),
+                    child: Text(
+                      "¿Es Usted Cónyuge, Concubino (a), Hijo (a), Hermano (a), Abuelo, Padre, Primo (a) o Nieto (a) de alguna persona que desempeñe o han desempeñado cargo público o político?",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontSize: 17,
+                        //color: Colors.blue
                       ),
-                    ),
-                    if (_siEsConyugue)
-                      Container(
-                          padding: EdgeInsets.only(left: 1.0),
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                              //border: Border.all(
-                              //color: Colors.blueAccent
-                              //)
+                      textScaleFactor: 1,
+                    )),
+                Container(
+                  padding: EdgeInsets.all(10),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: RadioListTile(
+                          title: const Text('Si',
+                              style: TextStyle(
+                                fontSize: 17,
+                                color: Color.fromARGB(255, 126, 126, 126),
+                              )),
+                          value: "Si",
+                          groupValue: _opcionesEsConyugue,
+                          onChanged: SeleccionadoEsConyugue,
+                        ),
+                      ),
+                      Expanded(
+                          child: RadioListTile(
+                        title: const Text('No',
+                            style: TextStyle(
+                              fontSize: 17,
+                              color: Color.fromARGB(255, 126, 126, 126),
+                            )),
+                        value: "No",
+                        groupValue: _opcionesEsConyugue,
+                        onChanged: SeleccionadoEsConyugue,
+                      )),
+                    ],
+                  ),
+                ),
+                if (_siEsConyugue)
+                  Container(
+                      padding: EdgeInsets.only(left: 1.0),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          //border: Border.all(
+                          //color: Colors.blueAccent
+                          //)
+                          ),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: _PrimerNombre(),
                               ),
-                          child: Column(
-                            children: [
-                              Row(
-                                children: <Widget>[
-                                  Expanded(
-                                    child: _PrimerNombre(),
-                                  ),
-                                  Expanded(
-                                    child: _SegundoNombre(),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                children: <Widget>[
-                                  Expanded(
-                                    child: _ApellidoPaterno(),
-                                  ),
-                                  Expanded(
-                                    child: _ApellidoMaterno(),
-                                  ),
-                                ],
+                              Expanded(
+                                child: _SegundoNombre(),
                               ),
                             ],
-                          )),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _BotonEnviar(),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _Avanzar()
-                  ]),
-            ));
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: _ApellidoPaterno(),
+                              ),
+                              Expanded(
+                                child: _ApellidoMaterno(),
+                              ),
+                            ],
+                          ),
+                        ],
+                      )),
+                SizedBox(
+                  height: 20,
+                ),
+                _BotonEnviar(),
+                SizedBox(
+                  height: 20,
+                ),
+                _Avanzar()
+              ]),
+        ));
   }
 
   Widget _Pantalla() {
@@ -1093,7 +1053,6 @@ if(Sector==null){
     );
   }
 
-
   Widget _NombreEmpresaLaboras() {
     return Container(
       padding: EdgeInsets.all(10),
@@ -1110,6 +1069,7 @@ if(Sector==null){
       ),
     );
   }
+
   Widget _CargoLaboras() {
     return Container(
       padding: EdgeInsets.all(10),
@@ -1126,6 +1086,7 @@ if(Sector==null){
       ),
     );
   }
+
   Widget _Antiguedad() {
     return Container(
       padding: EdgeInsets.all(10),
@@ -1142,7 +1103,7 @@ if(Sector==null){
       ),
     );
   }
-  
+
   Widget _AntiguedadTiempo() {
     return Container(
       padding: EdgeInsets.all(10),
@@ -1162,16 +1123,15 @@ if(Sector==null){
               'Tiempo',
               style: TextStyle(fontSize: 14),
             ),
-            items:
-                ListaAntiguedadTiempo.map((item) => DropdownMenuItem<String>(
-                      value: item,
-                      child: Text(
-                        item,
-                        style: const TextStyle(
-                          fontSize: 14,
-                        ),
-                      ),
-                    )).toList(),
+            items: ListaAntiguedadTiempo.map((item) => DropdownMenuItem<String>(
+                  value: item,
+                  child: Text(
+                    item,
+                    style: const TextStyle(
+                      fontSize: 14,
+                    ),
+                  ),
+                )).toList(),
             validator: ObligatorioSelect,
             onChanged: (value) {
               SelectedListaAntiguedadTiempo = value;
@@ -1199,7 +1159,6 @@ if(Sector==null){
     );
   }
 
-
   /////////////////
   ///
   Widget _GiroDelNegocio() {
@@ -1218,6 +1177,7 @@ if(Sector==null){
       ),
     );
   }
+
   Widget _NombreEmpresa() {
     return Container(
       padding: EdgeInsets.all(10),
@@ -1234,6 +1194,7 @@ if(Sector==null){
       ),
     );
   }
+
   Widget _AntiguedadPF() {
     return Container(
       padding: EdgeInsets.all(10),
@@ -1250,7 +1211,7 @@ if(Sector==null){
       ),
     );
   }
-  
+
   Widget _AntiguedadPFTiempo() {
     return Container(
       padding: EdgeInsets.all(10),
@@ -1270,16 +1231,15 @@ if(Sector==null){
               'Tiempo',
               style: TextStyle(fontSize: 14),
             ),
-            items:
-                ListaAntiguedadTiempo.map((item) => DropdownMenuItem<String>(
-                      value: item,
-                      child: Text(
-                        item,
-                        style: const TextStyle(
-                          fontSize: 14,
-                        ),
-                      ),
-                    )).toList(),
+            items: ListaAntiguedadTiempo.map((item) => DropdownMenuItem<String>(
+                  value: item,
+                  child: Text(
+                    item,
+                    style: const TextStyle(
+                      fontSize: 14,
+                    ),
+                  ),
+                )).toList(),
             validator: ObligatorioSelect,
             onChanged: (value) {
               SelectedListaAntiguedadPFTiempo = value;
@@ -1326,16 +1286,15 @@ if(Sector==null){
               'Sector',
               style: TextStyle(fontSize: 14),
             ),
-            items:
-                ListaSector.map((item) => DropdownMenuItem<String>(
-                      value: item,
-                      child: Text(
-                        item,
-                        style: const TextStyle(
-                          fontSize: 14,
-                        ),
-                      ),
-                    )).toList(),
+            items: ListaSector.map((item) => DropdownMenuItem<String>(
+                  value: item,
+                  child: Text(
+                    item,
+                    style: const TextStyle(
+                      fontSize: 14,
+                    ),
+                  ),
+                )).toList(),
             validator: ObligatorioSelect,
             onChanged: (value) {
               SelectedListaSector = value;
@@ -1367,7 +1326,8 @@ if(Sector==null){
   Future obtenerCP(var codigo) async {
     dev.log("t");
     final req = {"CP": codigo};
-    var url = Uri.parse('https://fasoluciones.mx/api/Solicitud/Catalogos/CP/');
+    var url =
+        Uri.parse('https://fasoluciones.mx/api/Solicitud/Catalogos/CP/$codigo');
 
     var request = await http.MultipartRequest('POST', url);
     request = jsonToFormData(request, req);
@@ -1699,7 +1659,6 @@ if(Sector==null){
         ));
   }
 
-
   String? _opcionSeleccionada;
   var dropdownvalue;
   Widget _Profesion() {
@@ -1717,7 +1676,6 @@ if(Sector==null){
               borderRadius: BorderRadius.circular(5),
             ),
           ),
-          
           isExpanded: true,
           hint: Text(
             'Profesiones',
@@ -1733,7 +1691,6 @@ if(Sector==null){
             height: 50,
             padding: EdgeInsets.only(left: 0, right: 9),
           ),
-          
           onChanged: (newVal) {
             setState(() {
               dropdownvalue = newVal;
@@ -1936,6 +1893,7 @@ if(Sector==null){
       ),
     );
   }
+
   Widget _GastosMensuales() {
     return Container(
       padding: EdgeInsets.all(10),
@@ -2097,8 +2055,7 @@ if(Sector==null){
               }
 
               String? AntiguedadTiempoRecibe = SelectedListaAntiguedadTiempo;
-              
-              
+
               if (AntiguedadTiempoRecibe == "") {
                 showDialog(
                     context: context,
@@ -2109,7 +2066,8 @@ if(Sector==null){
                     });
               }
 
-              String? AntiguedadPFTiempoRecibe = SelectedListaAntiguedadPFTiempo;
+              String? AntiguedadPFTiempoRecibe =
+                  SelectedListaAntiguedadPFTiempo;
               //print(AntiguedadPFTiempoRecibe);
               if (AntiguedadPFTiempoRecibe == "") {
                 showDialog(
@@ -2188,19 +2146,14 @@ if(Sector==null){
 
               NumeroFirmaElectronicaRecibe = NumeroFirmaElectronica.text;
 
-
-
               NombreEmpresaLaborasRecibe = NombreEmpresaLaboras.text;
               CargoLaborasRecibe = CargoLaboral.text;
               AntiguedadRecibe = Antiguedad.text;
-              
 
               GiroDelNegocioRecibe = GiroDelNegocio.text;
               NombreEmpresaRecibe = NombreEmpresa.text;
               AntiguedadPFRecibe = AntiguedadPF.text;
-     
-     
-     
+
               CalleRecibe = Calle.text;
               NumExtRecibe = NumExt.text;
               NumIntRecibe = NumInt.text;
@@ -2211,7 +2164,6 @@ if(Sector==null){
               CiudadRecibe = Ciudad.text;
               ColoniaRecibe = Colonia.text;
               PaisRecibe = Pais.text;
-              
 
               String? CargoPoliticoRecibe = _opcionesCargoPolitico;
               if (CargoPoliticoRecibe == "" || CargoPoliticoRecibe == null) {
@@ -2219,8 +2171,7 @@ if(Sector==null){
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: Text(
-                            'Definir el cargo político es obligatoria'),
+                        title: Text('Definir el cargo político es obligatoria'),
                       );
                     });
               }
@@ -2291,12 +2242,10 @@ print(EsConyugueRecibe);*/
                     GastosMensualesRecibe,
                     FirmaElectronicaRecibe,
                     NumeroFirmaElectronicaRecibe,
-
                     NombreEmpresaLaborasRecibe,
                     CargoLaborasRecibe,
                     AntiguedadRecibe,
                     AntiguedadTiempoRecibe,
-
                     GiroDelNegocioRecibe,
                     NombreEmpresaRecibe,
                     AntiguedadPFRecibe,
@@ -2312,7 +2261,6 @@ print(EsConyugueRecibe);*/
                     CiudadRecibe,
                     ColoniaRecibe,
                     PaisRecibe,
-
                     CargoPoliticoRecibe,
                     CargoRecibe,
                     PeriodoDelCargoRecibe,
@@ -2327,6 +2275,7 @@ print(EsConyugueRecibe);*/
           child: const Text('Siguiente')),
     );
   }
+
   Widget _Avanzar() {
     return Container(
       width: double.infinity,

@@ -104,7 +104,6 @@ class MyCustomFormFinRegMedico35_INEState
   final _plugin = FadMultisignPlugin();
   final _fadBioPlugin = FadBio();
 
-  
   Future<void> initId() async {
     String fadResponse;
     const config =
@@ -355,7 +354,7 @@ class MyCustomFormFinRegMedico35_INEState
           child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                SubitleCards('INE/IFE'),
+                SubitleCards('INE/IFESS'),
                 const SizedBox(height: 30),
                 SubitleCards(
                     "Para concluir tu registro sigue las indicaciones"),
@@ -386,40 +385,40 @@ class MyCustomFormFinRegMedico35_INEState
                 _Pantalla(),
                 _IDMedico(),
                 SizedBox(height: 30),
-                
-                if (_fadResponse=="") 
-                ElevatedButton(
-                  onPressed: () {
-                    initId();
-                  },
-                  child: const Text('Cargar mi identificación'),
-                ),
 
-                if (_fadResponse!="") 
-                ElevatedButton(
-                  onPressed: () {
-                    initId();
-                  },
-                  child: const Text('Actulizar mi identificación'),
-                ),
-                if (_fadResponse!="") 
-                Container(
-                    padding: EdgeInsets.only(left: 10.0),
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                        //border: Border.all(
-                        //color: Colors.blueAccent
-                        //)
+                if (_fadResponse == "")
+                  ElevatedButton(
+                    onPressed: () {
+                      initId();
+                    },
+                    child: const Text('Cargar mi identificación'),
+                  ),
+
+                if (_fadResponse != "")
+                  ElevatedButton(
+                    onPressed: () {
+                      initId();
+                    },
+                    child: const Text('Actulizar mi identificación'),
+                  ),
+                if (_fadResponse != "")
+                  Container(
+                      padding: EdgeInsets.only(left: 10.0),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          //border: Border.all(
+                          //color: Colors.blueAccent
+                          //)
+                          ),
+                      child: Text(
+                        "Listo, puedes avanzar",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 17,
+                          //color: Colors.blue
                         ),
-                    child: Text(
-                      "Listo, puedes avanzar",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 17,
-                        //color: Colors.blue
-                      ),
-                      textScaleFactor: 1,
-                    )),
+                        textScaleFactor: 1,
+                      )),
 
                 // const Text(
                 //   'Resultado',
@@ -457,13 +456,12 @@ class MyCustomFormFinRegMedico35_INEState
                 _BotonEnviar(),
                 SizedBox(
                   height: 20,
-                ),                
+                ),
                 _BotonSaltar(),
                 _Avanzar(),
                 SizedBox(
                   height: 20,
                 ),
-                
               ]),
         ));
   }
@@ -504,7 +502,6 @@ class MyCustomFormFinRegMedico35_INEState
         ));
   }
 
-  
   var globalinfoine = "";
   var globalineAnverso = "";
   Widget _BotonEnviar() {
@@ -519,95 +516,89 @@ class MyCustomFormFinRegMedico35_INEState
 
             if (_fadResponse == "") {
               showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text('Error: Carga tu identificación'),
-                      );
-                    });
-            }
-            else{
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text('Error: Carga tu identificación'),
+                    );
+                  });
+            } else {
               var res = json.decode(_fadResponse);
               for (var j in res['documents']) {
-                  // dev.log(j['data'].toString());
+                // dev.log(j['data'].toString());
 
-                  var info = j['data'].toString();
-                  var bytes = File(j['data']['foto.png']).readAsBytesSync();
-                  var ineAnversoBytes = j['captures']['ineAnverso.png'];
-                  // var bas = base64Encode(ineAnversoBytes);
-                  // dev.log(bytes.toString());
+                var info = j['data'].toString();
+                var bytes = File(j['data']['foto.png']).readAsBytesSync();
+                var ineAnversoBytes = j['captures']['ineAnverso.png'];
+                // var bas = base64Encode(ineAnversoBytes);
+                // dev.log(bytes.toString());
 
-                  globalimageUpdate = bytes;
+                globalimageUpdate = bytes;
+                globalinfoine = info;
+                globalineAnverso = ineAnversoBytes;
+                // dev.log(ineAnversoBytes);
+                // dev.log("byts");
+
+                setState(() {
                   globalinfoine = info;
                   globalineAnverso = ineAnversoBytes;
-                  // dev.log(ineAnversoBytes);
-                  // dev.log("byts");
-
-                  setState(() {
-                    globalinfoine = info;
-                    globalineAnverso = ineAnversoBytes;
-                  });
-
-                  // setState(() {
-                  //   var bytes = File(j['data']['foto.png']).readAsBytesSync();
-                  //   // dev.log(bytes.toString());
-
-                  //   globalimageUpdate = base64Encode(bytes);
-                  // });
-                }
-                setState(() {
-                  globalimageUpdate = globalimageUpdate;
-                  globalinfoine = globalinfoine;
-                  globalineAnverso = globalineAnverso;
-                  // dev.log("anv");
-                  // dev.log(globalineAnverso);
-
-                  // dev.log(globalimageUpdate);
-                  // dev.log("aqui hay byts");
-                  // dev.log("imageee");
-                  // dev.log(globalimageUpdate);
                 });
 
-                // for (var j in res['documents']) {
-                //   dev.log(j['data']['foto.png'].toString());
-                //   String image = j['data'].toString();
-                //   globalimageUpdate = image;
-                //   dev.log("envian");
-                //   dev.log(globalimageUpdate);
-                //   // dev.log("imagens");
-                //   // dev.log(globalimageUpdate);
-                //   setState(() {
-                //     globalimageUpdate = image;
-                //   });
-                // }
                 // setState(() {
-                //   // dev.log("imagenes obten");
-                //   // dev.log(globalimageUpdate);
-                //   globalimageUpdate = globalimageUpdate;
+                //   var bytes = File(j['data']['foto.png']).readAsBytesSync();
+                //   // dev.log(bytes.toString());
+
+                //   globalimageUpdate = base64Encode(bytes);
                 // });
+              }
+              setState(() {
+                globalimageUpdate = globalimageUpdate;
+                globalinfoine = globalinfoine;
+                globalineAnverso = globalineAnverso;
+                // dev.log("anv");
+                // dev.log(globalineAnverso);
 
-                if (_formKey.currentState!.validate()) {
-                  PantallaRecibe = Pantalla.text;
-                  IDMedicoRecibe = IDMedico.text;
+                // dev.log(globalimageUpdate);
+                // dev.log("aqui hay byts");
+                // dev.log("imageee");
+                // dev.log(globalimageUpdate);
+              });
 
-                  if (PantallaRecibe == "" ||
-                      IDMedicoRecibe == "" ||
-                      res == "") {
-                    showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: Text('Error: Carga tu identificación'),
-                          );
-                        });
-                  } else {
-                    Ingresar(PantallaRecibe, IDMedicoRecibe,
-                        globalimageUpdate!);
-                  }
+              // for (var j in res['documents']) {
+              //   dev.log(j['data']['foto.png'].toString());
+              //   String image = j['data'].toString();
+              //   globalimageUpdate = image;
+              //   dev.log("envian");
+              //   dev.log(globalimageUpdate);
+              //   // dev.log("imagens");
+              //   // dev.log(globalimageUpdate);
+              //   setState(() {
+              //     globalimageUpdate = image;
+              //   });
+              // }
+              // setState(() {
+              //   // dev.log("imagenes obten");
+              //   // dev.log(globalimageUpdate);
+              //   globalimageUpdate = globalimageUpdate;
+              // });
+
+              if (_formKey.currentState!.validate()) {
+                PantallaRecibe = Pantalla.text;
+                IDMedicoRecibe = IDMedico.text;
+
+                if (PantallaRecibe == "" || IDMedicoRecibe == "" || res == "") {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Error: Carga tu identificación'),
+                        );
+                      });
+                } else {
+                  Ingresar(PantallaRecibe, IDMedicoRecibe, globalimageUpdate!);
                 }
-
-            }  
-            
+              }
+            }
           },
           child: const Text('Siguiente')),
     );
@@ -631,6 +622,7 @@ class MyCustomFormFinRegMedico35_INEState
       ),
     );
   }
+
   Widget _Avanzar() {
     return Container(
       width: double.infinity,

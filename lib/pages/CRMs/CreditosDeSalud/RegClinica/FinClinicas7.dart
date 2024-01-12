@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'dart:developer' as dev;
 import '../Includes/widgets/build_screen.dart';
 import '../headers.dart';
 import '../menu_lateral.dart';
@@ -97,7 +97,7 @@ class MyCustomFormFinClinicas7State extends State<MyCustomFormFinClinicas7> {
         'Accionistas': CuantosSocios
       }).timeout(const Duration(seconds: 90));
       //print("llego aqui 111");
-      print(response.body);
+      dev.log(response.body);
 
       if (response.body != "0" && response.body != "") {
         var Respuesta = jsonDecode(response.body);
@@ -185,8 +185,7 @@ class MyCustomFormFinClinicas7State extends State<MyCustomFormFinClinicas7> {
   Widget build(BuildContext context) {
     return BuildScreens(
         'Clínica', '', '', 'Datos de la clínica', '', _formulario());
-  } 
-
+  }
 
   Widget _formulario() {
     return Form(
@@ -273,8 +272,6 @@ class MyCustomFormFinClinicas7State extends State<MyCustomFormFinClinicas7> {
         ));
   }
 
-  
-
   Widget _CuantosSocios() {
     return Container(
       padding: EdgeInsets.all(10),
@@ -317,14 +314,14 @@ class MyCustomFormFinClinicas7State extends State<MyCustomFormFinClinicas7> {
                       );
                     });
               } else {
-                Ingresar(PantallaRecibe, IDClinicaRecibe,
-                    CuantosSociosRecibe);
+                Ingresar(PantallaRecibe, IDClinicaRecibe, CuantosSociosRecibe);
               }
             }
           },
           child: const Text('Siguiente')),
     );
   }
+
   Widget _Avanzar() {
     return Container(
       width: double.infinity,
@@ -337,8 +334,8 @@ class MyCustomFormFinClinicas7State extends State<MyCustomFormFinClinicas7> {
         )),
         onTap: () {
           Navigator.of(context).pop();
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => FinClinicas8()));
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => FinClinicas8()));
         },
       ),
     );

@@ -200,9 +200,9 @@ class MyCustomFormFinClinicas4State extends State<MyCustomFormFinClinicas4> {
         'TipodeVivienda': TipodeVivienda,
         'Antiguedad': Antiguedad,
         'AntiguedadTiempo': AntiguedadTiempo
-      }).timeout(const Duration(seconds: 90));
+      });
       //print("llego aqui 111");
-      //print(response.body);
+      dev.log(response.body);
 
       if (response.body != "0" && response.body != "") {
         var Respuesta = jsonDecode(response.body);
@@ -277,8 +277,7 @@ class MyCustomFormFinClinicas4State extends State<MyCustomFormFinClinicas4> {
   void mostrar_datos() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      NombreCompletoSession =
-          prefs.getString('NombreCompletoSession') ?? '';
+      NombreCompletoSession = prefs.getString('NombreCompletoSession') ?? '';
       id_clinica = prefs.getInt('id_clinica') ?? 0;
     });
 
@@ -293,7 +292,7 @@ class MyCustomFormFinClinicas4State extends State<MyCustomFormFinClinicas4> {
   }
 
   Widget _formulario() {
-    return Form( 
+    return Form(
         key: _formKey,
         child: SingleChildScrollView(
           child: Column(
@@ -413,28 +412,17 @@ class MyCustomFormFinClinicas4State extends State<MyCustomFormFinClinicas4> {
         ));
   }
 
-  
-
   List<dynamic> _colonyList = [];
   Future obtenerCP(var codigo) async {
     dev.log("t");
     final req = {"CP": codigo};
-    var url = Uri.parse('https://fasoluciones.mx/api/Solicitud/Catalogos/CP/');
-
-    var request = await http.MultipartRequest('POST', url);
-    request = jsonToFormData(request, req);
-
-    final response = await request.send();
+    var url =
+        Uri.parse('https://fasoluciones.mx/api/Solicitud/Catalogos/CP/$codigo');
+    var response = await http.get(url);
     if (response.statusCode == 200) {
-      final responseData =
-          await response.stream.bytesToString(); //response.stream.toBytes();
-      //dev.log(responseData.toString());
-
-      var responseString = responseData;
-      final dat = json.decode(responseString);
-      dev.log("adata");
-      dev.log(dat.toString());
-      var data = json.decode(responseString)['data'][0];
+      final dat = json.decode(response.body);
+      var data = json.decode(response.body)['data'][0];
+      dev.log(data.toString());
       setState(() {
         // Colonia.text = data['Estado'].toString();
         MunDel.text = data['MunDel'].toString();
@@ -862,7 +850,7 @@ class MyCustomFormFinClinicas4State extends State<MyCustomFormFinClinicas4> {
                     });
               }
               MunDelRecibe = MunDel.text;
-              
+
               String? ColoniaRecibe = _selectedColony;
 
               print(ColoniaRecibe);
@@ -874,7 +862,7 @@ class MyCustomFormFinClinicas4State extends State<MyCustomFormFinClinicas4> {
                         title: Text('La colonia es obligatoria'),
                       );
                     });
-                    ColoniaRecibe="";
+                ColoniaRecibe = "";
               }
               String? TipodeViviendaRecibe = SelectedListaTipodeVivienda;
               if (TipodeViviendaRecibe == "") {
@@ -958,6 +946,7 @@ class MyCustomFormFinClinicas4State extends State<MyCustomFormFinClinicas4> {
           child: const Text('Siguiente')),
     );
   }
+
   Widget _Avanzar() {
     return Container(
       width: double.infinity,

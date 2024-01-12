@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'dart:developer' as dev;
 import '../Includes/widgets/build_screen.dart';
 import '../headers.dart';
 import '../menu_lateral.dart';
@@ -15,7 +15,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
-
 
 import 'FinRegMedico35_INE.dart';
 
@@ -96,8 +95,8 @@ class MyCustomFormFinRegMedico34State
         'actuo_en_nombre_propio': "1",
         'acepto_grabacion': "1"
       }).timeout(const Duration(seconds: 90));
-      print("llego aqui 111");
-      print(response.body);
+      dev.log("llego aqui 111");
+      dev.log(response.body);
 
       if (response.body != "0" && response.body != "") {
         var Respuesta = jsonDecode(response.body);
@@ -212,14 +211,15 @@ class MyCustomFormFinRegMedico34State
     return Form(
         key: _formKey,
         child: SingleChildScrollView(
-          child: Column(mainAxisAlignment: MainAxisAlignment.start, 
-          children: <Widget>[
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
                 // headerTop("¡¡¡Recuerda!!!!",
                 //     'Para concluir tu registro como médico afiliado a la RED MÉDICA de Fasol Soluciones, necesitamos lo siguiente: '),
 
                 SubitleCards("¡¡¡Recuerda!!!!"),
                 SizedBox(height: 20),
-                
+
                 SubitleCards(
                     "Para concluir tu registro como médico afiliado a la RED MÉDICA de Fasol Soluciones, necesitamos lo siguiente: "),
                 SizedBox(height: 20),
@@ -300,8 +300,7 @@ class MyCustomFormFinRegMedico34State
                 ),
                 CheckboxListTile(
                   controlAffinity: ListTileControlAffinity.leading,
-                  title: Text(
-                      'Acepto que mi imagen y mi voz sean grabadas'),
+                  title: Text('Acepto que mi imagen y mi voz sean grabadas'),
                   value: AceptoGrabarVozEImagen,
                   onChanged: (value) {
                     setState(() {
@@ -313,13 +312,13 @@ class MyCustomFormFinRegMedico34State
                   height: 20,
                 ),
                 _BotonEnviar(),
-                
+
                 _Avanzar(),
                 SizedBox(
                   height: 80,
                 ),
               ]),
-        ));  
+        ));
   }
 
   Widget _buildItem(String textTitle) {
@@ -369,8 +368,6 @@ class MyCustomFormFinRegMedico34State
         ));
   }
 
-  
-
   Widget _BotonEnviar() {
     return Container(
       width: double.infinity,
@@ -404,6 +401,7 @@ class MyCustomFormFinRegMedico34State
           child: const Text('Siguiente')),
     );
   }
+
   Widget _Avanzar() {
     return Container(
       width: double.infinity,

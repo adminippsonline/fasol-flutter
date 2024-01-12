@@ -38,8 +38,6 @@ class _FinClinicas14_1State extends State<FinClinicas14_1> {
   String CorreoSession = "";
   String TelefonoSession = "";
 
-  
-
   @override
   void initState() {
     super.initState();
@@ -78,10 +76,10 @@ class MyCustomFormFinClinicas14_1 extends StatefulWidget {
   }
 }
 
-class MyCustomFormFinClinicas14_1State extends State<MyCustomFormFinClinicas14_1> {
+class MyCustomFormFinClinicas14_1State
+    extends State<MyCustomFormFinClinicas14_1> {
   //el fomrKey para formulario
   final _formKey = GlobalKey<FormState>();
-
 
   ////////////////////////////
 
@@ -103,26 +101,33 @@ class MyCustomFormFinClinicas14_1State extends State<MyCustomFormFinClinicas14_1
   File? imagenConstanciaFirma = null;
   File? imagenOrganizacion = null;
 
-  void Ingresar(Pantalla, IDClinica, globalimageUpdateComprobante, globalimageUpdateConstanciaSituacion, globalimageUpdateConstanciaFirma, globalimageUpdateOrganizacion) async {
+  void Ingresar(
+      Pantalla,
+      IDClinica,
+      globalimageUpdateComprobante,
+      globalimageUpdateConstanciaSituacion,
+      globalimageUpdateConstanciaFirma,
+      globalimageUpdateOrganizacion) async {
     try {
       var url = Uri.https('fasoluciones.mx', 'api/Clinica/Agregar');
-      var data={
+      var data = {
         'Pantalla': Pantalla,
         'id_clinica': IDClinica,
-        'ComprobantteDeDomicilio':globalimageUpdateComprobante,
+        'ComprobantteDeDomicilio': globalimageUpdateComprobante,
         'ConstanciaSituacionFiscal': globalimageUpdateConstanciaSituacion,
         'ConstanciaFirmaElectronica': globalimageUpdateConstanciaFirma,
-        'OrganizacionDeLaEmpresa':globalimageUpdateOrganizacion
+        'OrganizacionDeLaEmpresa': globalimageUpdateOrganizacion
       };
       print(data);
-      var response = await http.post(url, body: data).timeout(const Duration(seconds: 90));
+      var response =
+          await http.post(url, body: data).timeout(const Duration(seconds: 90));
       //print("llego aqui 111");
       print(response.body);
 
       if (response.body != "0" && response.body != "") {
         var Respuesta = jsonDecode(response.body);
         print(Respuesta);
-        String status = Respuesta['status']; 
+        String status = Respuesta['status'];
         if (status == "OK") {
           //print('si existe aqui -----');
           /*showDialog(
@@ -205,7 +210,7 @@ class MyCustomFormFinClinicas14_1State extends State<MyCustomFormFinClinicas14_1
   Widget build(BuildContext context) {
     return BuildScreens(
         'Clínica', '', '', 'Datos de la clínica', '', _formulario());
-  } 
+  }
 
   String? imagePath;
   var globalimageUpdateComprobante = "";
@@ -220,15 +225,14 @@ class MyCustomFormFinClinicas14_1State extends State<MyCustomFormFinClinicas14_1
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 // headerTop("Clínica",
-                SubitleCards(
-                    'Carga de documentos de la empresa '),
+                SubitleCards('Carga de documentos de la empresa '),
                 SizedBox(
                   height: 20,
                 ),
 
                 _Pantalla(),
                 _IDClinica(),
-                
+
                 SizedBox(height: 10),
                 Container(
                     padding: EdgeInsets.only(left: 10.0),
@@ -306,7 +310,6 @@ class MyCustomFormFinClinicas14_1State extends State<MyCustomFormFinClinicas14_1
                         style: TextStyle(color: Colors.black),
                       ),
 
-
                 /////////////////
                 ///
                 ///
@@ -346,7 +349,7 @@ class MyCustomFormFinClinicas14_1State extends State<MyCustomFormFinClinicas14_1
                     : Text(
                         "${imagenConstanciaFirma!.path.toString()}",
                         style: TextStyle(color: Colors.black),
-                      ),      
+                      ),
 
                 SizedBox(height: 30),
                 Container(
@@ -384,8 +387,7 @@ class MyCustomFormFinClinicas14_1State extends State<MyCustomFormFinClinicas14_1
                     : Text(
                         "${imagenOrganizacion!.path.toString()}",
                         style: TextStyle(color: Colors.black),
-                      ),            
-
+                      ),
 
                 SizedBox(
                   height: 30,
@@ -465,7 +467,8 @@ class MyCustomFormFinClinicas14_1State extends State<MyCustomFormFinClinicas14_1
                         imagenConstanciaSituacion = File(_pickedFile.name);
                         final bytes = File(imagePath!).readAsBytesSync();
                         dev.log(bytes.toString());
-                        globalimageUpdateConstanciaSituacion = base64Encode(bytes);
+                        globalimageUpdateConstanciaSituacion =
+                            base64Encode(bytes);
                       });
                       Navigator.pop(context);
                     },
@@ -478,7 +481,6 @@ class MyCustomFormFinClinicas14_1State extends State<MyCustomFormFinClinicas14_1
           );
         });
   }
-
 
   Future<void> dialogConstanciaFirma(BuildContext context) {
     return showDialog(
@@ -560,7 +562,6 @@ class MyCustomFormFinClinicas14_1State extends State<MyCustomFormFinClinicas14_1
         });
   }
 
-
   Widget _Pantalla() {
     return Visibility(
         visible: false,
@@ -596,9 +597,6 @@ class MyCustomFormFinClinicas14_1State extends State<MyCustomFormFinClinicas14_1
           ),
         ));
   }
-
-
-  
 
   Widget _CuantosFaltan() {
     return Container(
@@ -641,9 +639,9 @@ class MyCustomFormFinClinicas14_1State extends State<MyCustomFormFinClinicas14_1
 
               if (PantallaRecibe == "" ||
                   IDClinicaRecibe == "" ||
-                  globalimageUpdateComprobante == ""  ||
-                  globalimageUpdateConstanciaSituacion == ""  ||
-                  globalimageUpdateConstanciaFirma == "" || 
+                  globalimageUpdateComprobante == "" ||
+                  globalimageUpdateConstanciaSituacion == "" ||
+                  globalimageUpdateConstanciaFirma == "" ||
                   globalimageUpdateOrganizacion == "") {
                 showDialog(
                     context: context,
@@ -653,14 +651,20 @@ class MyCustomFormFinClinicas14_1State extends State<MyCustomFormFinClinicas14_1
                       );
                     });
               } else {
-                Ingresar(PantallaRecibe, IDClinicaRecibe,
-                    globalimageUpdateComprobante!, globalimageUpdateConstanciaSituacion!, globalimageUpdateConstanciaFirma!, globalimageUpdateOrganizacion!);
+                Ingresar(
+                    PantallaRecibe,
+                    IDClinicaRecibe,
+                    globalimageUpdateComprobante!,
+                    globalimageUpdateConstanciaSituacion!,
+                    globalimageUpdateConstanciaFirma!,
+                    globalimageUpdateOrganizacion!);
               }
             }
           },
           child: const Text('Siguiente')),
     );
   }
+
   Widget _Avanzar() {
     return Container(
       width: double.infinity,

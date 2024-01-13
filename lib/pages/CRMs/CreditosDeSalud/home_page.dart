@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'dart:developer' as dev;
 import 'package:flutter/material.dart';
 import 'includes/colors/colors.dart';
 import 'headers.dart';
@@ -52,14 +54,15 @@ class _HomePageCreditosDeSaludState extends State<HomePageCreditosDeSalud> {
       id_info = prefs.getInt('id_info') ?? 0;
     });
   }
- 
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(       
+    return Scaffold(
       appBar: AppBar(
-        title: Text("Crédito y Préstamos Personales", style: TextStyle(
-            //fontFamily: 'cursive', 
-            color: TITULO_TEXT_BOTON_ENTRAR)),
+        title: Text("Crédito y Préstamos Personales",
+            style: TextStyle(
+                //fontFamily: 'cursive',
+                color: TITULO_TEXT_BOTON_ENTRAR)),
         backgroundColor: COLOR_PRINCIPAL,
       ),
       drawer: MenuLateralPage(),
@@ -83,6 +86,8 @@ class MyCustomFormHomePageCreditosDeSaludState
     extends State<MyCustomFormHomePageCreditosDeSalud> {
   //el fomrKey para formulario
   final _formKey = GlobalKey<FormState>();
+  List<int> arraySaltos = [];
+  List<int> arraySaltosIndex = [];
 
   //Los controladores para los input
   /*final Cantidad = CantidadgController();
@@ -92,6 +97,125 @@ class MyCustomFormHomePageCreditosDeSaludState
   /*final Cantidad = CantidadgController();
   final Periodo = PeriodoController();
   final Plazo = PlazoController();*/
+
+  @override
+  void initState() {
+    super.initState();
+    obtenerMonto();
+    fetchData();
+  }
+
+  Future<String> obtenerDireccionIP() async {
+    try {
+      for (var interface in await NetworkInterface.list()) {
+        for (var address in interface.addresses) {
+          // Verificar si la dirección IP es una dirección IPv4 y no una dirección de bucle local
+          if (address.type == InternetAddressType.IPv4 && !address.isLoopback) {
+            return address.address;
+          }
+        }
+      }
+    } catch (e) {
+      print("Error al obtener la dirección IP: $e");
+    }
+
+    return "No se pudo obtener la dirección IP";
+  }
+
+  String direccionIP = "";
+  Future<void> obtenerMonto() async {
+    direccionIP = await obtenerDireccionIP();
+
+    var url = Uri.parse(
+        "https://fasoluciones.mx/api/Solicitud/SGS/Solicitar?IP=$direccionIP&id_solicitante=0");
+    var response = await http.get(url);
+
+    String jsonString = response.body;
+    Map<String, dynamic> jsonMap = json.decode(jsonString);
+    String arraySaltosString = jsonMap['ArraySaltos'];
+    arraySaltosIndex = json.decode(arraySaltosString).cast<int>();
+    var periodosProducto = jsonMap['data']['GetPeriodicidadesProducto'];
+    arraySaltos = List<int>.from(json.decode(arraySaltosString));
+
+    // Actualiza el valor inicial del Slider después de obtener los datos
+    if (arraySaltos.isNotEmpty) {
+      setState(() {
+        value = arraySaltos.first.toDouble();
+      });
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> obtenerPlazosPeriodicidad(
+      var idPerio, var etiquet) async {
+    String direccionIP = await obtenerDireccionIP();
+    // Simular una llamada a la API para obtener los plazos de periodicidad
+    idPerio = 79;
+
+    String apiUrl =
+        'https://fasoluciones.mx/api/Solicitud/SGS/GetPlazosPeriodicidad?nIdPeriodo=$idPerio&Etiqueta=$etiquet&IP=$direccionIP&id_solicitante=0';
+
+    HttpClient httpClient = HttpClient();
+
+    try {
+      var request = await httpClient.getUrl(Uri.parse(apiUrl));
+      HttpClientResponse response = await request.close();
+
+      if (response.statusCode == 200) {
+        String responseBody = await response.transform(utf8.decoder).join();
+        Map<String, dynamic> responseData = json.decode(responseBody);
+
+        List<dynamic> plazosList =
+            responseData['data']['GetPlazosPeriodicidad'];
+
+        // Convertir la lista de plazos a List<Map<String, dynamic>>
+        List<Map<String, dynamic>> plazos =
+            List<Map<String, dynamic>>.from(plazosList);
+
+        return plazos;
+      } else {
+        throw Exception('Error en la llamada a la API');
+      }
+    } catch (error) {
+      dev.log(error.toString());
+      throw Exception('Error en la llamada a la API: $error');
+    } finally {
+      httpClient.close();
+    }
+  }
+
+  Future<Map<String, dynamic>> obtenerPeriocidad() async {
+    try {
+      String direccionIP = await obtenerDireccionIP();
+      print("Dirección IP del dispositivo: $direccionIP");
+      var url = Uri.parse(
+          "https://fasoluciones.mx/api/Solicitud/SGS/Solicitar?IP=$direccionIP&id_solicitante=0");
+      var response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        String jsonString = response.body;
+        Map<String, dynamic> jsonMap = json.decode(jsonString);
+        // Acceder a GetPeriodicidadesProducto
+        List<dynamic> periodicidades =
+            jsonMap['data']['GetPeriodicidadesProducto'];
+        // Obtener el valor de nIdPeriodo y sDescription
+        String nIdPeriodo = periodicidades[0]
+            ['nIdPeriodo']; // Puedes cambiar el índice según tus necesidades
+        String sDescription = periodicidades[0]['sDescription'];
+
+        // Retornar los valores como un mapa
+        return {'nIdPeriodo': nIdPeriodo, 'sDescription': sDescription};
+        ;
+      } else {
+        // Si la respuesta del servidor no es exitosa, manejar el error apropiadamente
+        print("Error en la solicitud: ${response.statusCode}");
+        return {"error": "Error en la solicitud: ${response.statusCode}"};
+      }
+    } catch (error) {
+      // Manejar cualquier error que pueda ocurrir durante la solicitud
+      print("Error en la solicitud: $error");
+      return {"error": "Error en la solicitud: $error"};
+    }
+  }
 
   int CantidadRecibe = 0;
   String PeriodoRecibe = "";
@@ -106,7 +230,7 @@ class MyCustomFormHomePageCreditosDeSaludState
   int _quincenasMinima = 12;
   int _mensualidadesMinima = 6;
 
-  String? _opcionesPeriodicidadPago="Quincenal";
+  String? _opcionesPeriodicidadPago = "Quincenal";
   bool _quincenalPeriodicidadPago = true;
   bool _mensualPeriodicidadPago = false;
   void SeleccionadoPeriodicidadPago(value) {
@@ -121,35 +245,23 @@ class MyCustomFormHomePageCreditosDeSaludState
   final PeriodicidadPago = TextEditingController();
   String PeriodicidadPagoRecibe = "";
 
-  void Ingresar(Cantidad, Periodo, Quincenal, Mensual) async {
+  void Ingresar(Cantidad, Periodo, Plazo, DireccionIP) async {
     try {
       print('La información se esta enviando');
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('La información se esta enviando')),
       );
-      /*String? CantidadEnviar = "aa";
-      String? PeriodoEnviar = Periodo;
-      String? QuincenalEnviar = "ccc";
-      String? MensualEnviar = Mensual;*/
-      /*var url =
-          Uri.https('fasoluciones.mx', 'ApiApp/Solicitud/SGS/Consultar.php');
-      var response = await http.post(url, body: {
+
+      var enviar = {
         'Cantidad': "$Cantidad",
         'Periodo': Periodo,
-        'Quincenal': "$Quincenal",
-        'Mensual': "$Mensual",
-      }).timeout(const Duration(seconds: 90));
-      print("holammmm");
-      print(response.body);*/
-      var Enviar= {
-        'Cantidad': "$Cantidad",
-        'Periodo': Periodo,
-        'Quincenal': "$Quincenal",
-        'Mensual': "$Mensual",
+        'Quincenal': "$Plazo",
+        'Mensual': "$DireccionIP",
       };
       //print(Enviar);
-      Navigator.of(context)
-          .pushReplacement(MaterialPageRoute(builder: (_) => Desgloce("$Cantidad", Periodo,"$Quincenal","$Mensual")));
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (_) =>
+              Desgloce("$Cantidad", Periodo, "$Plazo", "$DireccionIP")));
       FocusScope.of(context).unfocus();
     } on TimeoutException catch (e) {
       //print('Tardo muco la conexion');
@@ -172,93 +284,260 @@ class MyCustomFormHomePageCreditosDeSaludState
     }
   }
 
+  List<Map<String, dynamic>>? periodos = [];
+  String selectedPeriodo = 'Quincenal';
+  String idPeriodos = '79';
+  Future<void> fetchData() async {
+    String direccionIP = await obtenerDireccionIP();
+    print("Dirección IP del dispositivo: $direccionIP");
+    var url = Uri.parse(
+        "https://fasoluciones.mx/api/Solicitud/SGS/Solicitar?IP=$direccionIP&id_solicitante=0");
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> data = json.decode(response.body);
+
+      setState(() {
+        periodos = List.from(data['data']['GetPeriodicidadesProducto']!);
+      });
+    } else {
+      throw Exception('Failed to load data');
+    }
+  }
+
+  double _currentValue = 12.0; // Valor inicial del plazo
+  var plazoSelecIndex = 0;
+  Widget _getTextToShow(var idPeriodo, var etiqueta) {
+    if (selectedPeriodo == 'Quincenal') {
+      //return Text('Hola');
+      return FutureBuilder<List<Map<String, dynamic>>>(
+        future: obtenerPlazosPeriodicidad(idPeriodo, etiqueta),
+        builder: (context, plazosSnapshot) {
+          if (plazosSnapshot.hasData) {
+            List<Map<String, dynamic>> plazos = plazosSnapshot.data!;
+            String primerPlazo = plazos.first['nPlazo'].toString();
+            String ultimoPlazo = plazos.last['nPlazo'].toString();
+            // Obtiene el índice del plazo seleccionado
+            int indicePlazoSeleccionado = plazos.indexWhere((plazo) =>
+                double.parse(plazo['nPlazo'].toString()) == _currentValue);
+            plazoSelecIndex = indicePlazoSeleccionado;
+            // Puedes hacer algo con los plazos obtenidos
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Quincenas: $primerPlazo',
+                      style: TextStyle(fontSize: 24.0),
+                    ),
+                    Text(
+                      'Quincenas: $ultimoPlazo',
+                      style: TextStyle(fontSize: 24.0),
+                    ),
+                  ],
+                ),
+                Slider(
+                  value: _currentValue,
+                  min: 12,
+                  max: 48,
+                  divisions: 36,
+                  onChanged: (value) {
+                    setState(() {
+                      _currentValue = value;
+                    });
+                  },
+                ),
+                Container(
+                  padding: EdgeInsets.all(10.0),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20.0),
+                      color: Colors.deepOrange),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    textBaseline: TextBaseline.alphabetic,
+                    children: [
+                      Text(
+                        'Quincenas: ${_currentValue.toInt()}',
+                        style: const TextStyle(
+                            fontSize: 25.0,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      // Text(
+                      //     'Índice del Plazo Seleccionado: $indicePlazoSeleccionado'),
+                    ],
+                  ),
+                ),
+                // Text(
+                //   'Quincenas: ${_currentValue.toInt()}',
+                //   style: TextStyle(fontSize: 24.0),
+                // ),
+                // Text('Índice del Plazo Seleccionado: $indicePlazoSeleccionado'),
+              ],
+            );
+          } else if (plazosSnapshot.hasError) {
+            return Text('Error al obtener los plazos');
+          }
+          return CircularProgressIndicator(); // Mientras se carga la data
+        },
+      );
+    } else if (selectedPeriodo == 'Mensual') {
+      return FutureBuilder<List<Map<String, dynamic>>>(
+        future: obtenerPlazosPeriodicidad(idPeriodo, etiqueta),
+        builder: (context, plazosSnapshot) {
+          if (plazosSnapshot.hasData) {
+            List<Map<String, dynamic>> plazos = plazosSnapshot.data!;
+            String primerPlazo = plazos.first['nPlazo'].toString();
+            String ultimoPlazo = plazos.last['nPlazo'].toString();
+            int indicePlazoSeleccionado = plazos.indexWhere((plazo) =>
+                double.parse(plazo['nPlazo'].toString()) == _currentValue);
+            // Obtiene la etiqueta
+
+            // Puedes hacer algo con los plazos obtenidos
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Meses: $primerPlazo',
+                      style: TextStyle(fontSize: 24.0),
+                    ),
+                    Text(
+                      'Meses: $ultimoPlazo',
+                      style: TextStyle(fontSize: 24.0),
+                    ),
+                  ],
+                ),
+                Slider(
+                  value: _currentValue,
+                  min: 12,
+                  max: 48,
+                  divisions: 36,
+                  onChanged: (value) {
+                    setState(() {
+                      _currentValue = value;
+                    });
+                  },
+                ),
+                Container(
+                  padding: EdgeInsets.all(10.0),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20.0),
+                      color: Colors.deepOrange),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    textBaseline: TextBaseline.alphabetic,
+                    children: [
+                      Text(
+                        'Meses: ${_currentValue.toInt()}',
+                        style: const TextStyle(
+                            fontSize: 25.0,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                          'Índice del Plazo Seleccionado: $indicePlazoSeleccionado'),
+                    ],
+                  ),
+                ),
+                // Text(
+                //   'Meses: ${_currentValue.toInt()}',
+                //   style: TextStyle(fontSize: 24.0),
+                // ),
+              ],
+            );
+          } else if (plazosSnapshot.hasError) {
+            return Text('Error al obtener los plazos');
+          }
+          return CircularProgressIndicator(); // Mientras se carga la data
+        },
+      );
+    } else {
+      // Puedes manejar otros casos o retornar un widget por defecto
+      return Container();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: EdgeInsets.all(5),
-        child: Form(
-            key: _formKey,
-            child: SingleChildScrollView(
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    const SizedBox(
-                      height: 40,
-                    ),
-                    //SubitleCards("¿Cuánto dinero necesitas?"),
-
-                    Container(
-                      padding: EdgeInsets.only(left: 10.0),
-                      width: double.infinity,
-                      decoration: const BoxDecoration(
-                          //border: Border.all(
-                          //color: Colors.blueAccent
-                          //)
-                          ),
-                      child: const Text(
-                        "¿Cuánto dinero necesitas?",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 22,
-                          color: Colors.black,
-                        ),
-                        textScaleFactor: 1,
-                      )),
-                    
-                    const SizedBox(
-                      height: 40,
-                    ),
-                    _InputRange(),
-                    _tituloPeriodicidad(),
-                    Container(
-                      padding: const EdgeInsets.all(10),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: RadioListTile(
-                              title: const Text('Quincenal'),
-                              value: "Quincenal",
-                              groupValue: _opcionesPeriodicidadPago,
-                              onChanged: SeleccionadoPeriodicidadPago,
-                              //selected: true,
-                              //activeColor: Colors.red,
-                            ),
-                          ),
-                          Expanded(
-                              child: RadioListTile(
-                            title: const Text('Mensual'),
-                            value: "Mensual",
-                            groupValue: _opcionesPeriodicidadPago,
-                            onChanged: SeleccionadoPeriodicidadPago,
-                          )),
-                        ],
-                      ),
-                    ),
-                    if (_quincenalPeriodicidadPago) _InputQuincenal(),
-
-                    if (_mensualPeriodicidadPago) _InputMensualidad(),
-
-
-                    Container(
-                      padding: EdgeInsets.all(15),
-                      child: const Text(
-                        "Como entidad financiera estamos regulada y supervisada por la CONDUSEF con la cual obtuvimos nuestro registro como SOFOM y por su parte, por la CNBV en materia de Prevención de Lavado de Dinero y Financiamiento al Terrorismo.",
-                        textAlign:  TextAlign.justify,
-                        style: TextStyle(
-                            fontSize: 12, color: Color.fromARGB(255, 56, 56, 56)),
-                      ),
-                    ),
-
-                    
-                    _BotonEnviar(),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                  ]),
-            )));
+      padding: EdgeInsets.all(5),
+      child: Form(
+        key: _formKey,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              const SizedBox(
+                height: 40,
+              ),
+              Container(
+                padding: EdgeInsets.only(left: 10.0),
+                width: double.infinity,
+                decoration: const BoxDecoration(),
+                child: const Text(
+                  "¿Cuánto dinero necesitas??",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 22,
+                    color: Colors.black,
+                  ),
+                  textScaleFactor: 1,
+                ),
+              ),
+              const SizedBox(
+                height: 40,
+              ),
+              _InputRange(),
+              _tituloPeriodicidad(),
+              if (periodos != null)
+                for (var periodo in periodos!)
+                  RadioListTile<String>(
+                    title: Text(periodo['sDescription']),
+                    value: periodo['sDescription'],
+                    groupValue: selectedPeriodo,
+                    onChanged: (value) {
+                      setState(() {
+                        selectedPeriodo = value!;
+                        idPeriodos = periodo['nIdPeriodo'];
+                      });
+                    },
+                  )
+              else
+                CircularProgressIndicator(),
+              _getTextToShow(idPeriodos, selectedPeriodo),
+              Container(
+                padding: EdgeInsets.all(15),
+                child: const Text(
+                  "Como entidad financiera estamos regulada y supervisada por la CONDUSEF con la cual obtuvimos nuestro registro como SOFOM y por su parte, por la CNBV en materia de Prevención de Lavado de Dinero y Financiamiento al Terrorismo.",
+                  textAlign: TextAlign.justify,
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Color.fromARGB(255, 56, 56, 56),
+                  ),
+                ),
+              ),
+              _BotonEnviar(),
+              const SizedBox(
+                height: 20,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
+  double value = 0.0;
+  var montoSelectIndex = 0;
   Widget _InputRange() {
     return Column(children: <Widget>[
       Container(
@@ -313,37 +592,29 @@ class MyCustomFormHomePageCreditosDeSaludState
           ],
         ),
       ),
-      SliderTheme(
-        data: SliderThemeData(
-            /*activeTrackColor: Colors.deepOrange,
-            inactiveTrackColor: Colors.amber,
-            thumbColor: Colors.pink,
-            thumbShape: RoundSliderThumbShape(enabledThumbRadius: 18.0),
-            overlayColor: Colors.indigo.withOpacity(0.18),
-            overlayShape: RoundSliderOverlayShape(overlayRadius: 40.0),
-            activeTickMarkColor: Colors.blue,
-            inactiveTickMarkColor: Colors.white,
-            trackHeight: 18.0,
-            valueIndicatorColor: Colors.red,
-            valueIndicatorTextStyle: TextStyle(fontSize: 14.0)*/
-            ),
-        child: Slider(
-          value: _cantidadMinima.toDouble(),
-          min: 20,
-          max: 200,
-          divisions: 36,
-          label: _cantidadMinima.round().toString(),
-          //activeColor: Colors.deepOrange,
-          //inactiveColor: Colors.amber,
-          onChanged: (value) {
-            _cantidadMinima = value.round();
-            setState(() {
-              _cantidadMinima = _cantidadMinima;
-              print(_cantidadMinima);
-            });
-          },
-        ),
+      Slider(
+        value: value,
+        onChanged: (double sliderValue) {
+          setState(() {
+            value = sliderValue;
+          });
+        },
+        onChangeEnd: (double sliderValue) {
+          double nearestValue = arraySaltos.reduce((a, b) {
+            return (a - sliderValue).abs() < (b - sliderValue).abs() ? a : b;
+          }).toDouble();
+
+          setState(() {
+            value = nearestValue;
+            montoSelectIndex = arraySaltosIndex.indexOf(value.toInt());
+          });
+        },
+        min: arraySaltos.isEmpty ? 0 : arraySaltos.first.toDouble(),
+        max: arraySaltos.isEmpty ? 0 : arraySaltos.last.toDouble(),
+        divisions: arraySaltos.length >= 2 ? arraySaltos.length - 1 : 1,
+        label: arraySaltos.isEmpty ? '' : value.toString(),
       ),
+      Text('${arraySaltosIndex.indexOf(value.toInt())}')
     ]);
   }
 
@@ -429,32 +700,13 @@ class MyCustomFormHomePageCreditosDeSaludState
           ],
         ),
       ),
-      SliderTheme(
-        data: SliderThemeData(),
-        child: Slider(
-          value: _quincenasMinima.toDouble(),
-          min: 12,
-          max: 48,
-          divisions: 36,
-          label: _quincenasMinima.round().toString(),
-          //activeColor: Colors.deepOrange,
-          //inactiveColor: Colors.amber,
-          onChanged: (value) {
-            _quincenasMinima = value.round();
-            setState(() {
-              _quincenasMinima = _quincenasMinima;
-              print(_quincenasMinima);
-            });
-          },
-        ),
-      ),
     ]);
   }
 
   Widget _InputMensualidad() {
     return Column(children: <Widget>[
       Container(
-        padding: EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(10.0),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20.0),
             color: Colors.deepOrange),
@@ -526,43 +778,6 @@ class MyCustomFormHomePageCreditosDeSaludState
       ),
     ]);
   }
-  /*Widget _slideQuindenalPeriodicidadPago() {
-    return Container(
-      padding: EdgeInsets.all(10),
-      child: Slider(
-        value: _cantidadQuincenal,
-        min: 12,
-        max: 48,
-        divisions: 36,
-        label: _cantidadQuincenal.round().toString(),
-        onChanged: (double value) {
-          setState(() {
-            _cantidadQuincenal = value;
-            print("Pintando queincenal");
-            print(_cantidadQuincenal);
-          });
-        },
-      ),
-    );
-  }
-
-  Widget _slideMensuallPeriodicidadPago() {
-    return Container(
-      padding: EdgeInsets.all(10),
-      child: Slider(
-        value: _cantidadMensual,
-        min: 6,
-        max: 24,
-        divisions: 18,
-        label: _cantidadMensual.round().toString(),
-        onChanged: (double value) {
-          setState(() {
-            _cantidadMensual = value;
-          });
-        },
-      ),
-    );
-  }*/
 
   Widget _BotonEnviar() {
     return Container(
@@ -600,9 +815,14 @@ class MyCustomFormHomePageCreditosDeSaludState
                       );
                     });
               } else {
-                //print("llegando aqui 1");
-                Ingresar(CantidadRecibe, PeriodoRecibe, PlazoQuincenalRecibe,
-                    PlazoMensualRecibe);
+                dev.log(montoSelectIndex.toString());
+                dev.log(plazoSelecIndex.toString());
+                dev.log(idPeriodos);
+
+                Ingresar(montoSelectIndex.toString(), idPeriodos,
+                    plazoSelecIndex.toString(), direccionIP);
+                // Ingresar(CantidadRecibe, PeriodoRecibe, PlazoQuincenalRecibe,
+                //     PlazoMensualRecibe);
               }
             }
           },

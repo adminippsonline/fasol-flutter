@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'dart:developer' as dev;
 import 'package:flutter/material.dart';
 import 'CRMs/CreditosDeSalud/includes/colors/colors.dart';
 import 'CRMs/CreditosDeSalud/headers.dart';
@@ -25,8 +27,7 @@ class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
-  State<HomePage> createState() =>
-      _HomePageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
@@ -52,15 +53,15 @@ class _HomePageState extends State<HomePage> {
       id_info = prefs.getInt('id_info') ?? 0;
     });
   }
- 
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(       
+    return Scaffold(
       appBar: AppBar(
         title: Text("Fasol Crédito y Préstamos Personales"),
         backgroundColor: COLOR_PRINCIPAL,
       ),
-      drawer: MenuLateralPage(),
+      drawer: MenuLateralPage(""),
       bottomNavigationBar: MenuFooterPage(),
       body: const MyCustomFormHomePage(),
     );
@@ -77,8 +78,7 @@ class MyCustomFormHomePage extends StatefulWidget {
   }
 }
 
-class MyCustomFormHomePageState
-    extends State<MyCustomFormHomePage> {
+class MyCustomFormHomePageState extends State<MyCustomFormHomePage> {
   //el fomrKey para formulario
   final _formKey = GlobalKey<FormState>();
 
@@ -104,7 +104,7 @@ class MyCustomFormHomePageState
   int _quincenasMinima = 12;
   int _mensualidadesMinima = 6;
 
-  String? _opcionesPeriodicidadPago="Quincenal";
+  String? _opcionesPeriodicidadPago = "Quincenal";
   bool _quincenalPeriodicidadPago = true;
   bool _mensualPeriodicidadPago = false;
   void SeleccionadoPeriodicidadPago(value) {
@@ -139,15 +139,16 @@ class MyCustomFormHomePageState
       }).timeout(const Duration(seconds: 90));
       print("holammmm");
       print(response.body);*/
-      var Enviar= {
+      var Enviar = {
         'Cantidad': "$Cantidad",
         'Periodo': Periodo,
         'Quincenal': "$Quincenal",
         'Mensual': "$Mensual",
       };
       //print(Enviar);
-      Navigator.of(context)
-          .pushReplacement(MaterialPageRoute(builder: (_) => Desgloce("$Cantidad", Periodo,"$Quincenal","$Mensual")));
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (_) =>
+              Desgloce("$Cantidad", Periodo, "$Quincenal", "$Mensual")));
       FocusScope.of(context).unfocus();
     } on TimeoutException catch (e) {
       //print('Tardo muco la conexion');
@@ -170,7 +171,6 @@ class MyCustomFormHomePageState
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -187,28 +187,28 @@ class MyCustomFormHomePageState
                     //SubitleCards("¿Cuánto dinero necesitas?"),
 
                     Container(
-                      padding: EdgeInsets.only(left: 10.0),
-                      width: double.infinity,
-                      decoration: const BoxDecoration(
-                          //border: Border.all(
-                          //color: Colors.blueAccent
-                          //)
+                        padding: EdgeInsets.only(left: 10.0),
+                        width: double.infinity,
+                        decoration: const BoxDecoration(
+                            //border: Border.all(
+                            //color: Colors.blueAccent
+                            //)
+                            ),
+                        child: const Text(
+                          "¿Cuánto dinero necesitas??",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 22,
+                            color: Colors.black,
                           ),
-                      child: const Text(
-                        "¿Cuánto dinero necesitas?",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 22,
-                          color: Colors.black,
-                        ),
-                        textScaleFactor: 1,
-                      )),
-                    
+                          textScaleFactor: 1,
+                        )),
+
                     const SizedBox(
                       height: 40,
                     ),
-                    _InputRange(),
-                    _tituloPeriodicidad(),
+                    //_InputRange(),
+                    // _tituloPeriodicidad(),
                     Container(
                       padding: const EdgeInsets.all(10),
                       child: Row(
@@ -237,18 +237,17 @@ class MyCustomFormHomePageState
 
                     if (_mensualPeriodicidadPago) _InputMensualidad(),
 
-
                     Container(
                       padding: EdgeInsets.all(15),
                       child: const Text(
                         "Como entidad financiera estamos regulada y supervisada por la CONDUSEF con la cual obtuvimos nuestro registro como SOFOM y por su parte, por la CNBV en materia de Prevención de Lavado de Dinero y Financiamiento al Terrorismo.",
-                        textAlign:  TextAlign.justify,
+                        textAlign: TextAlign.justify,
                         style: TextStyle(
-                            fontSize: 12, color: Color.fromARGB(255, 56, 56, 56)),
+                            fontSize: 12,
+                            color: Color.fromARGB(255, 56, 56, 56)),
                       ),
                     ),
 
-                    
                     _BotonEnviar(),
                     const SizedBox(
                       height: 20,

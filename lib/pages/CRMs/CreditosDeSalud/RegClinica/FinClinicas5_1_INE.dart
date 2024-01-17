@@ -78,7 +78,7 @@ class _FinClinicas5_1_INEState extends State<FinClinicas5_1_INE> {
     //   appBar: AppBar(
     //     title: Text(NombreCompletoSession),
     //   ),
-    //   drawer: MenuLateralPage(),
+    //   drawer: MenuLateralPage(""),
     //   bottomNavigationBar: MenuFooterPage(),
     //   body: const MyCustomFormFinClinicas5_1(),
     // );

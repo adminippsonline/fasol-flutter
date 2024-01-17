@@ -40,7 +40,7 @@ class _RegistroMedState extends State<RegistroMed> {
     //   appBar: AppBar(
     //     title: const Text('Registro de médico'),
     //   ),
-    //   drawer: MenuLateralPage(),
+    //   drawer: MenuLateralPage(""),
     //   bottomNavigationBar: MenuFooterPage(),
     //   body: const MyCustomFormMedicoRegistro(),
     // );
@@ -91,14 +91,14 @@ class MyCustomFormMedicoRegistroState
       var url = Uri.https('fasoluciones.mx', 'api/Medico/Registro');
       var response = await http.post(url, body: {
         'Correo': Corr,
-        'Telefono': Celu, 
+        'Telefono': Celu,
         'Contrasena': Cont,
         'ConfirmarContrasena': ConfCont,
         'AvisoDePrivacidad': "1",
         'TerminosYCondiciones': "1",
       }).timeout(const Duration(seconds: 90));
       print(response.body);
-      
+
       if (response.body != "0" && response.body != "") {
         showDialog(
             context: context,
@@ -118,11 +118,11 @@ class MyCustomFormMedicoRegistroState
                 return AlertDialog(
                   title: Text('Registrado correctamente'),
                 );
-              });*/ 
-          guardar_datos(id_medico, 'Médico', Corr, Cont, Celu);    
+              });*/
+          guardar_datos(id_medico, 'Médico', Corr, Cont, Celu);
           Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (_) => PerfilMedVerificar()));
-            FocusScope.of(context).unfocus();
+              MaterialPageRoute(builder: (_) => PerfilMedVerificar()));
+          FocusScope.of(context).unfocus();
         } else {
           //print('Error en el registro');
           showDialog(
@@ -166,8 +166,8 @@ class MyCustomFormMedicoRegistroState
 
   //Esto es iun metodo
   //se usa para guarar dtos es tipo sesiones
-  Future<void> guardar_datos(id_medico, NombreCompletoSession,
-      CorreoSession, ContrasenaSession, CelularSession) async {
+  Future<void> guardar_datos(id_medico, NombreCompletoSession, CorreoSession,
+      ContrasenaSession, CelularSession) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt('id_medico', id_medico);
     await prefs.setString('NombreCompletoSession', NombreCompletoSession);
@@ -183,8 +183,7 @@ class MyCustomFormMedicoRegistroState
 
   @override
   Widget build(BuildContext context) {
-    return BuildScreens(
-        'Médico', '', '', 'Registro', '', _formulario());
+    return BuildScreens('Médico', '', '', 'Registro', '', _formulario());
   }
 
   Widget _formulario() {
@@ -361,7 +360,7 @@ class MyCustomFormMedicoRegistroState
               CorreoRecibe = Correo.text;
               CelularRecibe = Celular.text;
               ContrasenaRecibe = Contrasena.text;
-              ConfirmarContrasenaRecibe = ConfirmarContrasena.text; 
+              ConfirmarContrasenaRecibe = ConfirmarContrasena.text;
 
               final bool ValidarCorreo = EmailValidator.validate(CorreoRecibe);
               var ValidarCorreoFormat = (ValidarCorreo ? 'yes' : 'no');

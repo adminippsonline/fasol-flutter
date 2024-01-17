@@ -22,9 +22,6 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 
 //import 'RegistroMedOlvidaste_sui_imagen_no_irve.dart';
 
-
-
-
 import 'package:intl/intl.dart';
 import 'dart:io';
 
@@ -68,7 +65,7 @@ class _RegistroMedOlvidasteState extends State<RegistroMedOlvidaste> {
       appBar: AppBar(
         title: Text("Bienvenido $id_medico $id_info  $NombreCompletoSession"),
       ),
-      drawer: MenuLateralPage(),
+      drawer: MenuLateralPage(""),
       bottomNavigationBar: MenuFooterPage(),
       body: const MyCustomFormRegistroMedOlvidaste(),
     );

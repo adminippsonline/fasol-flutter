@@ -38,8 +38,6 @@ class _FinClinicas15State extends State<FinClinicas15> {
   String CorreoSession = "";
   String TelefonoSession = "";
 
-  
-
   @override
   void initState() {
     super.initState();
@@ -62,7 +60,7 @@ class _FinClinicas15State extends State<FinClinicas15> {
     //   appBar: AppBar(
     //     title: Text(NombreCompletoSession),
     //   ),
-    //   drawer: MenuLateralPage(),
+    //   drawer: MenuLateralPage(""),
     //   bottomNavigationBar: MenuFooterPage(),
     // );
   }
@@ -82,7 +80,6 @@ class MyCustomFormFinClinicas15State extends State<MyCustomFormFinClinicas15> {
   //el fomrKey para formulario
   final _formKey = GlobalKey<FormState>();
 
-
   ////////////////////////////
 
   //Los controladores para los input
@@ -100,23 +97,25 @@ class MyCustomFormFinClinicas15State extends State<MyCustomFormFinClinicas15> {
 
   File? imagenPoderDelRepresentante = null;
 
-  void Ingresar(Pantalla, IDClinica, globalimageUpdatePoderDelRepresentante) async {
+  void Ingresar(
+      Pantalla, IDClinica, globalimageUpdatePoderDelRepresentante) async {
     try {
       var url = Uri.https('fasoluciones.mx', 'api/Clinica/Agregar');
-      var data={
+      var data = {
         'Pantalla': Pantalla,
         'id_clinica': IDClinica,
-        'PoderDelRepresentante':globalimageUpdatePoderDelRepresentante
+        'PoderDelRepresentante': globalimageUpdatePoderDelRepresentante
       };
       //print(data);
-      var response = await http.post(url, body: data).timeout(const Duration(seconds: 90));
+      var response =
+          await http.post(url, body: data).timeout(const Duration(seconds: 90));
       //print("llego aqui 111");
       //print(response.body);
 
       if (response.body != "0" && response.body != "") {
         var Respuesta = jsonDecode(response.body);
         print(Respuesta);
-        String status = Respuesta['status']; 
+        String status = Respuesta['status'];
         if (status == "OK") {
           //print('si existe aqui -----');
           /*showDialog(
@@ -199,7 +198,7 @@ class MyCustomFormFinClinicas15State extends State<MyCustomFormFinClinicas15> {
   Widget build(BuildContext context) {
     return BuildScreens(
         'Clínica', '', '', 'Datos de la clínica', '', _formulario());
-  } 
+  }
 
   String? imagePath;
   var globalimageUpdatePoderDelRepresentante = "";
@@ -211,15 +210,14 @@ class MyCustomFormFinClinicas15State extends State<MyCustomFormFinClinicas15> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 // headerTop("Clínica",
-                SubitleCards(
-                    'Carga de documentos del Representante legal '),
+                SubitleCards('Carga de documentos del Representante legal '),
                 SizedBox(
                   height: 20,
                 ),
 
                 _Pantalla(),
                 _IDClinica(),
-                
+
                 SizedBox(height: 10),
                 Container(
                     padding: EdgeInsets.only(left: 10.0),
@@ -292,7 +290,8 @@ class MyCustomFormFinClinicas15State extends State<MyCustomFormFinClinicas15> {
                         imagenPoderDelRepresentante = File(_pickedFile.name);
                         final bytes = File(imagePath!).readAsBytesSync();
                         dev.log(bytes.toString());
-                        globalimageUpdatePoderDelRepresentante = base64Encode(bytes);
+                        globalimageUpdatePoderDelRepresentante =
+                            base64Encode(bytes);
                       });
                       Navigator.pop(context);
                     },
@@ -305,7 +304,6 @@ class MyCustomFormFinClinicas15State extends State<MyCustomFormFinClinicas15> {
           );
         });
   }
-
 
   Widget _Pantalla() {
     return Visibility(
@@ -343,10 +341,6 @@ class MyCustomFormFinClinicas15State extends State<MyCustomFormFinClinicas15> {
         ));
   }
 
-
- 
- 
-
   Widget _BotonEnviar() {
     return Container(
       width: double.infinity,
@@ -372,7 +366,7 @@ class MyCustomFormFinClinicas15State extends State<MyCustomFormFinClinicas15> {
 
               if (PantallaRecibe == "" ||
                   IDClinicaRecibe == "" ||
-                  globalimageUpdatePoderDelRepresentante == "" ) {
+                  globalimageUpdatePoderDelRepresentante == "") {
                 showDialog(
                     context: context,
                     builder: (BuildContext context) {
@@ -389,6 +383,7 @@ class MyCustomFormFinClinicas15State extends State<MyCustomFormFinClinicas15> {
           child: const Text('Siguiente')),
     );
   }
+
   Widget _Avanzar() {
     return Container(
       width: double.infinity,

@@ -44,7 +44,7 @@ class _PerfilMedVerificarState extends State<PerfilMedVerificar> {
         title: const Text(''),
         backgroundColor: COLOR_PRINCIPAL,
       ),
-      drawer: MenuLateralPage(),
+      drawer: MenuLateralPage(""),
       bottomNavigationBar: MenuFooterPage(),
       body: const MyCustomPerfilMedVerificar(),
     );
@@ -103,23 +103,22 @@ class MyCustomPerfilMedVerificarState
                     title: Text('Ingresando correctamente'),
                   );
                 });
-            
+
             String PrimerNombre = Respuesta['data']['PrimerNombre'] ?? "";
             String SegundoNombre = Respuesta['data']['SegundoNombre'] ?? "";
             String PrimerApellido = Respuesta['data']['ApellidoPaterno'] ?? "";
             String SegundoApellido = Respuesta['data']['ApellidoMaterno'] ?? "";
             //print(NombreCompleto);
-           
 
             var NombreCompleto = PrimerNombre +
-              " " +
-              SegundoNombre +
-              " " +
-              PrimerApellido +
-              " " +
-              SegundoApellido;
-            //print("******");  
-            //print(NombreCompleto);  
+                " " +
+                SegundoNombre +
+                " " +
+                PrimerApellido +
+                " " +
+                SegundoApellido;
+            //print("******");
+            //print(NombreCompleto);
             //print("******");
             guardar_datos(
                 id_medico,
@@ -160,8 +159,7 @@ class MyCustomPerfilMedVerificarState
               Navigator.of(context).pushReplacement(
                   MaterialPageRoute(builder: (_) => FinRegMedico36()));
               FocusScope.of(context).unfocus();
-            }
-            else if (Redireccionar == "Firmar") {
+            } else if (Redireccionar == "Firmar") {
               Navigator.of(context).pushReplacement(
                   MaterialPageRoute(builder: (_) => FirmarMedico()));
               FocusScope.of(context).unfocus();
@@ -170,7 +168,7 @@ class MyCustomPerfilMedVerificarState
               Navigator.of(context).push(
                   MaterialPageRoute<Null>(builder: (BuildContext context) {
                 return new PerfilMedicoWebView(
-                    CorreoSession, ContrasenaSession,id_medico);
+                    CorreoSession, ContrasenaSession, id_medico);
               }));
             }
           } else {
@@ -213,17 +211,17 @@ class MyCustomPerfilMedVerificarState
             );
           });
 
-           Navigator.of(context).push(
-              MaterialPageRoute<Null>(builder: (BuildContext context) {
-            return new PerfilMedVerificar();
-          }));
+      Navigator.of(context)
+          .push(MaterialPageRoute<Null>(builder: (BuildContext context) {
+        return new PerfilMedVerificar();
+      }));
     }
   }
 
   //Esto es iun metodo
   //se usa para guarar dtos es tipo sesiones
-  Future<void> guardar_datos(id_medico, NombreCompletoSession,
-      CorreoSession, ContrasenaSession, TelefonoSession) async {
+  Future<void> guardar_datos(id_medico, NombreCompletoSession, CorreoSession,
+      ContrasenaSession, TelefonoSession) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt('id_medico', id_medico);
     await prefs.setString('NombreCompletoSession', NombreCompletoSession);

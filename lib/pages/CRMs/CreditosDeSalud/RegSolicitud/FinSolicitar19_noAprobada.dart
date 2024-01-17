@@ -24,10 +24,12 @@ import 'FinSolicitar16.dart';
 import 'package:intl/intl.dart';
 
 class FinSolicitar19_noAprobada extends StatefulWidget {
-  const FinSolicitar19_noAprobada({super.key});
+  String idCredito = "";
+  FinSolicitar19_noAprobada(this.idCredito);
 
   @override
-  State<FinSolicitar19_noAprobada> createState() => _FinSolicitar19_noAprobadaState();
+  State<FinSolicitar19_noAprobada> createState() =>
+      _FinSolicitar19_noAprobadaState();
 }
 
 class _FinSolicitar19_noAprobadaState extends State<FinSolicitar19_noAprobada> {
@@ -56,13 +58,14 @@ class _FinSolicitar19_noAprobadaState extends State<FinSolicitar19_noAprobada> {
 
   @override
   Widget build(BuildContext context) {
-    return MyCustomFormFinSolicitar19_noAprobada();
+    return MyCustomFormFinSolicitar19_noAprobada(widget.idCredito);
   }
 }
 
 // Create a Form widget.
 class MyCustomFormFinSolicitar19_noAprobada extends StatefulWidget {
-  const MyCustomFormFinSolicitar19_noAprobada({super.key});
+  String idCredito = "";
+  MyCustomFormFinSolicitar19_noAprobada(this.idCredito);
 
   @override
   MyCustomFormFinSolicitar19_noAprobadaState createState() {
@@ -75,7 +78,6 @@ class MyCustomFormFinSolicitar19_noAprobadaState
   //el fomrKey para formulario
   final _formKey = GlobalKey<FormState>();
 
-
   //Los controladores para los input
   final Pantalla = TextEditingController();
   final IDLR = TextEditingController();
@@ -85,10 +87,7 @@ class MyCustomFormFinSolicitar19_noAprobadaState
   String IDLRRecibe = "";
   String IDInfoRecibe = "";
 
-  void Ingresar(
-      Pantalla,
-      IDLR,
-      IDInfo) async {
+  void Ingresar(Pantalla, IDLR, IDInfo) async {
     try {
       var url = Uri.https('fasoluciones.mx', 'api/Solicitud/Agregar');
       var response = await http.post(url, body: {
@@ -112,8 +111,8 @@ class MyCustomFormFinSolicitar19_noAprobadaState
                   title: Text('Registrado correctamente'),
                 );
               });
-          Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (_) => FinSolicitar16()));
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (_) => FinSolicitar16(widget.idCredito)));
           FocusScope.of(context).unfocus();
         } else {
           //print('Error en el registro');
@@ -173,8 +172,7 @@ class MyCustomFormFinSolicitar19_noAprobadaState
   void mostrar_datos() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      NombreCompletoSession =
-          prefs.getString('NombreCompletoSession') ?? '';
+      NombreCompletoSession = prefs.getString('NombreCompletoSession') ?? '';
       id_solicitud = prefs.getInt('id_solicitud') ?? 0;
       id_credito = prefs.getInt('id_credito') ?? 0;
     });
@@ -184,79 +182,73 @@ class MyCustomFormFinSolicitar19_noAprobadaState
     IDInfo.text = "$id_credito";
   }
 
-
-
-  @override 
+  @override
   Widget build(BuildContext context) {
     return BuildScreens(
         'Solicitud', '', '', 'Datos de la solicitud', '', _formulario());
-  } 
-
+  }
 
   Widget _formulario() {
     return Form(
-            key: _formKey,
-            child: SingleChildScrollView(
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    SubitleCards("No aprobado"),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _Pantalla(),
-                    _IDLR(),
-                    _IDInfo(),
+        key: _formKey,
+        child: SingleChildScrollView(
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                SubitleCards("No aprobado"),
+                SizedBox(
+                  height: 20,
+                ),
+                _Pantalla(),
+                _IDLR(),
+                _IDInfo(),
 
-                    Container(
-                        padding: EdgeInsets.only(left: 10.0),
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            //border: Border.all(
-                            //color: Colors.blueAccent
-                            //)
-                            ),
-                        child: Text(
-                          "Estimado(a) Lo sentimos mucho no pudimos autorizar el préstamo que nos solicitaste ",
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            fontSize: 17,
-                            //color: Colors.blue
-                          ),
-                          textScaleFactor: 1,
-                        )),
+                Container(
+                    padding: EdgeInsets.only(left: 10.0),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        //border: Border.all(
+                        //color: Colors.blueAccent
+                        //)
+                        ),
+                    child: Text(
+                      "Estimado(a) Lo sentimos mucho no pudimos autorizar el préstamo que nos solicitaste ",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontSize: 17,
+                        //color: Colors.blue
+                      ),
+                      textScaleFactor: 1,
+                    )),
 
+                Container(
+                    padding: EdgeInsets.only(left: 10.0),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        //border: Border.all(
+                        //color: Colors.blueAccent
+                        //)
+                        ),
+                    child: Text(
+                      "",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontSize: 17,
+                        //color: Colors.blue
+                      ),
+                      textScaleFactor: 1,
+                    )),
 
-                    Container(
-                        padding: EdgeInsets.only(left: 10.0),
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            //border: Border.all(
-                            //color: Colors.blueAccent
-                            //)
-                            ),
-                        child: Text(
-                          "",
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            fontSize: 17,
-                            //color: Colors.blue
-                          ),
-                          textScaleFactor: 1,
-                        )),
-
-
-
-                    SizedBox(
-                      height: 20,
-                    ),
-                    //_BotonEnviar(),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    //_Avanzar
-                  ]),
-            ));
+                SizedBox(
+                  height: 20,
+                ),
+                //_BotonEnviar(),
+                SizedBox(
+                  height: 20,
+                ),
+                //_Avanzar
+              ]),
+        ));
   }
 
   Widget _Pantalla() {
@@ -313,7 +305,6 @@ class MyCustomFormFinSolicitar19_noAprobadaState
         ));
   }
 
-
   Widget _BotonEnviar() {
     return Container(
       width: double.infinity,
@@ -326,7 +317,7 @@ class MyCustomFormFinSolicitar19_noAprobadaState
               IDInfoRecibe = IDInfo.text;
               if (PantallaRecibe == "" ||
                   IDLRRecibe == "" ||
-                  IDInfoRecibe == "" ) {
+                  IDInfoRecibe == "") {
                 showDialog(
                     context: context,
                     builder: (BuildContext context) {
@@ -335,10 +326,7 @@ class MyCustomFormFinSolicitar19_noAprobadaState
                       );
                     });
               } else {
-                Ingresar(
-                    PantallaRecibe,
-                    IDLRRecibe,
-                    IDInfoRecibe);
+                Ingresar(PantallaRecibe, IDLRRecibe, IDInfoRecibe);
               }
             }
           },

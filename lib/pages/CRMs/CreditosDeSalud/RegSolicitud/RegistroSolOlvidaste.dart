@@ -20,7 +20,7 @@ class _RegistroSolOlvidasteState extends State<RegistroSolOlvidaste> {
       appBar: AppBar(
         title: const Text('RegistroSolOlvidaste'),
       ),
-      drawer: MenuLateralPage(),
+      drawer: MenuLateralPage(""),
       bottomNavigationBar: MenuFooterPage(),
       backgroundColor: Colors.white,
       body: Center(

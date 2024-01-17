@@ -43,7 +43,8 @@ import 'package:plugin/plugin.dart';
 import 'FinSolicitar21_Biom.dart';
 
 class FinSolicitar21_INE extends StatefulWidget {
-  const FinSolicitar21_INE({super.key});
+  String idCredito = "";
+  FinSolicitar21_INE(this.idCredito);
 
   @override
   State<FinSolicitar21_INE> createState() => _FinSolicitar21_INEState();
@@ -75,12 +76,12 @@ class _FinSolicitar21_INEState extends State<FinSolicitar21_INE> {
 
   @override
   Widget build(BuildContext context) {
-    return MyCustomFormFinSolicitar21_INE();
+    return MyCustomFormFinSolicitar21_INE(widget.idCredito);
     // return Scaffold(
     //   appBar: AppBar(
     //     title: Text(NombreCompletoSession),
     //   ),
-    //   drawer: MenuLateralPage(),
+    //   drawer: MenuLateralPage(""),
     //   bottomNavigationBar: MenuFooterPage(),
     //   body: const MyCustomFormFinSolicitar21(),
     // );
@@ -89,7 +90,8 @@ class _FinSolicitar21_INEState extends State<FinSolicitar21_INE> {
 
 // Create a Form widget.
 class MyCustomFormFinSolicitar21_INE extends StatefulWidget {
-  const MyCustomFormFinSolicitar21_INE({super.key});
+  String idCredito = "";
+  MyCustomFormFinSolicitar21_INE(this.idCredito);
 
   @override
   MyCustomFormFinSolicitar21_INEState createState() {
@@ -106,7 +108,6 @@ class MyCustomFormFinSolicitar21_INEState
   final _plugin = FadMultisignPlugin();
   final _fadBioPlugin = FadBio();
 
-  
   Future<void> initId() async {
     String fadResponse;
     const config =
@@ -139,6 +140,7 @@ class MyCustomFormFinSolicitar21_INEState
   void Ingresar(Pantalla, IDLR, IDInfo, Uint8List imageBytes) async {
     try {
       String filename = globalineAnverso;
+
       if (filename != "") {
         final decodeBytes =
             base64.decode(globalineAnverso.replaceAll(RegExp(r'\s+'), ''));
@@ -146,11 +148,23 @@ class MyCustomFormFinSolicitar21_INEState
         final dio = Dio();
         var url = "https://fasoluciones.mx/api/Solicitud/Agregar";
 
+        // final formData = FormData.fromMap({
+        //   'Pantalla': 'FinSolicitar21',
+        //   'SubPantalla': 'FinSolicitar21_INE',
+        //   'id_solicitud': IDLR,
+        //   'id_credito': widget.idCredito,
+        //   'info': globalinfoine,
+        //   'ine_atras': MultipartFile.fromBytes(decodeBytes,
+        //       filename: "ineanverso.png",
+        //       contentType: MediaType('image', 'png')),
+        //   'ine_frente': MultipartFile.fromBytes(imageBytes,
+        //       filename: 'image.png', contentType: MediaType('image', 'png')),
+        // });
         final formData = FormData.fromMap({
           'Pantalla': 'FinSolicitar21',
           'SubPantalla': 'FinSolicitar21_INE',
           'id_solicitud': IDLR,
-          'id_credito': IDInfo,
+          'id_credito': widget.idCredito,
           'info': globalinfoine,
           'ine_atras': MultipartFile.fromBytes(decodeBytes,
               filename: "ineanverso.png",
@@ -160,11 +174,11 @@ class MyCustomFormFinSolicitar21_INEState
         });
 
         var response = await dio.post(url, data: formData);
-        dev.log('Código de estado: ${response.statusCode}');
-        dev.log('Cuerpo de la respuesta: ${response.data}');
+        dev.log(response.statusCode.toString());
+        dev.log(response.data);
 
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (_) => FinSolicitar21_Biom()));
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (_) => FinSolicitar21_Biom(widget.idCredito)));
         FocusScope.of(context).unfocus();
 
         // request.fields['Pantalla'] = 'FinSolicitar21_INE';
@@ -399,40 +413,40 @@ class MyCustomFormFinSolicitar21_INEState
                 _IDLR(),
                 _IDInfo(),
                 SizedBox(height: 30),
-                
-                if (_fadResponse=="") 
-                ElevatedButton(
-                  onPressed: () {
-                    initId();
-                  },
-                  child: const Text('Cargar mi identificación'),
-                ),
 
-                if (_fadResponse!="") 
-                ElevatedButton(
-                  onPressed: () {
-                    initId();
-                  },
-                  child: const Text('Actulizar mi identificación'),
-                ),
-                if (_fadResponse!="") 
-                Container(
-                    padding: EdgeInsets.only(left: 10.0),
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                        //border: Border.all(
-                        //color: Colors.blueAccent
-                        //)
+                if (_fadResponse == "")
+                  ElevatedButton(
+                    onPressed: () {
+                      initId();
+                    },
+                    child: const Text('Cargar mi identificación'),
+                  ),
+
+                if (_fadResponse != "")
+                  ElevatedButton(
+                    onPressed: () {
+                      initId();
+                    },
+                    child: const Text('Actulizar mi identificación'),
+                  ),
+                if (_fadResponse != "")
+                  Container(
+                      padding: EdgeInsets.only(left: 10.0),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          //border: Border.all(
+                          //color: Colors.blueAccent
+                          //)
+                          ),
+                      child: Text(
+                        "Listo, puedes avanzar",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 17,
+                          //color: Colors.blue
                         ),
-                    child: Text(
-                      "Listo, puedes avanzar",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 17,
-                        //color: Colors.blue
-                      ),
-                      textScaleFactor: 1,
-                    )),
+                        textScaleFactor: 1,
+                      )),
 
                 // const Text(
                 //   'Resultado',
@@ -541,102 +555,99 @@ class MyCustomFormFinSolicitar21_INEState
       child: ElevatedButton(
           onPressed: () {
             print("***");
-            print(_fadResponse );
+            print(_fadResponse);
             print("***");
 
             if (_fadResponse == "") {
               showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text('Error: Carga tu identificación'),
-                      );
-                    });
-            }
-            else{
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text('Error: Carga tu identificación'),
+                    );
+                  });
+            } else {
               var res = json.decode(_fadResponse);
               for (var j in res['documents']) {
-                  // dev.log(j['data'].toString());
+                // dev.log(j['data'].toString());
 
-                  var info = j['data'].toString();
-                  var bytes = File(j['data']['foto.png']).readAsBytesSync();
-                  var ineAnversoBytes = j['captures']['ineAnverso.png'];
-                  // var bas = base64Encode(ineAnversoBytes);
-                  // dev.log(bytes.toString());
+                var info = j['data'].toString();
+                var bytes = File(j['data']['foto.png']).readAsBytesSync();
+                var ineAnversoBytes = j['captures']['ineAnverso.png'];
+                // var bas = base64Encode(ineAnversoBytes);
+                // dev.log(bytes.toString());
 
-                  globalimageUpdate = bytes;
+                globalimageUpdate = bytes;
+                globalinfoine = info;
+                globalineAnverso = ineAnversoBytes;
+                // dev.log(ineAnversoBytes);
+                // dev.log("byts");
+
+                setState(() {
                   globalinfoine = info;
                   globalineAnverso = ineAnversoBytes;
-                  // dev.log(ineAnversoBytes);
-                  // dev.log("byts");
-
-                  setState(() {
-                    globalinfoine = info;
-                    globalineAnverso = ineAnversoBytes;
-                  });
-
-                  // setState(() {
-                  //   var bytes = File(j['data']['foto.png']).readAsBytesSync();
-                  //   // dev.log(bytes.toString());
-
-                  //   globalimageUpdate = base64Encode(bytes);
-                  // });
-                }
-                setState(() {
-                  globalimageUpdate = globalimageUpdate;
-                  globalinfoine = globalinfoine;
-                  globalineAnverso = globalineAnverso;
-                  // dev.log("anv");
-                  // dev.log(globalineAnverso);
-
-                  // dev.log(globalimageUpdate);
-                  // dev.log("aqui hay byts");
-                  // dev.log("imageee");
-                  // dev.log(globalimageUpdate);
                 });
 
-                // for (var j in res['documents']) {
-                //   dev.log(j['data']['foto.png'].toString());
-                //   String image = j['data'].toString();
-                //   globalimageUpdate = image;
-                //   dev.log("envian");
-                //   dev.log(globalimageUpdate);
-                //   // dev.log("imagens");
-                //   // dev.log(globalimageUpdate);
-                //   setState(() {
-                //     globalimageUpdate = image;
-                //   });
-                // }
                 // setState(() {
-                //   // dev.log("imagenes obten");
-                //   // dev.log(globalimageUpdate);
-                //   globalimageUpdate = globalimageUpdate;
+                //   var bytes = File(j['data']['foto.png']).readAsBytesSync();
+                //   // dev.log(bytes.toString());
+
+                //   globalimageUpdate = base64Encode(bytes);
                 // });
+              }
+              setState(() {
+                globalimageUpdate = globalimageUpdate;
+                globalinfoine = globalinfoine;
+                globalineAnverso = globalineAnverso;
+                // dev.log("anv");
+                // dev.log(globalineAnverso);
 
-                if (_formKey.currentState!.validate()) {
-                  PantallaRecibe = Pantalla.text;
-                  IDLRRecibe = IDLR.text;
-                  IDInfoRecibe = IDInfo.text;
+                // dev.log(globalimageUpdate);
+                // dev.log("aqui hay byts");
+                // dev.log("imageee");
+                // dev.log(globalimageUpdate);
+              });
 
-                  if (PantallaRecibe == "" ||
-                      IDLRRecibe == "" ||
-                      IDInfoRecibe == "" ||
-                      res == "") {
-                    showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: Text('Error: Carga tu identificación'),
-                          );
-                        });
-                  } else {
-                    Ingresar(PantallaRecibe, IDLRRecibe, IDInfoRecibe,
-                        globalimageUpdate!);
-                  }
+              // for (var j in res['documents']) {
+              //   dev.log(j['data']['foto.png'].toString());
+              //   String image = j['data'].toString();
+              //   globalimageUpdate = image;
+              //   dev.log("envian");
+              //   dev.log(globalimageUpdate);
+              //   // dev.log("imagens");
+              //   // dev.log(globalimageUpdate);
+              //   setState(() {
+              //     globalimageUpdate = image;
+              //   });
+              // }
+              // setState(() {
+              //   // dev.log("imagenes obten");
+              //   // dev.log(globalimageUpdate);
+              //   globalimageUpdate = globalimageUpdate;
+              // });
+
+              if (_formKey.currentState!.validate()) {
+                PantallaRecibe = Pantalla.text;
+                IDLRRecibe = IDLR.text;
+                IDInfoRecibe = IDInfo.text;
+
+                if (PantallaRecibe == "" ||
+                    IDLRRecibe == "" ||
+                    IDInfoRecibe == "" ||
+                    res == "") {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Error: Carga tu identificación'),
+                        );
+                      });
+                } else {
+                  Ingresar(PantallaRecibe, IDLRRecibe, IDInfoRecibe,
+                      globalimageUpdate!);
                 }
-
-            }  
-            
+              }
+            }
           },
           child: const Text('Siguiente')),
     );
@@ -654,8 +665,10 @@ class MyCustomFormFinSolicitar21_INEState
         )),
         onTap: () {
           Navigator.of(context).pop();
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => FinSolicitar21_Biom()));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => FinSolicitar21_Biom(widget.idCredito)));
         },
       ),
     );

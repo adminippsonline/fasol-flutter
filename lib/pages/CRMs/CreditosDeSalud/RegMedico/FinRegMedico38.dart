@@ -23,7 +23,6 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 
 //import 'FinRegMedico38_sui_imagen_no_irve.dart';
 
-
 import 'FinRegMedico38.dart';
 
 import '../PerfilMedico/PerfilMedicoWebView.dart';
@@ -70,7 +69,7 @@ class _FinRegMedico38State extends State<FinRegMedico38> {
     //   appBar: AppBar(
     //     title: Text(NombreCompletoSession),
     //   ),
-    //   drawer: MenuLateralPage(),
+    //   drawer: MenuLateralPage(""),
     //   bottomNavigationBar: MenuFooterPage(),
     //   body: const MyCustomFormFinRegMedico38(),
     // );
@@ -123,8 +122,8 @@ class MyCustomFormFinRegMedico38State
                 );
               });
           Navigator.of(context).pushReplacement(MaterialPageRoute(
-              builder: (_) =>
-                  PerfilMedicoWebView(CorreoSession, ContrasenaSession,id_medico)));
+              builder: (_) => PerfilMedicoWebView(
+                  CorreoSession, ContrasenaSession, id_medico)));
           FocusScope.of(context).unfocus();
         } else {
           //print('Error en el registro');
@@ -217,8 +216,8 @@ class MyCustomFormFinRegMedico38State
                     //headerTop("Médicos", "Estimado Dr $NombreCompletoSession"),
                     SubitleCards("Estimado Dr $NombreCompletoSession"),
                     SizedBox(
-                  height: 20,
-                ),
+                      height: 20,
+                    ),
                     _Pantalla(),
                     _IDMedico(),
                     Container(
@@ -231,7 +230,6 @@ class MyCustomFormFinRegMedico38State
                             color: Color.fromARGB(255, 56, 56, 56)),
                       ),
                     ),
-                    
 
                     Container(
                       padding: EdgeInsets.all(15),
@@ -292,8 +290,6 @@ class MyCustomFormFinRegMedico38State
         ));
   }
 
- 
-
   Widget _BotonEnviar() {
     return Container(
       width: double.infinity,
@@ -301,8 +297,8 @@ class MyCustomFormFinRegMedico38State
       child: ElevatedButton(
           onPressed: () {
             Navigator.of(context).pushReplacement(MaterialPageRoute(
-                builder: (_) =>
-                    PerfilMedicoWebView(CorreoSession, ContrasenaSession,id_medico)));
+                builder: (_) => PerfilMedicoWebView(
+                    CorreoSession, ContrasenaSession, id_medico)));
           },
           child: const Text('Ir a mi perfil')),
     );

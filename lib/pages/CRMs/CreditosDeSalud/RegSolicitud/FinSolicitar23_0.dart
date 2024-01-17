@@ -20,7 +20,6 @@ import 'package:email_validator/email_validator.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 
-
 import 'FinSolicitar23_4.dart';
 import 'FinSolicitar23_1.dart';
 //import 'FinRegMedico32.dart';
@@ -29,7 +28,8 @@ import 'FinSolicitar23_1.dart';
 import 'package:intl/intl.dart';
 
 class FinSolicitar23_0 extends StatefulWidget {
-  const FinSolicitar23_0({super.key});
+  String idCredito = "";
+  FinSolicitar23_0(this.idCredito);
 
   @override
   State<FinSolicitar23_0> createState() => _FinSolicitar23_0State();
@@ -61,13 +61,14 @@ class _FinSolicitar23_0State extends State<FinSolicitar23_0> {
 
   @override
   Widget build(BuildContext context) {
-    return MyCustomFormFinSolicitar23_0();
+    return MyCustomFormFinSolicitar23_0(widget.idCredito);
   }
 }
 
 // Create a Form widget.
 class MyCustomFormFinSolicitar23_0 extends StatefulWidget {
-  const MyCustomFormFinSolicitar23_0({super.key});
+  String idCredito = "";
+  MyCustomFormFinSolicitar23_0(this.idCredito);
 
   @override
   MyCustomFormFinSolicitar23_0State createState() {
@@ -84,19 +85,16 @@ class MyCustomFormFinSolicitar23_0State
   //el fomrKey para formulario
   final _formKey = GlobalKey<FormState>();
 
-  
-  
   String? _opcionesConCotizacion;
   bool _siConCotizacion = false;
 
   void SeleccionadoConCotizacion(value) {
     setState(() {
       _opcionesConCotizacion = value;
-      _siConCotizacion = value == "Si";
+      _siConCotizacion = value == "1";
     });
   }
 
-  
   //Los controladores para los input
   final Pantalla = TextEditingController();
   final IDLR = TextEditingController();
@@ -106,7 +104,6 @@ class MyCustomFormFinSolicitar23_0State
   final MontoDeCotizacion = TextEditingController();
 
   File? imagenComprobante1 = null;
-  
 
   String PantallaRecibe = "";
   String IDLRRecibe = "";
@@ -115,74 +112,170 @@ class MyCustomFormFinSolicitar23_0State
   String ConCotizacionRecibe = "";
   String MontoDeCotizacionRecibe = "";
 
-  void Ingresar(
-      Pantalla,
-      IDLR,
-      IDInfo,
-      ConCotizacion,
-      MontoDeCotizacion, 
+  void Ingresar(Pantalla, IDLR, IDInfo, ConCotizacion, MontoDeCotizacion,
       globalimageUpdateComprobante1) async {
     try {
       var url = Uri.https('fasoluciones.mx', 'api/Solicitud/Agregar');
 
-      var bodyEnviar = {
-        'Pantalla': Pantalla,
-        'id_solicitud': IDLR,
-        'id_credito': IDInfo,
-        'ConCotizacion': ConCotizacion,
-        'MontoDeCotizacion': MontoDeCotizacion,
-        'Comprobante1':globalimageUpdateComprobante1
-      };
-      print(bodyEnviar);
-      var response = await http
-          .post(url, body: bodyEnviar)
-          .timeout(const Duration(seconds: 90));
-      print("llego aqui 111");
-      print(response.body);
-
-      if (response.body != "0" && response.body != "") {
-        var Respuesta = jsonDecode(response.body);
-        print(Respuesta);
-        String status = Respuesta['status'];
-        if (status == "OK") {
-          //print('si existe aqui -----');
-          showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: Text('Registrado correctamente'),
-                );
-              });
-            if(ConCotizacion=="Si"){  
-              Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (_) => FinSolicitar23_1()));
+      if (ConCotizacion == "0") {
+        dev.log("cero");
+        var bodyEnviar = {
+          'Pantalla': Pantalla,
+          'id_solicitud': IDLR,
+          'id_credito': widget.idCredito,
+          'SinCotizacion': ConCotizacion,
+          // 'MontoDeCotizacion': MontoDeCotizacion,
+          // 'Archivo': globalimageUpdateComprobante1
+        };
+        var response = await http
+            .post(url, body: bodyEnviar)
+            .timeout(const Duration(seconds: 90));
+        if (response.body != "0" && response.body != "") {
+          var Respuesta = jsonDecode(response.body);
+          print(Respuesta);
+          String status = Respuesta['status'];
+          if (status == "OK") {
+            //print('si existe aqui -----');
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text('Registrado correctamente'),
+                  );
+                });
+            if (ConCotizacion == "1") {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (_) => FinSolicitar23_1(widget.idCredito)));
+              FocusScope.of(context).unfocus();
+            } else {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (_) => FinSolicitar23_4(widget.idCredito)));
               FocusScope.of(context).unfocus();
             }
-            else{ 
-              Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (_) => FinSolicitar23_4()));
-              FocusScope.of(context).unfocus();
-            }
+          } else {
+            //print('Error en el registro');
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text('Error en el registro'),
+                  );
+                });
+          }
         } else {
           //print('Error en el registro');
           showDialog(
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
-                  title: Text('Error en el registro'),
+                  title: Text("Error en el registro"),
                 );
               });
         }
-      } else {
-        //print('Error en el registro');
-        showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text("Error en el registro"),
-              );
-            });
+      } else if (ConCotizacion == "1") {
+        var bodyEnviar = {
+          'Pantalla': Pantalla,
+          'id_solicitud': IDLR,
+          'id_credito': widget.idCredito,
+          'ConCotizacion': ConCotizacion,
+          'MontoCotizacion': MontoDeCotizacion,
+          'Archivo': globalimageUpdateComprobante1
+        };
+        var response = await http
+            .post(url, body: bodyEnviar)
+            .timeout(const Duration(seconds: 90));
+
+        if (response.body != "0" && response.body != "") {
+          var Respuesta = jsonDecode(response.body);
+          print(Respuesta);
+          String status = Respuesta['status'];
+          if (status == "OK") {
+            //print('si existe aqui -----');
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text('Registrado correctamente'),
+                  );
+                });
+            if (ConCotizacion == "1") {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (_) => FinSolicitar23_1(widget.idCredito)));
+              FocusScope.of(context).unfocus();
+            } else {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (_) => FinSolicitar23_4(widget.idCredito)));
+              FocusScope.of(context).unfocus();
+            }
+          } else {
+            //print('Error en el registro');
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text('Error en el registro'),
+                  );
+                });
+          }
+        } else {
+          //print('Error en el registro');
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text("Error en el registro"),
+                );
+              });
+        }
       }
+
+      // print(bodyEnviar);
+
+      // print("llego aqui 111");
+      // dev.log(response.body);
+
+      // if (response.body != "0" && response.body != "") {
+      //   var Respuesta = jsonDecode(response.body);
+      //   print(Respuesta);
+      //   String status = Respuesta['status'];
+      //   if (status == "OK") {
+      //     //print('si existe aqui -----');
+      //     showDialog(
+      //         context: context,
+      //         builder: (BuildContext context) {
+      //           return AlertDialog(
+      //             title: Text('Registrado correctamente'),
+      //           );
+      //         });
+      //     if (ConCotizacion == "Si") {
+      //       Navigator.of(context).pushReplacement(
+      //           MaterialPageRoute(builder: (_) => FinSolicitar23_1()));
+      //       FocusScope.of(context).unfocus();
+      //     } else {
+      //       Navigator.of(context).pushReplacement(MaterialPageRoute(
+      //           builder: (_) => FinSolicitar23_4(widget.idCredito)));
+      //       FocusScope.of(context).unfocus();
+      //     }
+      //   } else {
+      //     //print('Error en el registro');
+      //     showDialog(
+      //         context: context,
+      //         builder: (BuildContext context) {
+      //           return AlertDialog(
+      //             title: Text('Error en el registro'),
+      //           );
+      //         });
+      //   }
+      // } else {
+      //   //print('Error en el registro');
+      //   showDialog(
+      //       context: context,
+      //       builder: (BuildContext context) {
+      //         return AlertDialog(
+      //           title: Text("Error en el registro"),
+      //         );
+      //       });
+      // }
     } on TimeoutException catch (e) {
       //print('Tardo muco la conexion');
       showDialog(
@@ -221,8 +314,7 @@ class MyCustomFormFinSolicitar23_0State
   void mostrar_datos() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      NombreCompletoSession =
-          prefs.getString('NombreCompletoSession') ?? '';
+      NombreCompletoSession = prefs.getString('NombreCompletoSession') ?? '';
       id_solicitud = prefs.getInt('id_solicitud') ?? 0;
       id_credito = prefs.getInt('id_credito') ?? 0;
     });
@@ -232,163 +324,148 @@ class MyCustomFormFinSolicitar23_0State
     IDInfo.text = "$id_credito";
   }
 
-
-
-  @override 
+  @override
   Widget build(BuildContext context) {
     return BuildScreens(
         'Solicitud', '', '', 'Datos de la solicitud', '', _formulario());
-  } 
+  }
 
   String? imagePath;
   var globalimageUpdateComprobante1 = "";
 
   Widget _formulario() {
     return Form(
-            key: _formKey,
-            child: SingleChildScrollView(
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    SubitleCards("Cotización médica"),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _Pantalla(),
-                    _IDLR(),
-                    _IDInfo(),
-                    Container(
-                        padding: EdgeInsets.only(left: 10.0),
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            //border: Border.all(
-                            //color: Colors.blueAccent
-                            //)
-                            ),
-                        child: Text(
-                          "Para determinar el monto total del crédito, es importante que nos compartas tu cotización médica ",
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            fontSize: 17,
-                            //color: Colors.blue
-                          ),
-                          textScaleFactor: 1,
-                        )),
-                    Container(
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: RadioListTile(
-                              title: const Text('Con cotización',
-                                  style: TextStyle(
-                                    fontSize: 17,
-                                    color: Color.fromARGB(255, 126, 126, 126),
-                                  )),
-                              value: "Si",
-                              groupValue: _opcionesConCotizacion,
-                              onChanged: SeleccionadoConCotizacion,
-                            ),
-                          )
-                        ],
+        key: _formKey,
+        child: SingleChildScrollView(
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                SubitleCards("Cotización médica"),
+                SizedBox(
+                  height: 20,
+                ),
+                _Pantalla(),
+                _IDLR(),
+                _IDInfo(),
+                Container(
+                    padding: EdgeInsets.only(left: 10.0),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        //border: Border.all(
+                        //color: Colors.blueAccent
+                        //)
+                        ),
+                    child: Text(
+                      "Para determinar el monto total del crédito, es importante que nos compartas tu cotización médica ",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontSize: 17,
+                        //color: Colors.blue
                       ),
-                    ),
-
-                    Container(
-                      child: Row(
+                      textScaleFactor: 1,
+                    )),
+                Container(
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: RadioListTile(
+                          title: const Text('Con cotización',
+                              style: TextStyle(
+                                fontSize: 17,
+                                color: Color.fromARGB(255, 126, 126, 126),
+                              )),
+                          value: "1",
+                          groupValue: _opcionesConCotizacion,
+                          onChanged: SeleccionadoConCotizacion,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                Container(
+                  child: Row(
+                    children: [
+                      Expanded(
+                          child: RadioListTile(
+                        title: const Text('Sin cotización',
+                            style: TextStyle(
+                              fontSize: 17,
+                              color: Color.fromARGB(255, 126, 126, 126),
+                            )),
+                        value: "0",
+                        groupValue: _opcionesConCotizacion,
+                        onChanged: SeleccionadoConCotizacion,
+                      )),
+                    ],
+                  ),
+                ),
+                if (_siConCotizacion)
+                  Container(
+                      padding: EdgeInsets.only(left: 1.0),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          //border: Border.all(
+                          //color: Colors.blueAccent
+                          //)
+                          ),
+                      child: Column(
                         children: [
-                          Expanded(
-                              child: RadioListTile(
-                            title: const Text('Sin cotización',
+                          Container(
+                              padding: EdgeInsets.only(left: 10.0),
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                  //border: Border.all(
+                                  //color: Colors.blueAccent
+                                  //)
+                                  ),
+                              child: Text(
+                                "Comprobante 1",
+                                textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontSize: 17,
-                                  color: Color.fromARGB(255, 126, 126, 126),
-                                )),
-                            value: "No",
-                            groupValue: _opcionesConCotizacion,
-                            onChanged: SeleccionadoConCotizacion,
-                          )),
-                        ],
-                      ),
-                    ),
-
-                    if (_siConCotizacion)
-                      Container(
-                          padding: EdgeInsets.only(left: 1.0),
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                              //border: Border.all(
-                              //color: Colors.blueAccent
-                              //)
-                              ),
-                          child: Column(
-                            children: [
-                              Container(
-                                padding: EdgeInsets.only(left: 10.0),
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                    //border: Border.all(
-                                    //color: Colors.blueAccent
-                                    //)
-                                    ),
-                                child: Text(
-                                  "Comprobante 1",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize: 17,
-                                    //color: Colors.blue
-                                  ),
-                                  textScaleFactor: 1,
-                                )),
-                                SizedBox(
+                                  //color: Colors.blue
+                                ),
+                                textScaleFactor: 1,
+                              )),
+                          SizedBox(
                             height: 20,
                           ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          
-children: [
-                          Expanded(
-                            child: _MontoDeCotizacion(),
-                          ),
-                          ElevatedButton(
-                                child: Text("Busca archivo"),
-                                onPressed: () async {
-                                  dev.log("Comprobante1");
-                                  setState(() {
-                                    dialogComprobante1(context);
-                                  });
-                                }),
-                        ],
-                        ),
-                        imagenComprobante1 == null
-                            ? Center()
-                            : Text(
-                                "${imagenComprobante1!.path.toString()}",
-                                style: TextStyle(color: Colors.black),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                child: _MontoDeCotizacion(),
                               ),
-
-                    
+                              ElevatedButton(
+                                  child: Text("Busca archivo"),
+                                  onPressed: () async {
+                                    dev.log("Comprobante1");
+                                    setState(() {
+                                      dialogComprobante1(context);
+                                    });
+                                  }),
                             ],
-                          )),
-                          
-                    
-                    
-                    
-                    
-                    
-
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _BotonEnviar(),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _Avanzar()
-                  ]),
-            ));
+                          ),
+                          imagenComprobante1 == null
+                              ? Center()
+                              : Text(
+                                  "${imagenComprobante1!.path.toString()}",
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                        ],
+                      )),
+                SizedBox(
+                  height: 20,
+                ),
+                _BotonEnviar(),
+                SizedBox(
+                  height: 20,
+                ),
+                _Avanzar()
+              ]),
+        ));
   }
 
-  
   Widget _MontoDeCotizacion() {
     return Container(
       padding: EdgeInsets.all(10),
@@ -405,6 +482,7 @@ children: [
       ),
     );
   }
+
   Future<void> dialogComprobante1(BuildContext context) {
     return showDialog(
         context: context,
@@ -444,8 +522,6 @@ children: [
           );
         });
   }
-
-  
 
   Widget _Pantalla() {
     return Visibility(
@@ -512,14 +588,14 @@ children: [
               IDLRRecibe = IDLR.text;
               IDInfoRecibe = IDInfo.text;
               MontoDeCotizacionRecibe = MontoDeCotizacion.text;
-              
+
               String? ConCotizacionRecibe = _opcionesConCotizacion;
               if (ConCotizacionRecibe == "" || ConCotizacionRecibe == null) {
                 showDialog(
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: Text('La opción cargo político es obligatoria'),
+                        title: Text('La opción Cotizacion  es obligatoria'),
                       );
                     });
               }
@@ -536,6 +612,8 @@ children: [
                       );
                     });
               } else {
+                dev.log(ConCotizacionRecibe.toString());
+
                 Ingresar(
                     PantallaRecibe,
                     IDLRRecibe,
@@ -549,6 +627,7 @@ children: [
           child: const Text('Siguiente')),
     );
   }
+
   Widget _Avanzar() {
     return Container(
       width: double.infinity,
@@ -561,8 +640,10 @@ children: [
         )),
         onTap: () {
           Navigator.of(context).pop();
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => FinSolicitar23_1()));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => FinSolicitar23_1(widget.idCredito)));
         },
       ),
     );

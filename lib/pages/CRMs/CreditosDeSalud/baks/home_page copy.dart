@@ -17,7 +17,7 @@ class _HomePageCreditosDeSaludState extends State<HomePageCreditosDeSalud> {
         appBar: AppBar(
           title: const Text('Fasol: Te lleva hasta donde quieres crecer'),
         ),
-        drawer: MenuLateralPage(),
+        drawer: MenuLateralPage(""),
         bottomNavigationBar: MenuFooterPage(),
         body: SafeArea(
             child: SingleChildScrollView(

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+import 'dart:developer' as dev;
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -22,7 +23,6 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 
 //import 'FinSolicitar23_2_sui_imagen_no_irve.dart';
-
 
 import 'FinSolicitar23_2.dart';
 
@@ -72,7 +72,7 @@ class _FinSolicitar23_2State extends State<FinSolicitar23_2> {
     //   appBar: AppBar(
     //     title: Text(NombreCompletoSession),
     //   ),
-    //   drawer: MenuLateralPage(),
+    //   drawer: MenuLateralPage(""),
     //   bottomNavigationBar: MenuFooterPage(),
     //   body: const MyCustomFormFinSolicitar23_2(),
     // );
@@ -128,8 +128,8 @@ class MyCustomFormFinSolicitar23_2State
                 );
               });
           Navigator.of(context).pushReplacement(MaterialPageRoute(
-              builder: (_) =>
-                  PerfilSolicitudWebView(CorreoSession, ContrasenaSession, id_solicitud)));
+              builder: (_) => PerfilSolicitudWebView(
+                  CorreoSession, ContrasenaSession, id_solicitud)));
           FocusScope.of(context).unfocus();
         } else {
           //print('Error en el registro');
@@ -137,7 +137,7 @@ class MyCustomFormFinSolicitar23_2State
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
-                  title: Text('Error en el registro'), 
+                  title: Text('Error en el registro'),
                 );
               });
         }
@@ -223,10 +223,10 @@ class MyCustomFormFinSolicitar23_2State
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     //headerTop("Médicos", "Estimado Dr $NombreCompletoSession"),
-                    SubitleCards("Estimado Dr $NombreCompletoSession"),
+                    SubitleCards("Estimado Cliente $NombreCompletoSession"),
                     SizedBox(
-                  height: 20,
-                ),
+                      height: 20,
+                    ),
                     _Pantalla(),
                     _IDLR(),
                     _IDInfo(),
@@ -240,7 +240,6 @@ class MyCustomFormFinSolicitar23_2State
                             color: Color.fromARGB(255, 56, 56, 56)),
                       ),
                     ),
-                    
 
                     Container(
                       padding: EdgeInsets.all(15),
@@ -325,9 +324,11 @@ class MyCustomFormFinSolicitar23_2State
       padding: EdgeInsets.all(10),
       child: ElevatedButton(
           onPressed: () {
-            Navigator.of(context).pushReplacement(MaterialPageRoute(
-                builder: (_) =>
-                    PerfilSolicitudWebView(CorreoSession, ContrasenaSession, id_solicitud)));
+            dev.log(id_solicitud.toString());
+            dev.log(ContrasenaSession.toString());
+            // Navigator.of(context).pushReplacement(MaterialPageRoute(
+            //     builder: (_) => PerfilSolicitudWebView(
+            //         CorreoSession, ContrasenaSession, id_solicitud)));
             // FocusScope.of(context).unfocus();
 
             // if (_formKey.currentState!.validate()) {

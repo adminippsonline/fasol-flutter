@@ -26,7 +26,8 @@ import 'FinSolicitar17_2.dart';
 import 'package:intl/intl.dart';
 
 class FinSolicitar17_1 extends StatefulWidget {
-  const FinSolicitar17_1({super.key});
+  String idCredito = "";
+  FinSolicitar17_1(this.idCredito);
 
   @override
   State<FinSolicitar17_1> createState() => _FinSolicitar17_1State();
@@ -58,13 +59,14 @@ class _FinSolicitar17_1State extends State<FinSolicitar17_1> {
 
   @override
   Widget build(BuildContext context) {
-    return MyCustomFormFinSolicitar17_1();
+    return MyCustomFormFinSolicitar17_1(widget.idCredito);
   }
 }
 
 // Create a Form widget.
 class MyCustomFormFinSolicitar17_1 extends StatefulWidget {
-  const MyCustomFormFinSolicitar17_1({super.key});
+  String idCredito = "";
+  MyCustomFormFinSolicitar17_1(this.idCredito);
 
   @override
   MyCustomFormFinSolicitar17_1State createState() {
@@ -134,9 +136,9 @@ class MyCustomFormFinSolicitar17_1State
                   title: Text('Registrado correctamente'),
                 );
               });
-          Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (_) => FinSolicitar17_2()));
-            FocusScope.of(context).unfocus();
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (_) => FinSolicitar17_2(widget.idCredito)));
+          FocusScope.of(context).unfocus();
         } else {
           //print('Error en el registro');
           showDialog(
@@ -195,8 +197,7 @@ class MyCustomFormFinSolicitar17_1State
   void mostrar_datos() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      NombreCompletoSession =
-          prefs.getString('NombreCompletoSession') ?? '';
+      NombreCompletoSession = prefs.getString('NombreCompletoSession') ?? '';
       id_solicitud = prefs.getInt('id_solicitud') ?? 0;
       id_credito = prefs.getInt('id_credito') ?? 0;
     });
@@ -206,96 +207,93 @@ class MyCustomFormFinSolicitar17_1State
     IDInfo.text = "$id_credito";
   }
 
-
-
-  @override 
+  @override
   Widget build(BuildContext context) {
     return BuildScreens(
         'Solicitud', '', '', 'Datos de la solicitud', '', _formulario());
-  } 
-
+  }
 
   Widget _formulario() {
     return Form(
-            key: _formKey,
-            child: SingleChildScrollView(
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
+        key: _formKey,
+        child: SingleChildScrollView(
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                SubitleCards("Confirmación de identidad "),
+                SizedBox(
+                  height: 20,
+                ),
+                _Pantalla(),
+                _IDSolicitud(),
+                _IDInfo(),
+                SizedBox(
+                  height: 20,
+                ),
+                Container(
+                    padding: EdgeInsets.only(left: 10.0),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        //border: Border.all(
+
+                        //)
+                        ),
+                    child: Text(
+                      "Se ha enviado un nuevo código a tu correo (Revisa tu carpeta de spam)",
+                      textAlign: TextAlign.justify,
+                      style: TextStyle(
+                        fontSize: 17,
+                      ),
+                      textScaleFactor: 1,
+                    )),
+                SizedBox(
+                  height: 20,
+                ),
+                Container(
+                    padding: EdgeInsets.only(left: 10.0),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        //border: Border.all(
+
+                        //)
+                        ),
+                    child: Text(
+                      "Ingresa el código que recibiste por correo, con esto confirmamos tu identidad con el buró de crédito ",
+                      textAlign: TextAlign.justify,
+                      style: TextStyle(
+                        fontSize: 17,
+                      ),
+                      textScaleFactor: 1,
+                    )),
+                SizedBox(
+                  height: 20,
+                ),
+                Row(
                   children: <Widget>[
-                    SubitleCards("Confirmación de identidad "),
-                    SizedBox(
-                      height: 20,
+                    Expanded(
+                      child: _Uno(),
                     ),
-                    _Pantalla(),
-                    _IDSolicitud(),
-                    _IDInfo(),
-                    SizedBox(
-                      height: 20,
+                    Expanded(
+                      child: _Dos(),
                     ),
-                    Container(
-                        padding: EdgeInsets.only(left: 10.0),
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            //border: Border.all(
-
-                            //)
-                            ),
-                        child: Text(
-                          "Se ha enviado un nuevo código a tu correo (Revisa tu carpeta de spam)",
-                          textAlign: TextAlign.justify,
-                          style: TextStyle(
-                            fontSize: 17,
-                          ),
-                          textScaleFactor: 1,
-                        )),
-                    SizedBox(
-                      height: 20,
+                    Expanded(
+                      child: _Tres(),
                     ),
-                    Container(
-                        padding: EdgeInsets.only(left: 10.0),
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            //border: Border.all(
-
-                            //)
-                            ),
-                        child: Text(
-                          "Ingresa el código que recibiste por correo, con esto confirmamos tu identidad con el buró de crédito ",
-                          textAlign: TextAlign.justify,
-                          style: TextStyle(
-                            fontSize: 17,
-                          ),
-                          textScaleFactor: 1,
-                        )),
-                        SizedBox(
-                      height: 20,
+                    Expanded(
+                      child: _Cuatro(),
                     ),
-                    Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: _Uno(),
-                        ),
-                        Expanded(
-                          child: _Dos(),
-                        ),
-                        Expanded(
-                          child: _Tres(),
-                        ),
-                        Expanded(
-                          child: _Cuatro(),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _BotonEnviar(),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    //_Avanzar
-                  ]),
-            ));
+                  ],
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                _BotonEnviar(),
+                SizedBox(
+                  height: 20,
+                ),
+                //_Avanzar
+              ]),
+        ));
   }
 
   Widget _Pantalla() {

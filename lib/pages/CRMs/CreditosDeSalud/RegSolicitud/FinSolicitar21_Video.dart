@@ -38,9 +38,9 @@ import 'package:fad_bio/fad_bio.dart';
 import 'package:flutter/services.dart';
 import 'package:plugin/plugin.dart';
 
-
 class FinSolicitar21_Video extends StatefulWidget {
-  const FinSolicitar21_Video({super.key});
+  String idCredito = "";
+  FinSolicitar21_Video(this.idCredito);
 
   @override
   State<FinSolicitar21_Video> createState() => _FinSolicitar21_VideoState();
@@ -72,12 +72,12 @@ class _FinSolicitar21_VideoState extends State<FinSolicitar21_Video> {
 
   @override
   Widget build(BuildContext context) {
-    return const MyCustomFormFinSolicitar21_Video();
+    return MyCustomFormFinSolicitar21_Video(widget.idCredito);
     // return Scaffold(
     //   appBar: AppBar(
     //     title: Text(NombreCompletoSession),
     //   ),
-    //   drawer: MenuLateralPage(),
+    //   drawer: MenuLateralPage(""),
     //   bottomNavigationBar: MenuFooterPage(),
     //   body: const MyCustomFormFinSolicitar21(),
     // );
@@ -86,7 +86,8 @@ class _FinSolicitar21_VideoState extends State<FinSolicitar21_Video> {
 
 // Create a Form widget.
 class MyCustomFormFinSolicitar21_Video extends StatefulWidget {
-  const MyCustomFormFinSolicitar21_Video({super.key});
+  String idCredito = "";
+  MyCustomFormFinSolicitar21_Video(this.idCredito);
 
   @override
   MyCustomFormFinSolicitar21_VideoState createState() {
@@ -105,8 +106,17 @@ class MyCustomFormFinSolicitar21_VideoState
 
   Future<void> initVideoAgreement() async {
     String fadResponse;
+    var url = Uri.parse("https://fasoluciones.mx/api/MensajeVideo/Mensaje");
+    var response = await http.post(url, body: {
+      'id_solicitud': id_solicitud.toString(),
+      'id_credito': widget.idCredito
+    });
+
+    Map<String, dynamic> decodedJson = await jsonDecode(response.body);
+    String mensaje = decodedJson['msg'];
+
     String config =
-        '{ "module": "videoagreement",  "config": {"textToDisplay": "Texto enviado desde Dart", "idCapture": false, "maximumTimeForRecording": 30, "minimumTimeForRecording": 7, "msWordSpeech": 50, "forceIdCrop": false}}';
+        '{ "module": "videoagreement",  "config": {"textToDisplay": "$mensaje", "idCapture": false, "maximumTimeForRecording": 30, "minimumTimeForRecording": 7, "msWordSpeech": 50, "forceIdCrop": false}}';
 
     try {
       fadResponse =
@@ -126,8 +136,6 @@ class MyCustomFormFinSolicitar21_VideoState
     return "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA5PxZ3DLj+zP6T6HFgzzk\nM77LdzP3fojBoLasw7EfzvLMnJNUlyRb5m8e5QyyJxI+wRjsALHvFgLzGwxM8ehz\nDqqBZed+f4w33GgQXFZOS4AOvyPbALgCYoLehigLAbbCNTkeY5RDcmmSI/sbp+s6\nmAiAKKvCdIqe17bltZ/rfEoL3gPKEfLXeN549LTj3XBp0hvG4loQ6eC1E1tRzSkf\nGJD4GIVvR+j12gXAaftj3ahfYxioBH7F7HQxzmWkwDyn3bqU54eaiB7f0ftsPpWM\nceUaqkL2DZUvgN0efEJjnWy5y1/Gkq5GGWCROI9XG/SwXJ30BbVUehTbVcD70+ZF\n8QIDAQAB\n-----END PUBLIC KEY-----";
   }
 
-  
-
   //Los controladores para los input
   final Pantalla = TextEditingController();
   final IDLR = TextEditingController();
@@ -141,22 +149,30 @@ class MyCustomFormFinSolicitar21_VideoState
     try {
       final dio = Dio();
       var url = "https://fasoluciones.mx/api/Solicitud/Agregar";
+      // final formData = FormData.fromMap({
+      //   'Pantalla': 'FinSolicitar21',
+      //   'SubPantalla': 'FinSolicitar21_Video',
+      //   'id_solicitud': IDLR,
+      //   'id_credito': widget.idCredito,
+      //   'video': MultipartFile.fromBytes(videoBytes,
+      //       filename: 'video.mp4', contentType: MediaType('video', 'mp4')),
+      // });
       final formData = FormData.fromMap({
         'Pantalla': 'FinSolicitar21',
         'SubPantalla': 'FinSolicitar21_Video',
         'id_solicitud': IDLR,
-        'id_credito': IDInfo,
+        'id_credito': widget.idCredito,
         'video': MultipartFile.fromBytes(videoBytes,
             filename: 'video.mp4', contentType: MediaType('video', 'mp4')),
       });
 
       var response = await dio.post(url, data: formData);
-      dev.log('Código de estado: ${response.statusCode}');
-      dev.log('Cuerpo de la respuesta: ${response.data}');
+      dev.log(response.statusCode.toString());
+      dev.log(response.data.toString());
 
       Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (_) => FinSolicitar22()));
-        FocusScope.of(context).unfocus();
+          MaterialPageRoute(builder: (_) => FinSolicitar22(widget.idCredito)));
+      FocusScope.of(context).unfocus();
 
       // var videoFile = http.MultipartFile.fromBytes('video', videoBytes,
       //     contentType: MediaType('video', 'mp4'));
@@ -268,20 +284,18 @@ class MyCustomFormFinSolicitar21_VideoState
     }
   }
 
-  void Consultar(
-    
-      IDLR,
-      IDInfo) async {
+  void Consultar(IDLR, IDInfo) async {
     try {
       var url = Uri.https('fasoluciones.mx', 'api/Solicitud/Agregar');
-      var data ={
+      var data = {
         'Pantalla': "FinSolicitar21",
         'SubPantalla': 'FinSolicitar21_VideoInfo',
         'id_solicitud': IDLR,
         'id_credito': IDInfo
       };
       print(data);
-      var response = await http.post(url, body: data).timeout(const Duration(seconds: 90));
+      var response =
+          await http.post(url, body: data).timeout(const Duration(seconds: 90));
       print("llego aqui 111");
       print(response.body);
 
@@ -291,7 +305,6 @@ class MyCustomFormFinSolicitar21_VideoState
         String status = Respuesta['status'];
         if (status == "OK") {
           //print('si existe aqui -----');
-          
         } else {
           //print('Error en el registro');
           showDialog(
@@ -360,7 +373,7 @@ class MyCustomFormFinSolicitar21_VideoState
     Pantalla.text = 'FinSolicitar21_Video';
     IDLR.text = "$id_solicitud";
     IDInfo.text = "$id_credito";
-    Consultar("$id_solicitud","$id_credito");
+    Consultar("$id_solicitud", "$id_credito");
   }
 
   void mostrar_datos() async {
@@ -383,8 +396,6 @@ class MyCustomFormFinSolicitar21_VideoState
         'Información Personal', '', _formulario());
   }
 
- 
- 
   jsonToFormData(http.MultipartRequest request, Map<String, dynamic> data) {
     for (var key in data.keys) {
       request.fields[key] = data[key].toString();
@@ -425,47 +436,48 @@ class MyCustomFormFinSolicitar21_VideoState
                     ]),
                   ),
                 ),
-               
+
                 _Pantalla(),
                 _IDLR(),
                 _IDInfo(),
                 SizedBox(height: 30),
-                if (_fadResponse=="") 
-                ElevatedButton(
-                  onPressed: () {
-                    initVideoAgreement();
-                  },
-                  child: const Text('Iniciar Acuerdo Video'),
-                ),
-                if (_fadResponse!="") 
-                ElevatedButton(
-                  onPressed: () {
-                    initVideoAgreement();
-                  },
-                  child: const Text('Actulizar Acuerdo video'),
-                ),
+                if (_fadResponse == "")
+                  ElevatedButton(
+                    onPressed: () {
+                      initVideoAgreement();
+                    },
+                    child: const Text('Iniciar Acuerdo Video'),
+                  ),
+                if (_fadResponse != "")
+                  ElevatedButton(
+                    onPressed: () {
+                      initVideoAgreement();
+                    },
+                    child: const Text('Actulizar Acuerdo video'),
+                  ),
 
                 SizedBox(
                   height: 20,
                 ),
-                if (_fadResponse!="" && _fadResponse != "Cancelado por el usuario") 
-                Container(
-                    padding: EdgeInsets.only(left: 10.0),
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                        //border: Border.all(
-                        //color: Colors.blueAccent
-                        //)
+                if (_fadResponse != "" &&
+                    _fadResponse != "Cancelado por el usuario")
+                  Container(
+                      padding: EdgeInsets.only(left: 10.0),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          //border: Border.all(
+                          //color: Colors.blueAccent
+                          //)
+                          ),
+                      child: Text(
+                        "Listo, puedes avanzar",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 17,
+                          //color: Colors.blue
                         ),
-                    child: Text(
-                      "Listo, puedes avanzar",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 17,
-                        //color: Colors.blue
-                      ),
-                      textScaleFactor: 1,
-                    )),
+                        textScaleFactor: 1,
+                      )),
                 // Container(
                 //   margin: EdgeInsets.all(16),
                 //   child: SingleChildScrollView(
@@ -482,110 +494,48 @@ class MyCustomFormFinSolicitar21_VideoState
                   width: double.infinity,
                   padding: EdgeInsets.all(10),
                   child: ElevatedButton(
-                    onPressed: () async {
-                      if (_fadResponse == "") {
-                        showDialog(
+                      onPressed: () async {
+                        if (_fadResponse == "") {
+                          showDialog(
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
                                   title: Text('Error: Graba tu video'),
                                 );
-                              }); 
-                      }
-                      else if (_fadResponse == "Cancelado por el usuario") {
-                        showDialog(
+                              });
+                        } else if (_fadResponse == "Cancelado por el usuario") {
+                          showDialog(
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
-                                  title: Text('Error: Cancelado por el usuario'),
+                                  title:
+                                      Text('Error: Cancelado por el usuario'),
                                 );
-                              }); 
-                      }
-                      else{
+                              });
+                        } else {
+                          String ine = "";
 
+                          var res = json.decode(_fadResponse);
 
-                        dev.log(_fadResponse);
-                        String ine = ""; 
+                          final bytes = File(res['videoAgreementResult']['file']
+                                  ['videoAgreement.mp4'])
+                              .readAsBytesSync();
 
-                        var res = json.decode(_fadResponse);
-                        // dev.log(res.toString());
-                        // dev.log(res['videoAgreementResult'].toString());
-                        // dev.log(res['videoAgreementResult']['file']
-                        //         ['videoAgreement.mp4']
-                        //     .toString());
-                        final bytes = File(res['videoAgreementResult']['file']
-                                ['videoAgreement.mp4'])
-                            .readAsBytesSync();
+                          // dev.log(bytes.toString());
 
-                            
-                        // dev.log(bytes.toString());
-
-                        setState(() {
-                          globalVideoUpdate = bytes;
-                           //print(globalimageUpdate);
-                          PantallaRecibe = Pantalla.text;
-                          IDLRRecibe = IDLR.text;
-                          IDInfoRecibe = IDInfo.text;  
-                          Ingresar(PantallaRecibe, IDLRRecibe, IDInfoRecibe, bytes);
-                        });
-
-                        // final bytes = await blobToBytes(
-                        //     res['videoAgreementResult']['file']
-                        //         ['videoAgreement.mp4']);
-                        // final directory =
-                        //     await getApplicationDocumentsDirectory();
-                        // final filePath = '${directory.path}/video.mp4';
-
-                        // final bytes = File(res['videoAgreementResult']['file']
-                        //     ['videoAgreement.mp4']);
-
-                        // dev.log(bytes.toString());
-
-                        // final blob = new Blob(await bytes.readAsBytes());
-
-                        // for (var j in res['videoAgreementResult']) {
-                        //   dev.log(j.toString());
-                        //   // dev.log(j['videoAgreement.mp4']);
-                        // }
-                        //dev.log(res['faceB64'].toString());
-                        // var respuesta = res['faceB64'].toString();
-                        // String imagen = respuesta;
-                        // globalVideoUpdate = imagen;
-                        // dev.log("imag");
-                        // dev.log(globalVideoUpdate);
-
-                        // setState(() {
-                        //   String imagen = respuesta;
-                        //   globalVideoUpdate = imagen;
-                        // });
-
-                        // for (var j in res['documents']) {
-                        //   dev.log(j['captures']['ineAnverso.png'].toString());
-                        //   //  ine = j['data'].toString();
-                        //   //bytes = base64Encode(j['captures']);
-                        //   // setState(() {
-                        //   //   ine = j['data'].toString();
-                        //   // });
-
-                        //   var bytes =
-                        //       File(j['captures']['ineAnverso.png']).readAsBytes();
-                        //   dev.log(bytes.toString());
-
-                        //   // base64Encode(j['captures']['ineAnverso.png']);
-                        //   // enviarINE(bytes, id_solicitud, id_credito);
-
-                        //   //ESTE ES EL BUENO
-                        //   //enviarINE(j['data'].toString(), id_solicitud, id_credito);
-                        // }
-
-                        // var resp = _fadResponse.toString();
-                        // var respuesta = json.encode(_fadResponse);
-                        // dev.log("obtebiendo");
-                        // dev.log(respuesta);
-                      }
-                    },
-                    child: Text("Siguiente")),
-                ),   
+                          setState(() {
+                            globalVideoUpdate = bytes;
+                            //print(globalimageUpdate);
+                            PantallaRecibe = Pantalla.text;
+                            IDLRRecibe = IDLR.text;
+                            IDInfoRecibe = IDInfo.text;
+                            Ingresar(PantallaRecibe, IDLRRecibe, IDInfoRecibe,
+                                bytes);
+                          });
+                        }
+                      },
+                      child: Text("Siguiente")),
+                ),
                 SizedBox(
                   height: 20,
                 ),
@@ -693,50 +643,50 @@ class MyCustomFormFinSolicitar21_VideoState
         ));
   }
 
-  Widget _BotonEnviar() {
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.all(10),
-      child: ElevatedButton(
-          onPressed: () {
-            var res = json.decode(_fadResponse);
-            //dev.log(res['faceB64'].toString());
+  // Widget _BotonEnviar() {
+  //   return Container(
+  //     width: double.infinity,
+  //     padding: EdgeInsets.all(10),
+  //     child: ElevatedButton(
+  //         onPressed: () {
+  //           var res = json.decode(_fadResponse);
+  //           //dev.log(res['faceB64'].toString());
 
-            // dev.log(res.toString());
-            // dev.log(res['videoAgreementResult'].toString());
-            // dev.log(res['videoAgreementResult']['file']
-            //         ['videoAgreement.mp4']
-            //     .toString());
-            final videoBytes =
-                File(res['videoAgreementResult']['file']['videoAgreement.mp4'])
-                    .readAsBytesSync();
+  //           // dev.log(res.toString());
+  //           // dev.log(res['videoAgreementResult'].toString());
+  //           // dev.log(res['videoAgreementResult']['file']
+  //           //         ['videoAgreement.mp4']
+  //           //     .toString());
+  //           final videoBytes =
+  //               File(res['videoAgreementResult']['file']['videoAgreement.mp4'])
+  //                   .readAsBytesSync();
 
-            if (_formKey.currentState!.validate()) {
-              PantallaRecibe = Pantalla.text;
-              IDLRRecibe = IDLR.text;
-              IDInfoRecibe = IDInfo.text;
+  //           if (_formKey.currentState!.validate()) {
+  //             PantallaRecibe = Pantalla.text;
+  //             IDLRRecibe = IDLR.text;
+  //             IDInfoRecibe = IDInfo.text;
 
-              if (PantallaRecibe == "" ||
-                  IDLRRecibe == "" ||
-                  IDInfoRecibe == "") {
-                showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text('Error: Todos los campos son obligatorios'),
-                      );
-                    });
-              } else {
-                // dev.log(videoBytes.toString());
-                // dev.log("aquis arribas hay bytes");
-                Ingresar(
-                    PantallaRecibe, IDLRRecibe, IDInfoRecibe, videoBytes);
-              }
-            }
-          },
-          child: const Text('Siguiente')),
-    );
-  }
+  //             if (PantallaRecibe == "" ||
+  //                 IDLRRecibe == "" ||
+  //                 IDInfoRecibe == "") {
+  //               showDialog(
+  //                   context: context,
+  //                   builder: (BuildContext context) {
+  //                     return AlertDialog(
+  //                       title: Text('Error: Todos los campos son obligatorios'),
+  //                     );
+  //                   });
+  //             } else {
+  //               dev.log("asas");
+  //               // dev.log(videoBytes.toString());
+  //               // dev.log("aquis arribas hay bytes");
+  //               //Ingresar(PantallaRecibe, IDLRRecibe, IDInfoRecibe, videoBytes);
+  //             }
+  //           }
+  //         },
+  //         child: const Text('Siguiente')),
+  //   );
+  // }
 
   Widget _BotonSaltar() {
     return Container(
@@ -750,8 +700,10 @@ class MyCustomFormFinSolicitar21_VideoState
         )),
         onTap: () {
           Navigator.of(context).pop();
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => FinSolicitar22()));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => FinSolicitar22(widget.idCredito)));
         },
       ),
     );

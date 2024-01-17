@@ -24,7 +24,8 @@ import 'FinSolicitar11.dart';
 import 'package:intl/intl.dart';
 
 class FinSolicitar10 extends StatefulWidget {
-  const FinSolicitar10({super.key});
+  String idCredito = "";
+  FinSolicitar10(this.idCredito);
 
   @override
   State<FinSolicitar10> createState() => _FinSolicitar10State();
@@ -32,12 +33,12 @@ class FinSolicitar10 extends StatefulWidget {
 
 class _FinSolicitar10State extends State<FinSolicitar10> {
   //se usa para mostrar los datos del estado
-  int id_solicitud = 0; 
+  int id_solicitud = 0;
   int id_credito = 0;
   String NombreCompletoSession = "";
   String CorreoSession = "";
   String TelefonoSession = "";
- 
+
   @override
   void initState() {
     super.initState();
@@ -47,22 +48,22 @@ class _FinSolicitar10State extends State<FinSolicitar10> {
   void mostrar_datos() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      NombreCompletoSession =
-          prefs.getString('NombreCompletoSession') ?? '';
+      NombreCompletoSession = prefs.getString('NombreCompletoSession') ?? '';
       id_solicitud = prefs.getInt('id_solicitud') ?? 0;
       id_credito = prefs.getInt('id_credito') ?? 0;
     });
   }
 
-  @override 
+  @override
   Widget build(BuildContext context) {
-    return MyCustomFormFinSolicitar10();
+    return MyCustomFormFinSolicitar10(widget.idCredito);
   }
 }
 
 // Create a Form widget.
 class MyCustomFormFinSolicitar10 extends StatefulWidget {
-  const MyCustomFormFinSolicitar10({super.key});
+  String idCredito = "";
+  MyCustomFormFinSolicitar10(this.idCredito);
 
   @override
   MyCustomFormFinSolicitar10State createState() {
@@ -118,7 +119,7 @@ class MyCustomFormFinSolicitar10State
   String? SelectedListaEspecialidad;
 
   final List<String> Listaid_medico = ['medico 1', 'medico 2'];
-  String? SelectedListaid_medico; 
+  String? SelectedListaid_medico;
 
   TextEditingController dateinput = TextEditingController();
   //Los controladores para los input
@@ -138,8 +139,7 @@ class MyCustomFormFinSolicitar10State
   String PrecioCirugiaRecibe = "";
   String FechaTentativaDeOperacionRecibe = "";
 
-
-  List _opcionesEspecialidades = [];  
+  List _opcionesEspecialidades = [];
   Future obtenerEspecialidades() async {
     final response = await http.get(Uri.parse(
         'https://fasoluciones.mx/api/Solicitud/Catalogos/Especialidades'));
@@ -155,7 +155,6 @@ class MyCustomFormFinSolicitar10State
     }
   }
 
-
   void Ingresar(
       Pantalla,
       IDSolicitud,
@@ -168,7 +167,7 @@ class MyCustomFormFinSolicitar10State
       FechaTentativaDeOperacion) async {
     try {
       var url = Uri.https('fasoluciones.mx', 'api/Solicitud/Agregar');
-      var data ={
+      var data = {
         'Pantalla': Pantalla,
         'id_solicitud': IDSolicitud,
         'id_credito': IDCredito,
@@ -177,15 +176,18 @@ class MyCustomFormFinSolicitar10State
         'EstadoUbicacionMedico': EstadoUbicacionMedico,
         'id_medico': "2",
         'PrecioCirugia': PrecioCirugia,
-        'FechaTentativaDeOperacion': FechaTentativaDeOperacion
+        'FechaTentativaDeOperacion': FechaTentativaDeOperacion,
       };
-      
-      print(data);
 
-      var response = await http.post(url, body: data).timeout(const Duration(seconds: 90));
+      dev.log("creditosss");
+      dev.log(IDCredito);
+
+      var response =
+          await http.post(url, body: data).timeout(const Duration(seconds: 90));
       //print("llego aqui 111");
       //print(response.body);
-
+      dev.log(response.statusCode.toString());
+      dev.log(response.body);
       if (response.body != "0" && response.body != "") {
         print(response.body);
         var Respuesta = jsonDecode(response.body);
@@ -200,8 +202,8 @@ class MyCustomFormFinSolicitar10State
                   title: Text('Registrado correctamente'),
                 );
               });
-          Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (_) => FinSolicitar11()));
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (_) => FinSolicitar11(widget.idCredito)));
           FocusScope.of(context).unfocus();
         } else {
           //print('Error en el registro');
@@ -262,8 +264,7 @@ class MyCustomFormFinSolicitar10State
   void mostrar_datos() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      NombreCompletoSession =
-          prefs.getString('NombreCompletoSession') ?? '';
+      NombreCompletoSession = prefs.getString('NombreCompletoSession') ?? '';
       id_solicitud = prefs.getInt('id_solicitud') ?? 0;
       id_credito = prefs.getInt('id_credito') ?? 0;
     });
@@ -273,79 +274,81 @@ class MyCustomFormFinSolicitar10State
     IDCredito.text = "$id_credito";
   }
 
-  @override 
+  @override
   Widget build(BuildContext context) {
     return BuildScreens(
         'Solicitud', '', '', 'Datos de la solicitud', '', _formulario());
-  } 
+  }
 
   Widget _formulario() {
     return Form(
-            key: _formKey,
-            child: SingleChildScrollView(
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
+        key: _formKey,
+        child: SingleChildScrollView(
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                SubitleCards(
+                    "¿Qué cirugía o tratamiento médico te deseas realizar?"),
+                SizedBox(
+                  height: 20,
+                ),
+                _Pantalla(),
+                _IDSolicitud(),
+                _IDCredito(),
+                Row(
                   children: <Widget>[
-                    SubitleCards("¿Qué cirugía o tratamiento médico te deseas realizar?"),
-                    SizedBox(
-                      height: 20,
+                    Expanded(
+                      child: _Especialidad(),
                     ),
-                    _Pantalla(),
-                    _IDSolicitud(),
-                    _IDCredito(),
-                    Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: _Especialidad(),
-                        ),
-                      ],
+                  ],
+                ),
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: _TipoDeCirugia(),
                     ),
-                    Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: _TipoDeCirugia(),
-                        ),
-                      ],
+                  ],
+                ),
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: _EstadoUbicacionMedico(),
                     ),
-                    Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: _EstadoUbicacionMedico(),
-                        ),
-                      ],
+                  ],
+                ),
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: _id_medico(),
                     ),
-                    Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: _id_medico(),
-                        ),
-                      ],
+                  ],
+                ),
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: _PrecioCirugia(),
                     ),
-                    Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: _PrecioCirugia(),
-                        ),
-                      ],
+                  ],
+                ),
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: _FechaTentativaDeOperacion(),
                     ),
-                    Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: _FechaTentativaDeOperacion(),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _BotonEnviar(),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _Avanzar()
-                  ]),
-            ));
+                  ],
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                _BotonEnviar(),
+                SizedBox(
+                  height: 20,
+                ),
+                _Avanzar()
+              ]),
+        ));
   }
+
   Widget _Pantalla() {
     return Visibility(
         visible: false,
@@ -530,7 +533,6 @@ class MyCustomFormFinSolicitar10State
     );
   }
 
-
   Widget _EstadoUbicacionMedico() {
     return Container(
       padding: EdgeInsets.all(10),
@@ -563,6 +565,7 @@ class MyCustomFormFinSolicitar10State
             validator: ObligatorioSelect,
             onChanged: (value) {
               SelectedListaEstadoUbicacionMedico = value;
+              getDoctorsByCity(SelectedListaEstadoUbicacionMedico);
             },
             onSaved: (value) {
               SelectedListaEstadoUbicacionMedico = value.toString();
@@ -587,58 +590,139 @@ class MyCustomFormFinSolicitar10State
     );
   }
 
+  List<dynamic> _doctorList = [];
+  Future getDoctorsByCity(var city) async {
+    var url = Uri.parse(
+        'https://fasoluciones.mx/api/Solicitud/Catalogos/MedicoPorEstado/$city');
+    var response = await http.get(url);
+    if (response.statusCode == 200) {
+      final dat = json.decode(response.body);
+
+      if (dat.containsKey('data') &&
+          dat['data'] is List &&
+          dat['data'].isNotEmpty) {
+        var data = dat['data'][0];
+        dev.log(data.toString());
+
+        if (data.containsKey('primer_nombre')) {
+          setState(() {
+            _doctorList = List<String>.from(
+                dat['data'].map((address) => address['primer_nombre']));
+          });
+        } else {
+          print(
+              "La clave 'primer_nombre' no está presente en el primer elemento de la lista.");
+        }
+      } else {
+        print(
+            "La clave 'data' no está presente o la lista está vacía en la respuesta JSON.");
+      }
+    } else {
+      throw Exception('Error al obtener las opciones');
+    }
+    // if (response.statusCode == 200) {
+    //   final dat = json.decode(response.body);
+    //   var data = json.decode(response.body)['data'][0];
+    //   dev.log(data.toString());
+    //   setState(() {
+    //     _doctorList = List<String>.from(
+    //         dat['data'].map((address) => address['primer_nombre']));
+    //   });
+    //   setState(() {});
+    // } else {
+    //   throw Exception('Error al obtener las opciones');
+    // }
+  }
+
   Widget _id_medico() {
     return Container(
       padding: EdgeInsets.all(10),
       width: double.infinity,
       child: DecoratedBox(
-          decoration: BoxDecoration(),
-          child: DropdownButtonFormField2(
-            decoration: InputDecoration(
-              isDense: true,
-              contentPadding: EdgeInsets.zero,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(5),
-              ),
+        decoration: BoxDecoration(),
+        child: DropdownButtonFormField2(
+          decoration: InputDecoration(
+            isDense: true,
+            contentPadding: EdgeInsets.zero,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(5),
             ),
-            isExpanded: true,
-            hint: const Text(
-              'Selecciona a tu médico ',
-              style: TextStyle(fontSize: 14),
+          ),
+          isExpanded: true,
+          hint: const Text(
+            'Selecciona a tu médico ',
+            style: TextStyle(fontSize: 14),
+          ),
+          items: _doctorList?.map((value) {
+                return DropdownMenuItem<String>(
+                    value: value, child: Text(value));
+              })?.toList() ??
+              [],
+          //validator: ObligatorioSelect,
+          onChanged: (value) {
+            SelectedListaid_medico = value as String?;
+          },
+          onSaved: (value) {
+            SelectedListaid_medico = value.toString();
+          },
+          buttonStyleData: const ButtonStyleData(
+            height: 55,
+            padding: EdgeInsets.only(left: 0, right: 10),
+          ),
+          iconStyleData: const IconStyleData(
+            icon: Icon(
+              Icons.arrow_drop_down,
+              color: Colors.black45,
             ),
-            items: Listaid_medico.map((item) => DropdownMenuItem<String>(
-                  value: item,
-                  child: Text(
-                    item,
-                    style: const TextStyle(
-                      fontSize: 14,
-                    ),
-                  ),
-                )).toList(),
-            validator: ObligatorioSelect,
-            onChanged: (value) {
-              SelectedListaid_medico = value;
-            },
-            onSaved: (value) {
-              SelectedListaid_medico = value.toString();
-            },
-            buttonStyleData: const ButtonStyleData(
-              height: 55,
-              padding: EdgeInsets.only(left: 0, right: 10),
+            iconSize: 30,
+          ),
+          dropdownStyleData: DropdownStyleData(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(1),
             ),
-            iconStyleData: const IconStyleData(
-              icon: Icon(
-                Icons.arrow_drop_down,
-                color: Colors.black45,
-              ),
-              iconSize: 30,
-            ),
-            dropdownStyleData: DropdownStyleData(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(1),
-              ),
-            ),
-          )),
+          ),
+        ),
+        // child: DropdownButtonFormField2(
+        //   decoration: InputDecoration(
+        //     isDense: true,
+        //     contentPadding: EdgeInsets.zero,
+        //     border: OutlineInputBorder(
+        //       borderRadius: BorderRadius.circular(5),
+        //     ),
+        //   ),
+        //   isExpanded: true,
+        //   hint: const Text(
+        //     'Selecciona a tu médico ',
+        //     style: TextStyle(fontSize: 14),
+        //   ),
+        //   items: _doctorList.map((value) {
+        //     return DropdownMenuItem<String>(value: value, child: Text(value));
+        //   }).toList(),
+        //   validator: ObligatorioSelect,
+        //   onChanged: (value) {
+        //     SelectedListaid_medico = value;
+        //   },
+        //   onSaved: (value) {
+        //     SelectedListaid_medico = value.toString();
+        //   },
+        //   buttonStyleData: const ButtonStyleData(
+        //     height: 55,
+        //     padding: EdgeInsets.only(left: 0, right: 10),
+        //   ),
+        //   iconStyleData: const IconStyleData(
+        //     icon: Icon(
+        //       Icons.arrow_drop_down,
+        //       color: Colors.black45,
+        //     ),
+        //     iconSize: 30,
+        //   ),
+        //   dropdownStyleData: DropdownStyleData(
+        //     decoration: BoxDecoration(
+        //       borderRadius: BorderRadius.circular(1),
+        //     ),
+        //   ),
+        // )
+      ),
     );
   }
 
@@ -650,7 +734,7 @@ class MyCustomFormFinSolicitar10State
           controller:
               FechaTentativaDeOperacionInput, //editing controller of this TextField
           decoration: InputDecoration(
-              suffixIcon: Icon(Icons.calendar_today), 
+              suffixIcon: Icon(Icons.calendar_today),
               labelText: "¿Cuándo te gustaría operarte? ",
               border: OutlineInputBorder(),
               isDense: false,
@@ -693,13 +777,11 @@ class MyCustomFormFinSolicitar10State
             if (_formKey.currentState!.validate()) {
               PantallaRecibe = Pantalla.text;
               IDSolicitudRecibe = IDSolicitud.text;
-              IDCreditoRecibe = IDCredito.text;
 
-              
               TipoDeCirugiaRecibe = TipoDeCirugia.text;
               PrecioCirugiaRecibe = PrecioCirugia.text;
               String? EspecialidadRecibe = dropdownvalueEspecialidad;
-             
+
               if (EspecialidadRecibe == "") {
                 showDialog(
                     context: context,
@@ -743,18 +825,8 @@ class MyCustomFormFinSolicitar10State
                     });
               }
 
-print(IDSolicitudRecibe);
-print(IDCreditoRecibe);
-print(EspecialidadRecibe);
-print(TipoDeCirugiaRecibe);
-print(EstadoUbicacionMedicoRecibe);
-print(id_medicoRecibe);
-print(PrecioCirugiaRecibe);
-print(FechaTentativaDeOperacionRecibe);
-
               if (PantallaRecibe == "" ||
                   IDSolicitudRecibe == "" ||
-                  IDCreditoRecibe == "" ||
                   EspecialidadRecibe == "" ||
                   TipoDeCirugiaRecibe == "" ||
                   EstadoUbicacionMedicoRecibe == "" ||
@@ -769,10 +841,11 @@ print(FechaTentativaDeOperacionRecibe);
                       );
                     });
               } else {
+                dev.log(widget.idCredito);
                 Ingresar(
                     PantallaRecibe,
                     IDSolicitudRecibe,
-                    IDCreditoRecibe,
+                    widget.idCredito,
                     EspecialidadRecibe,
                     TipoDeCirugiaRecibe,
                     EstadoUbicacionMedicoRecibe,
@@ -785,6 +858,7 @@ print(FechaTentativaDeOperacionRecibe);
           child: const Text('Siguiente')),
     );
   }
+
   Widget _Avanzar() {
     return Container(
       width: double.infinity,
@@ -797,8 +871,10 @@ print(FechaTentativaDeOperacionRecibe);
         )),
         onTap: () {
           Navigator.of(context).pop();
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => FinSolicitar11()));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => FinSolicitar11(widget.idCredito)));
         },
       ),
     );

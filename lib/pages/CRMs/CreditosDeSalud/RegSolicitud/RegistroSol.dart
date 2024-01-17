@@ -1,5 +1,7 @@
-import 'package:flutter/material.dart';
+import 'dart:io';
 
+import 'package:flutter/material.dart';
+import 'dart:developer' as dev;
 import '../Includes/widgets/build_screen.dart';
 import '../headers.dart';
 import '../menu_lateral.dart';
@@ -27,7 +29,9 @@ import '../PerfilSolicitud/PerfilSolVerificar.dart';
 //void main() => runApp(const RegistroSol());
 
 class RegistroSol extends StatefulWidget {
-  const RegistroSol({super.key});
+  String idCredito = "";
+
+  RegistroSol(this.idCredito);
 
   @override
   State<RegistroSol> createState() => _RegistroSolState();
@@ -36,13 +40,14 @@ class RegistroSol extends StatefulWidget {
 class _RegistroSolState extends State<RegistroSol> {
   @override
   Widget build(BuildContext context) {
-    return MyCustomFormSolicitudRegistro();
+    return MyCustomFormSolicitudRegistro(widget.idCredito);
   }
 }
 
 // Create a Form widget.
 class MyCustomFormSolicitudRegistro extends StatefulWidget {
-  const MyCustomFormSolicitudRegistro({super.key});
+  String idCredito = "";
+  MyCustomFormSolicitudRegistro(this.idCredito);
 
   @override
   MyCustomFormSolicitudRegistroState createState() {
@@ -69,8 +74,28 @@ class MyCustomFormSolicitudRegistroState
   String ConfirmarContrasenaRecibe = "";
 
   String email = "";
+  Future<String> obtenerDireccionIP() async {
+    try {
+      for (var interface in await NetworkInterface.list()) {
+        for (var address in interface.addresses) {
+          // Verificar si la dirección IP es una dirección IPv4 y no una dirección de bucle local
+          if (address.type == InternetAddressType.IPv4 && !address.isLoopback) {
+            return address.address;
+          }
+        }
+      }
+    } catch (e) {
+      print("Error al obtener la dirección IP: $e");
+    }
 
-  void Ingresar(Corr, Celu, Cont, ConfCont,AvisoDePrivacidad,TerminosYCondiciones) async {
+    return "No se pudo obtener la dirección IP";
+  }
+
+  String direccionIP = "";
+  void Ingresar(Corr, Celu, Cont, ConfCont, AvisoDePrivacidad,
+      TerminosYCondiciones, var idCredito) async {
+    dev.log("ingresar");
+    direccionIP = await obtenerDireccionIP();
     /*print('La información se esta enviando');
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('La información se esta enviando')),
@@ -85,10 +110,13 @@ class MyCustomFormSolicitudRegistroState
         'Correo': Corr,
         'Telefono': Celu,
         'Contrasena': Cont,
-        'ConfirmarContrasena': ConfCont, 
+        'ConfirmarContrasena': ConfCont,
         'AvisoDePrivacidad': "1",
         'TerminosYCondiciones': "1",
+        'id_credito': widget.idCredito,
+        'ip': direccionIP
       }).timeout(const Duration(seconds: 90));
+      dev.log(response.body.toString());
       /*print('Ingresado en fasol');
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Ingresado en fasol')),
@@ -102,47 +130,28 @@ class MyCustomFormSolicitudRegistroState
               );
             });
         var Respuesta = jsonDecode(response.body);
-        
+
         String status = Respuesta['status'];
-        String msg = Respuesta['msg'];        
+        String msg = Respuesta['msg'];
         if (status == "OK") {
           int id_solicitud = Respuesta['id_solicitud'];
-          /*showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: Text('Registrado correctamente'),
-                );
-              });*/
-          /*if(id_solicitud>=1 && id_credito>=1)  {   
-            showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: Text('tiene un credito'),
-                );
-              });  
-            guardar_datos(id_solicitud, id_credito, 'Solicitud', Corr, Cont, Celu);
-            Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (_) => FinSolicitar10()));
-            FocusScope.of(context).unfocus();
-          }   
-          else{*/   
-            guardar_datos(id_solicitud, 'Solicitud', Corr, Cont, Celu);
-            showDialog(
+
+          guardar_datos(id_solicitud, 'Solicitud', Corr, Cont, Celu);
+          showDialog(
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
                   title: Text('pas aa verificar'),
                 );
-              });  
-            Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (_) => PerfilSolVerificar()));
-            FocusScope.of(context).unfocus();
+              });
+
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (_) => PerfilSolVerificar(widget.idCredito)));
+          FocusScope.of(context).unfocus();
           //}
         } else {
           //print('Error en el registro');
-          showDialog( 
+          showDialog(
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
@@ -178,14 +187,13 @@ class MyCustomFormSolicitudRegistroState
               title: Text('Error: HTTP://'),
             );
           });
-
     }
   }
 
   //Esto es iun metodo
   //se usa para guarar dtos es tipo sesiones
-  Future<void> guardar_datos(id_solicitud, NombreCompletoSession,
-      CorreoSession, ContrasenaSession, TelefonoSession) async {
+  Future<void> guardar_datos(id_solicitud, NombreCompletoSession, CorreoSession,
+      ContrasenaSession, TelefonoSession) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt('id_solicitud', id_solicitud);
     await prefs.setString('NombreCompletoSession', NombreCompletoSession);
@@ -201,77 +209,74 @@ class MyCustomFormSolicitudRegistroState
 
   @override
   Widget build(BuildContext context) {
-    return BuildScreens(
-        'Solicitud', '', '', 'Registro', '', _formulario());
+    return BuildScreens('Solicitud', '', '', 'Registro', '', _formulario());
   }
 
   @override
   Widget _formulario() {
     return Form(
-          key: _formKey,
-          child: SingleChildScrollView(
-            child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-
-                children: <Widget>[
-                  SubitleCards('Por favor llena todos los campos*****'),
+        key: _formKey,
+        child: SingleChildScrollView(
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                SubitleCards('Por favor llena todos los campos*****'),
                 const SizedBox(
                   height: 20,
                 ),
-                  _Correo(),
-                    _Celular(),
-                    _Contrasena(),
-                    _ConfirmarContrasena(),
-                    CheckboxListTile(
-                          controlAffinity: ListTileControlAffinity.leading,
-                          title: Text('Aviso de privacidad',style: TextStyle(
-                                fontSize: 14,
-                                color: const Color.fromARGB(255, 87, 89, 92)
-                              )),
-                          
-                          value: AvisoDePrivacidad,
-                          onChanged: (value) {
-                            //print(value);
-                            setState(() {
-                              AvisoDePrivacidad = !AvisoDePrivacidad;
-                              //print(AvisoDePrivacidad);
-                            });
-                          },
-                        ),
-                        CheckboxListTile(
-                          controlAffinity: ListTileControlAffinity.leading,
-                          title: Text('Términos y condiciones',style: TextStyle(
-                                fontSize: 14,
-                                color: const Color.fromARGB(255, 87, 89, 92)
-                              )),
-                          value: TerminosYCondiciones,
-                          onChanged: (value) {
-                            setState(() {
-                              TerminosYCondiciones = !TerminosYCondiciones;
-                            });
-                          },
-                        ),
-                    /*SizedBox(
+                _Correo(),
+                _Celular(),
+                _Contrasena(),
+                _ConfirmarContrasena(),
+                CheckboxListTile(
+                  controlAffinity: ListTileControlAffinity.leading,
+                  title: Text('Aviso de privacidad',
+                      style: TextStyle(
+                          fontSize: 14,
+                          color: const Color.fromARGB(255, 87, 89, 92))),
+                  value: AvisoDePrivacidad,
+                  onChanged: (value) {
+                    //print(value);
+                    setState(() {
+                      AvisoDePrivacidad = !AvisoDePrivacidad;
+                      //print(AvisoDePrivacidad);
+                    });
+                  },
+                ),
+                CheckboxListTile(
+                  controlAffinity: ListTileControlAffinity.leading,
+                  title: Text('Términos y condiciones',
+                      style: TextStyle(
+                          fontSize: 14,
+                          color: const Color.fromARGB(255, 87, 89, 92))),
+                  value: TerminosYCondiciones,
+                  onChanged: (value) {
+                    setState(() {
+                      TerminosYCondiciones = !TerminosYCondiciones;
+                    });
+                  },
+                ),
+                /*SizedBox(
                       height: 20,
                     ),*/
-                    _BotonEnviar(),
-                    Container(
-                    padding: EdgeInsets.all(15),
-                    child: Text(
-                        "Al dar clic en crear mi cuenta aceptas los términos y condiciones y el aviso de privacidad de Fasol Soluciones ",
-                        textAlign:  TextAlign.center,
-                        style: TextStyle(fontSize: 12,),
-                      ),
-                      
+                _BotonEnviar(),
+                Container(
+                  padding: EdgeInsets.all(15),
+                  child: Text(
+                    "Al dar clic en crear mi cuenta aceptas los términos y condiciones y el aviso de privacidad de Fasol Soluciones ",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 12,
                     ),
-                    _BotonIngresar(),
-                    //_BotonOlvidaste(),
-                    SizedBox(
-                      height: 40, 
-                    ), 
-                ]),
-          )
-        );
+                  ),
+                ),
+                _BotonIngresar(),
+                //_BotonOlvidaste(),
+                SizedBox(
+                  height: 40,
+                ),
+              ]),
+        ));
   }
 
   Widget _Correo() {
@@ -389,15 +394,20 @@ class MyCustomFormSolicitudRegistroState
                 if (CorreoRecibe != "" &&
                     CelularRecibe != "" &&
                     ContrasenaRecibe != "" &&
-                    ConfirmarContrasenaRecibe != "" && 
-                    AvisoDePrivacidad == true && 
+                    ConfirmarContrasenaRecibe != "" &&
+                    AvisoDePrivacidad == true &&
                     TerminosYCondiciones == true) {
                   if (ContrasenaRecibe == ConfirmarContrasenaRecibe) {
-                    /*ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Proceando los datos')),
-                    );*/
-                    Ingresar(CorreoRecibe, CelularRecibe, ContrasenaRecibe,
-                        ConfirmarContrasenaRecibe,AvisoDePrivacidad,TerminosYCondiciones);
+                    dev.log(widget.idCredito);
+
+                    Ingresar(
+                        CorreoRecibe,
+                        CelularRecibe,
+                        ContrasenaRecibe,
+                        ConfirmarContrasenaRecibe,
+                        AvisoDePrivacidad,
+                        TerminosYCondiciones,
+                        widget.idCredito);
                   } else {
                     //print('Error: Las contraseñas no coinciden');
                     showDialog(

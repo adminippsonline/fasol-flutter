@@ -61,7 +61,7 @@ class _FinClinicas8State extends State<FinClinicas8> {
     //   appBar: AppBar(
     //     title: Text(NombreCompletoSession),
     //   ),
-    //   drawer: MenuLateralPage(),
+    //   drawer: MenuLateralPage(""),
     //   bottomNavigationBar: MenuFooterPage(),
     // );
   }
@@ -226,7 +226,7 @@ class MyCustomFormFinClinicas8State extends State<MyCustomFormFinClinicas8> {
   Widget build(BuildContext context) {
     return BuildScreens(
         'Clínica', '', '', 'Datos de la clínica', '', _formulario());
-  } 
+  }
 
   Widget _formulario() {
     return Form(
@@ -254,7 +254,7 @@ class MyCustomFormFinClinicas8State extends State<MyCustomFormFinClinicas8> {
                 _PrimerNombre(),
                 _SegundoNombre(),
                 _PrimerApellido(),
-                      _SegundoApellido(),
+                _SegundoApellido(),
                 SizedBox(
                   height: 20,
                 ),
@@ -313,9 +313,6 @@ class MyCustomFormFinClinicas8State extends State<MyCustomFormFinClinicas8> {
           ),
         ));
   }
-
-  
-  
 
   Widget _PrimerNombre() {
     return Container(
@@ -446,6 +443,7 @@ class MyCustomFormFinClinicas8State extends State<MyCustomFormFinClinicas8> {
           child: const Text('Siguiente')),
     );
   }
+
   Widget _Avanzar() {
     return Container(
       width: double.infinity,
@@ -458,8 +456,8 @@ class MyCustomFormFinClinicas8State extends State<MyCustomFormFinClinicas8> {
         )),
         onTap: () {
           Navigator.of(context).pop();
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => FinClinicas9()));
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => FinClinicas9()));
         },
       ),
     );

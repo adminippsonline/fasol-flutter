@@ -39,7 +39,8 @@ import 'package:plugin/plugin.dart';
 import 'FinSolicitar21_Video.dart';
 
 class FinSolicitar21_Biom extends StatefulWidget {
-  const FinSolicitar21_Biom({super.key});
+  String idCredito = "";
+  FinSolicitar21_Biom(this.idCredito);
 
   @override
   State<FinSolicitar21_Biom> createState() => _FinSolicitar21_BiomState();
@@ -71,12 +72,12 @@ class _FinSolicitar21_BiomState extends State<FinSolicitar21_Biom> {
 
   @override
   Widget build(BuildContext context) {
-    return MyCustomFormFinSolicitar21_Biom();
+    return MyCustomFormFinSolicitar21_Biom(widget.idCredito);
     // return Scaffold(
     //   appBar: AppBar(
     //     title: Text(NombreCompletoSession),
     //   ),
-    //   drawer: MenuLateralPage(),
+    //   drawer: MenuLateralPage(""),
     //   bottomNavigationBar: MenuFooterPage(),
     //   body: const MyCustomFormFinSolicitar21(),
     // );
@@ -85,7 +86,8 @@ class _FinSolicitar21_BiomState extends State<FinSolicitar21_Biom> {
 
 // Create a Form widget.
 class MyCustomFormFinSolicitar21_Biom extends StatefulWidget {
-  const MyCustomFormFinSolicitar21_Biom({super.key});
+  String idCredito = "";
+  MyCustomFormFinSolicitar21_Biom(this.idCredito);
 
   @override
   MyCustomFormFinSolicitar21_BiomState createState() {
@@ -101,8 +103,6 @@ class MyCustomFormFinSolicitar21_BiomState
   String _fadResponse = "";
   final _plugin = FadMultisignPlugin();
   final _fadBioPlugin = FadBio();
-
-
 
   String getPublicKey() {
     return "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA5PxZ3DLj+zP6T6HFgzzk\nM77LdzP3fojBoLasw7EfzvLMnJNUlyRb5m8e5QyyJxI+wRjsALHvFgLzGwxM8ehz\nDqqBZed+f4w33GgQXFZOS4AOvyPbALgCYoLehigLAbbCNTkeY5RDcmmSI/sbp+s6\nmAiAKKvCdIqe17bltZ/rfEoL3gPKEfLXeN549LTj3XBp0hvG4loQ6eC1E1tRzSkf\nGJD4GIVvR+j12gXAaftj3ahfYxioBH7F7HQxzmWkwDyn3bqU54eaiB7f0ftsPpWM\nceUaqkL2DZUvgN0efEJjnWy5y1/Gkq5GGWCROI9XG/SwXJ30BbVUehTbVcD70+ZF\n8QIDAQAB\n-----END PUBLIC KEY-----";
@@ -126,7 +126,6 @@ class MyCustomFormFinSolicitar21_BiomState
       _fadResponse = fadResponse;
     });
   }
-
 
   //Los controladores para los input
   final Pantalla = TextEditingController();
@@ -169,8 +168,8 @@ class MyCustomFormFinSolicitar21_BiomState
               );
             });
 
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (_) => FinSolicitar21_Video()));
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (_) => FinSolicitar21_Video(widget.idCredito)));
       }
 
       // var response = await http.post(url, body: {
@@ -272,8 +271,6 @@ class MyCustomFormFinSolicitar21_BiomState
         'Información Personal', '', _formulario());
   }
 
-  
-  
   jsonToFormData(http.MultipartRequest request, Map<String, dynamic> data) {
     for (var key in data.keys) {
       request.fields[key] = data[key].toString();
@@ -318,42 +315,42 @@ class MyCustomFormFinSolicitar21_BiomState
                 _IDLR(),
                 _IDInfo(),
                 SizedBox(height: 30),
-                if (_fadResponse=="") 
-                ElevatedButton(
-                  onPressed: () {
-                    initFace();
-                  },
-                  child: const Text('Tomar mi selfie'),
-                ),
+                if (_fadResponse == "")
+                  ElevatedButton(
+                    onPressed: () {
+                      initFace();
+                    },
+                    child: const Text('Tomar mi selfie'),
+                  ),
 
-                if (_fadResponse!="") 
-                ElevatedButton(
-                  onPressed: () {
-                    initFace();
-                  },
-                  child: const Text('Actulizar mi selfie'),
-                ),
+                if (_fadResponse != "")
+                  ElevatedButton(
+                    onPressed: () {
+                      initFace();
+                    },
+                    child: const Text('Actulizar mi selfie'),
+                  ),
                 SizedBox(
                   height: 20,
                 ),
-                if (_fadResponse!="") 
-                Container(
-                    padding: EdgeInsets.only(left: 10.0),
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                        //border: Border.all(
-                        //color: Colors.blueAccent
-                        //)
+                if (_fadResponse != "")
+                  Container(
+                      padding: EdgeInsets.only(left: 10.0),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          //border: Border.all(
+                          //color: Colors.blueAccent
+                          //)
+                          ),
+                      child: Text(
+                        "Listo, puedes avanzar",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 17,
+                          //color: Colors.blue
                         ),
-                    child: Text(
-                      "Listo, puedes avanzar",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 17,
-                        //color: Colors.blue
-                      ),
-                      textScaleFactor: 1,
-                    )),
+                        textScaleFactor: 1,
+                      )),
                 //const Text(
                 //'Resultado',
                 //),
@@ -369,77 +366,68 @@ class MyCustomFormFinSolicitar21_BiomState
                 //     ),
                 //   ),
                 // ),
-                
+
                 Container(
                   width: double.infinity,
                   padding: EdgeInsets.all(10),
                   child: ElevatedButton(
-                    onPressed: () {
-                      
-
-                      if (_fadResponse == "") {
-                        showDialog(
+                      onPressed: () {
+                        if (_fadResponse == "") {
+                          showDialog(
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
                                   title: Text('Error: Toma tu selfie'),
                                 );
-                              }); 
-                      }
-                      else{
-                        String ine = "";
-                        var bytes;
-                        var res = json.decode(_fadResponse);
-                        //dev.log(res['faceB64'].toString());
-                        var respuesta = res['faceB64'].toString();
-                        String imagen = respuesta;
-                        globalimageUpdate = imagen;
-                        dev.log("imag");
-                        dev.log(globalimageUpdate);
-
-                        setState(() {
+                              });
+                        } else {
+                          String ine = "";
+                          var bytes;
+                          var res = json.decode(_fadResponse);
+                          //dev.log(res['faceB64'].toString());
+                          var respuesta = res['faceB64'].toString();
                           String imagen = respuesta;
                           globalimageUpdate = imagen;
-                          //print(globalimageUpdate);
-                          PantallaRecibe = Pantalla.text;
-                          IDLRRecibe = IDLR.text;
-                          IDInfoRecibe = IDInfo.text;  
-                          Ingresar(PantallaRecibe, IDLRRecibe, IDInfoRecibe);
+                          dev.log("imag");
+                          dev.log(globalimageUpdate);
 
+                          setState(() {
+                            String imagen = respuesta;
+                            globalimageUpdate = imagen;
+                            //print(globalimageUpdate);
+                            PantallaRecibe = Pantalla.text;
+                            IDLRRecibe = IDLR.text;
+                            IDInfoRecibe = IDInfo.text;
+                            Ingresar(PantallaRecibe, IDLRRecibe, IDInfoRecibe);
+                          });
 
+                          // for (var j in res['documents']) {
+                          //   dev.log(j['captures']['ineAnverso.png'].toString());
+                          //   //  ine = j['data'].toString();
+                          //   //bytes = base64Encode(j['captures']);
+                          //   // setState(() {
+                          //   //   ine = j['data'].toString();
+                          //   // });
 
-                        });
+                          //   var bytes =
+                          //       File(j['captures']['ineAnverso.png']).readAsBytes();
+                          //   dev.log(bytes.toString());
 
-                        
+                          //   // base64Encode(j['captures']['ineAnverso.png']);
+                          //   // enviarINE(bytes, id_solicitud, id_credito);
 
-                        // for (var j in res['documents']) {
-                        //   dev.log(j['captures']['ineAnverso.png'].toString());
-                        //   //  ine = j['data'].toString();
-                        //   //bytes = base64Encode(j['captures']);
-                        //   // setState(() {
-                        //   //   ine = j['data'].toString();
-                        //   // });
+                          //   //ESTE ES EL BUENO
+                          //   //enviarINE(j['data'].toString(), id_solicitud, id_credito);
+                          // }
 
-                        //   var bytes =
-                        //       File(j['captures']['ineAnverso.png']).readAsBytes();
-                        //   dev.log(bytes.toString());
-
-                        //   // base64Encode(j['captures']['ineAnverso.png']);
-                        //   // enviarINE(bytes, id_solicitud, id_credito);
-
-                        //   //ESTE ES EL BUENO
-                        //   //enviarINE(j['data'].toString(), id_solicitud, id_credito);
-                        // }
-
-                        // var resp = _fadResponse.toString();
-                        // var respuesta = json.encode(_fadResponse);
-                        // dev.log("obtebiendo");
-                        // dev.log(respuesta);
-                      }
-                    },
-                    child: Text("Siguiente")),
-
-                ),    
+                          // var resp = _fadResponse.toString();
+                          // var respuesta = json.encode(_fadResponse);
+                          // dev.log("obtebiendo");
+                          // dev.log(respuesta);
+                        }
+                      },
+                      child: Text("Siguiente")),
+                ),
                 SizedBox(
                   height: 20,
                 ),
@@ -512,11 +500,7 @@ class MyCustomFormFinSolicitar21_BiomState
       width: double.infinity,
       padding: EdgeInsets.all(10),
       child: ElevatedButton(
-          
-          onPressed: () { 
-             
-            
-
+          onPressed: () {
             var res = json.decode(_fadResponse);
             //dev.log(res['faceB64'].toString());
             var respuesta = res['faceB64'].toString();
@@ -565,8 +549,11 @@ class MyCustomFormFinSolicitar21_BiomState
         )),
         onTap: () {
           Navigator.of(context).pop();
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => FinSolicitar21_Video()));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      FinSolicitar21_Video(widget.idCredito)));
         },
       ),
     );

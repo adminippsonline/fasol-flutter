@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'dart:developer' as dev;
 import '../Includes/widgets/build_screen.dart';
 import '../headers.dart';
 import '../menu_lateral.dart';
@@ -22,7 +22,8 @@ import 'FinSolicitar21_INE.dart';
 import 'package:intl/intl.dart';
 
 class FinSolicitar20 extends StatefulWidget {
-  const FinSolicitar20({super.key});
+  String idCredito = "";
+  FinSolicitar20(this.idCredito);
 
   @override
   State<FinSolicitar20> createState() => _FinSolicitar20State();
@@ -54,12 +55,12 @@ class _FinSolicitar20State extends State<FinSolicitar20> {
 
   @override
   Widget build(BuildContext context) {
-    return MyCustomFormFinSolicitar20();
+    return MyCustomFormFinSolicitar20(widget.idCredito);
     // return Scaffold(
     //   appBar: AppBar(
     //     title: Text(NombreCompletoSession),
     //   ),
-    //   drawer: MenuLateralPage(),
+    //   drawer: MenuLateralPage(""),
     //   bottomNavigationBar: MenuFooterPage(),
     //   body: const MyCustomFormFinSolicitar20(),
     // );
@@ -68,7 +69,8 @@ class _FinSolicitar20State extends State<FinSolicitar20> {
 
 // Create a Form widget.
 class MyCustomFormFinSolicitar20 extends StatefulWidget {
-  const MyCustomFormFinSolicitar20({super.key});
+  String idCredito = "";
+  MyCustomFormFinSolicitar20(this.idCredito);
 
   @override
   MyCustomFormFinSolicitar20State createState() {
@@ -97,12 +99,10 @@ class MyCustomFormFinSolicitar20State
       var response = await http.post(url, body: {
         'Pantalla': Pantalla,
         'id_solicitud': IDLR,
-        'id_credito': IDInfo,
-        'ActuoEnNombreYcuentaPropia': "1",
-        'AceptoGrabarVozEImagen': "1"
+        'id_credito': widget.idCredito,
+        'actuo_en_nombre_propio': "1",
+        'acepto_grabacion': "1"
       }).timeout(const Duration(seconds: 90));
-      print("llego aqui 111");
-      print(response.body);
 
       if (response.body != "0" && response.body != "") {
         var Respuesta = jsonDecode(response.body);
@@ -117,8 +117,8 @@ class MyCustomFormFinSolicitar20State
                   title: Text('Registrado correctamente'),
                 );
               });
-          Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (_) => FinSolicitar21_INE()));
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (_) => FinSolicitar21_INE(widget.idCredito)));
           FocusScope.of(context).unfocus();
         } else {
           //print('Error en el registro');
@@ -221,14 +221,15 @@ class MyCustomFormFinSolicitar20State
     return Form(
         key: _formKey,
         child: SingleChildScrollView(
-          child: Column(mainAxisAlignment: MainAxisAlignment.start, 
-          children: <Widget>[
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
                 // headerTop("¡¡¡Recuerda!!!!",
                 //     'Para concluir tu registro como médico afiliado a la RED MÉDICA de Fasol Soluciones, necesitamos lo siguiente: '),
 
                 SubitleCards("¡¡¡Recuerda!!!!"),
                 SizedBox(height: 20),
-                
+
                 SubitleCards(
                     "Necesitarás para concluir tu crédito lo siguiente: "),
                 SizedBox(height: 20),
@@ -310,8 +311,7 @@ class MyCustomFormFinSolicitar20State
                 ),
                 CheckboxListTile(
                   controlAffinity: ListTileControlAffinity.leading,
-                  title: Text(
-                      'Acepto que mi imagen y mi voz sean grabadas'),
+                  title: Text('Acepto que mi imagen y mi voz sean grabadas'),
                   value: AceptoGrabarVozEImagen,
                   onChanged: (value) {
                     setState(() {
@@ -327,7 +327,6 @@ class MyCustomFormFinSolicitar20State
                 SizedBox(
                   height: 80,
                 ),
-                
               ]),
         ));
   }
@@ -432,6 +431,7 @@ class MyCustomFormFinSolicitar20State
           child: const Text('Siguiente')),
     );
   }
+
   Widget _Avanzar() {
     return Container(
       width: double.infinity,
@@ -444,8 +444,10 @@ class MyCustomFormFinSolicitar20State
         )),
         onTap: () {
           Navigator.of(context).pop();
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => FinSolicitar21_INE()));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => FinSolicitar21_INE(widget.idCredito)));
         },
       ),
     );

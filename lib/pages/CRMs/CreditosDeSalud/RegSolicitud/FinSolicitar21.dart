@@ -24,7 +24,8 @@ import 'FinSolicitar22_1.dart';
 import 'package:intl/intl.dart';
 
 class FinSolicitar21 extends StatefulWidget {
-  const FinSolicitar21({super.key});
+  String idCredito = "";
+  FinSolicitar21(this.idCredito);
 
   @override
   State<FinSolicitar21> createState() => _FinSolicitar21State();
@@ -56,13 +57,14 @@ class _FinSolicitar21State extends State<FinSolicitar21> {
 
   @override
   Widget build(BuildContext context) {
-    return MyCustomFormFinSolicitar21();
+    return MyCustomFormFinSolicitar21(widget.idCredito);
   }
 }
 
 // Create a Form widget.
 class MyCustomFormFinSolicitar21 extends StatefulWidget {
-  const MyCustomFormFinSolicitar21({super.key});
+  String idCredito = "";
+  MyCustomFormFinSolicitar21(this.idCredito);
 
   @override
   MyCustomFormFinSolicitar21State createState() {
@@ -169,8 +171,7 @@ class MyCustomFormFinSolicitar21State
   void mostrar_datos() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      NombreCompletoSession =
-          prefs.getString('NombreCompletoSession') ?? '';
+      NombreCompletoSession = prefs.getString('NombreCompletoSession') ?? '';
       id_medico = prefs.getInt('id_medico') ?? 0;
       id_credito = prefs.getInt('id_credito') ?? 0;
     });
@@ -180,39 +181,37 @@ class MyCustomFormFinSolicitar21State
     IDInfo.text = "$id_credito";
   }
 
-
-
-  @override 
+  @override
   Widget build(BuildContext context) {
     return BuildScreens(
         'Solicitud', '', '', 'Datos de la solicitud', '', _formulario());
-  } 
-
+  }
 
   Widget _formulario() {
     return Form(
-            key: _formKey,
-            child: SingleChildScrollView(
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    SubitleCards("¿Qué cirugía o tratamiento médico te deseas realizar?"),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _Pantalla(),
-                    _IDMedico(),
-                    _IDInfo(),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _BotonEnviar(),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _Avanzar()
-                  ]),
-            ));
+        key: _formKey,
+        child: SingleChildScrollView(
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                SubitleCards(
+                    "¿Qué cirugía o tratamiento médico te deseas realizar?"),
+                SizedBox(
+                  height: 20,
+                ),
+                _Pantalla(),
+                _IDMedico(),
+                _IDInfo(),
+                SizedBox(
+                  height: 20,
+                ),
+                _BotonEnviar(),
+                SizedBox(
+                  height: 20,
+                ),
+                _Avanzar()
+              ]),
+        ));
   }
 
   Widget _Pantalla() {
@@ -298,6 +297,7 @@ class MyCustomFormFinSolicitar21State
           child: const Text('Siguiente')),
     );
   }
+
   Widget _Avanzar() {
     return Container(
       width: double.infinity,
@@ -310,8 +310,10 @@ class MyCustomFormFinSolicitar21State
         )),
         onTap: () {
           Navigator.of(context).pop();
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => FinSolicitar22_1()));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => FinSolicitar22_1(widget.idCredito)));
         },
       ),
     );

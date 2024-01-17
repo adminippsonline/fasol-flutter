@@ -64,7 +64,7 @@ class _FinRegMedico36State extends State<FinRegMedico36> {
       appBar: AppBar(
         title: Text("Bienvenido $id_medico $id_info  $NombreCompletoSession"),
       ),
-      drawer: MenuLateralPage(),
+      drawer: MenuLateralPage(""),
       bottomNavigationBar: MenuFooterPage(),
       body: const MyCustomFormFinRegMedico36(),
     );

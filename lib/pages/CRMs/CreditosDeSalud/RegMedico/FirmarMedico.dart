@@ -13,7 +13,7 @@ import 'package:http_parser/http_parser.dart';
 import 'dart:developer' as dev;
 import '../Includes/widgets/build_screen.dart';
 import '../headers.dart';
-import '../menu_lateral.dart'; 
+import '../menu_lateral.dart';
 import '../menu_footer.dart';
 import '../../../../../Elementos/validaciones_formularios.dart';
 //estas dos creo son para las apis que se consumen
@@ -27,7 +27,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
-
 
 import 'package:intl/intl.dart';
 
@@ -79,7 +78,7 @@ class _FirmarMedicoState extends State<FirmarMedico> {
     //   appBar: AppBar(
     //     title: Text(NombreCompletoSession),
     //   ),
-    //   drawer: MenuLateralPage(),
+    //   drawer: MenuLateralPage(""),
     //   bottomNavigationBar: MenuFooterPage(),
     //   body: const MyCustomFormFinRegMedico35(),
     // );
@@ -96,8 +95,7 @@ class MyCustomFormFirmarMedico extends StatefulWidget {
   }
 }
 
-class MyCustomFormFirmarMedicoState
-    extends State<MyCustomFormFirmarMedico> {
+class MyCustomFormFirmarMedicoState extends State<MyCustomFormFirmarMedico> {
   //el fomrKey para formulario
   final _formKey = GlobalKey<FormState>();
 
@@ -105,22 +103,24 @@ class MyCustomFormFirmarMedicoState
   final _plugin = FadMultisignPlugin();
   final _fadBioPlugin = FadBio();
 
-  String ticket="";
-  String msg="";
-  void Consultar(IDMedico,IDInfo) async { 
+  String ticket = "";
+  String msg = "";
+  void Consultar(IDMedico, IDInfo) async {
     /*print("****-------------------**********************");
     print(IDMedico);
     print(IDInfo);
     print("****-------------------**********************");*/
-    if(IDMedico!=0 && IDInfo!=0){    
+    if (IDMedico != 0 && IDInfo != 0) {
       try {
         var url = Uri.https('fasoluciones.mx', 'ApiApp/Medico/FirmarFAD.php');
-        var data ={
-          'Pantalla':'Firmar',
+        var data = {
+          'Pantalla': 'Firmar',
           'id_medico': "$IDMedico",
           'id_info': "$IDInfo"
         };
-        var response = await http.post(url, body: data).timeout(const Duration(seconds: 90));
+        var response = await http
+            .post(url, body: data)
+            .timeout(const Duration(seconds: 90));
         //print("llego aqui 111");
         //print(response.body);
         if (response.body != "0" && response.body != "") {
@@ -128,7 +128,7 @@ class MyCustomFormFirmarMedicoState
           //print(Respuesta);
           String status = Respuesta['status'];
           String msg = Respuesta['msg'];
-          
+
           if (status == "OK") {
             //print('Si recibo el ticket');
             print(ticket);
@@ -168,12 +168,11 @@ class MyCustomFormFirmarMedicoState
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
-                title: Text('Error: HTTP:// $msg' ),
+                title: Text('Error: HTTP:// $msg'),
               );
             });
       }
-    }
-    else{
+    } else {
       //print('http error');
       showDialog(
           context: context,
@@ -181,18 +180,18 @@ class MyCustomFormFirmarMedicoState
             return AlertDialog(
               title: Text('Error: HTTP://'),
             );
-          });  
+          });
     }
   }
 
   void Ingresar(Pantalla, IDMedico, IDInfo) async {
     try {
-var url = Uri.https('fasoluciones.mx', 'ApiApp/Medico/Actualizar.php');
+      var url = Uri.https('fasoluciones.mx', 'ApiApp/Medico/Actualizar.php');
       var response = await http.post(url, body: {
         'Pantalla': 'Firmado',
         'id_medico': IDMedico,
         'id_info': IDInfo,
-        'Firmado':'OK'
+        'Firmado': 'OK'
       }).timeout(const Duration(seconds: 90));
       //print("llego aqui 111");
       //print(response.body);
@@ -211,8 +210,8 @@ var url = Uri.https('fasoluciones.mx', 'ApiApp/Medico/Actualizar.php');
                 );
               });
           Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (_) => PerfilMedVerificar()));
-        FocusScope.of(context).unfocus();
+              MaterialPageRoute(builder: (_) => PerfilMedVerificar()));
+          FocusScope.of(context).unfocus();
         } else {
           //print('Error en el registro');
           showDialog(
@@ -259,7 +258,7 @@ var url = Uri.https('fasoluciones.mx', 'ApiApp/Medico/Actualizar.php');
     //String ticket="ñññññññññññññññññññññ";
     String config =
         '{"endpoint": "https://uat.firmaautografa.com","preventScreenCapture": false, "ticket": "$ticket","timeVideoAgreement":28}';
-    
+
     print("----------------");
     print(config);
     print("----------------");
@@ -276,14 +275,16 @@ var url = Uri.https('fasoluciones.mx', 'ApiApp/Medico/Actualizar.php');
 
     setState(() {
       _fadResponse = fadResponse;
-      if(_fadResponse=='{"fadResultCode":"-3428","resultCode":"3","result":"null"}'){
-          showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text('Ocurrio un error intentelo nuevamente o contacte al administrador'),
-                      );
-                    });
+      if (_fadResponse ==
+          '{"fadResultCode":"-3428","resultCode":"3","result":"null"}') {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text(
+                    'Ocurrio un error intentelo nuevamente o contacte al administrador'),
+              );
+            });
       }
     });
   }
@@ -303,14 +304,13 @@ var url = Uri.https('fasoluciones.mx', 'ApiApp/Medico/Actualizar.php');
   String IDInfoRecibe = "";
   String TicketRecibe = "";
 
- //se usa para mostrar los datos del estado
+  //se usa para mostrar los datos del estado
   int id_medico = 0;
   int id_info = 0;
   String NombreCompletoSession = "";
   String CorreoSession = "";
   String TelefonoSession = "";
 
-  
   //Esto es un metodo
   //se usa para mostrar los datos del estado
 
@@ -333,14 +333,12 @@ var url = Uri.https('fasoluciones.mx', 'ApiApp/Medico/Actualizar.php');
     mostrar_datos();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return BuildScreens('${NombreCompletoSession}', '', '',
         'Información Personal', '', _formulario());
   }
 
-  
   Widget _formulario() {
     return Form(
         key: _formKey,
@@ -380,14 +378,16 @@ var url = Uri.https('fasoluciones.mx', 'ApiApp/Medico/Actualizar.php');
                 _IDMedico(),
                 _IDInfo(),
                 SizedBox(height: 30),
-                 
-                if (_fadResponse=="" || _fadResponse=='{"fadResultCode":"-3428","resultCode":"3","result":"null"}') 
-                ElevatedButton(
-                  onPressed: () {
-                    initMultiSign();
-                  },
-                  child: const Text('Iniciar Muiltifirma'),
-                ),
+
+                if (_fadResponse == "" ||
+                    _fadResponse ==
+                        '{"fadResultCode":"-3428","resultCode":"3","result":"null"}')
+                  ElevatedButton(
+                    onPressed: () {
+                      initMultiSign();
+                    },
+                    child: const Text('Iniciar Muiltifirma'),
+                  ),
                 /*const Text(
                   'Resultado',
                 ),
@@ -401,14 +401,13 @@ var url = Uri.https('fasoluciones.mx', 'ApiApp/Medico/Actualizar.php');
                     ),
                   ),
                 ),*/
-                
+
                 SizedBox(
                   height: 20,
                 ),
-                
+
                 //if (_fadResponse!="" && _fadResponse!='{"fadResultCode":"-3428","resultCode":"3","result":"null"}')
                 _BotonEnviar(),
-
               ]),
         ));
   }
@@ -467,8 +466,6 @@ var url = Uri.https('fasoluciones.mx', 'ApiApp/Medico/Actualizar.php');
         ));
   }
 
-
- 
   Widget _BotonEnviar() {
     return Container(
       width: double.infinity,
@@ -479,23 +476,22 @@ var url = Uri.https('fasoluciones.mx', 'ApiApp/Medico/Actualizar.php');
             print(_fadResponse );
             print("***");*/
 
-            if (_fadResponse=="" || _fadResponse=='{"fadResultCode":"-3428","resultCode":"3","result":"null"}'){
+            if (_fadResponse == "" ||
+                _fadResponse ==
+                    '{"fadResultCode":"-3428","resultCode":"3","result":"null"}') {
               showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text('Por favor firma el contrato'),
-                      );
-                    });
-            }
-            else{
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text('Por favor firma el contrato'),
+                    );
+                  });
+            } else {
               PantallaRecibe = Pantalla.text;
               IDMedicoRecibe = IDMedico.text;
               IDInfoRecibe = IDInfo.text;
               Ingresar(PantallaRecibe, IDMedicoRecibe, IDInfoRecibe);
-
-            }  
-            
+            }
           },
           child: const Text('Listo')),
     );

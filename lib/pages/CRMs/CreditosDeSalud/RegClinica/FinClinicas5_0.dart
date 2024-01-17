@@ -56,7 +56,7 @@ class _FinClinicas5_0State extends State<FinClinicas5_0> {
     //   appBar: AppBar(
     //     title: Text(NombreCompletoSession),
     //   ),
-    //   drawer: MenuLateralPage(),
+    //   drawer: MenuLateralPage(""),
     //   bottomNavigationBar: MenuFooterPage(),
     //   body: const MyCustomFormFinClinicas5_0(),
     // );
@@ -214,8 +214,9 @@ class MyCustomFormFinClinicas5_0State
     return Form(
         key: _formKey,
         child: SingleChildScrollView(
-          child: Column(mainAxisAlignment: MainAxisAlignment.start, 
-          children: <Widget>[
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
                 // headerTop("¡¡¡Recuerda!!!!",
                 //     'Para concluir tu registro como médico afiliado a la RED MÉDICA de Fasol Soluciones, necesitamos lo siguiente: '),
 
@@ -300,8 +301,7 @@ class MyCustomFormFinClinicas5_0State
                 ),
                 CheckboxListTile(
                   controlAffinity: ListTileControlAffinity.leading,
-                  title: Text(
-                      'Acepto que mi imagen y mi voz sean grabadas.'),
+                  title: Text('Acepto que mi imagen y mi voz sean grabadas.'),
                   value: AceptoGrabarVozEImagen,
                   onChanged: (value) {
                     setState(() {
@@ -317,7 +317,6 @@ class MyCustomFormFinClinicas5_0State
                 SizedBox(
                   height: 20,
                 ),
-                
               ]),
         ));
   }
@@ -369,8 +368,6 @@ class MyCustomFormFinClinicas5_0State
         ));
   }
 
-  
-
   Widget _BotonEnviar() {
     return Container(
       width: double.infinity,
@@ -404,6 +401,7 @@ class MyCustomFormFinClinicas5_0State
           child: const Text('Siguiente')),
     );
   }
+
   Widget _Avanzar() {
     return Container(
       width: double.infinity,

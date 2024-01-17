@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/pages/home_page.dart';
 import '../Includes/colors/colors.dart';
-import '../headers.dart';  
+import '../headers.dart';
 import '../menu_lateral.dart';
 import '../menu_footer.dart';
 //estas dos creo son para las apis que se consumen
@@ -15,11 +15,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
-
 import '../home_page.dart';
 import 'PerfilSol.dart';
 import 'PerfilSolicitudWebView.dart';
-
 
 import '../RegSolicitud/FinSolicitar10.dart';
 import '../RegSolicitud/FinSolicitar11.dart';
@@ -51,7 +49,8 @@ import '../VerificarCuenta.dart';
 //void main() => runApp(const PerfilSolVerificar());
 
 class PerfilSolVerificar extends StatefulWidget {
-  const PerfilSolVerificar({super.key});
+  String idCredito = "";
+  PerfilSolVerificar(this.idCredito);
 
   @override
   State<PerfilSolVerificar> createState() => _PerfilSolVerificarState();
@@ -65,16 +64,17 @@ class _PerfilSolVerificarState extends State<PerfilSolVerificar> {
         title: const Text(''),
         backgroundColor: COLOR_PRINCIPAL,
       ),
-      drawer: MenuLateralPage(),
+      drawer: MenuLateralPage(widget.idCredito),
       bottomNavigationBar: MenuFooterPage(),
-      body: const MyCustomPerfilSolVerificar(),
+      body: MyCustomPerfilSolVerificar(widget.idCredito),
     );
   }
 }
 
 // Create a Form widget.
 class MyCustomPerfilSolVerificar extends StatefulWidget {
-  const MyCustomPerfilSolVerificar({super.key});
+  String idCredito = "";
+  MyCustomPerfilSolVerificar(this.idCredito);
 
   @override
   MyCustomPerfilSolVerificarState createState() {
@@ -93,27 +93,32 @@ class MyCustomPerfilSolVerificarState
   //Variables para datos que se reciben del input
   String CorreoRecibe = "";
   String ContrasenaRecibe = "";
-  String IDSolicitudRecibe ="";
+  String IDSolicitudRecibe = "";
 
   String email = "";
   int id_sol = 0;
 
   void Ingresar(Corr, Pass, id_sol) async {
     try {
-      var data = {'Correo': Corr, 'Contrasena': Pass, 'id_solicitud': '$id_sol'};
+      var data = {
+        'Correo': Corr,
+        'Contrasena': Pass,
+        'id_solicitud': '$id_sol'
+      };
       var url = Uri.https('fasoluciones.mx', 'api/Solicitud/Verificar');
-      var response = await http.post(url, body: data).timeout(const Duration(seconds: 90));
+      var response =
+          await http.post(url, body: data).timeout(const Duration(seconds: 90));
       if (response.body != "0" && response.body != "") {
         print(response.body);
-          var Respuesta = jsonDecode(response.body);
-          String Redireccionar = Respuesta['Redireccionar'];
-          String status = Respuesta['status'];
-          
-          Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (_) => FinSolicitar10()));
-                      FocusScope.of(context).unfocus();
+        var Respuesta = jsonDecode(response.body);
+        String Redireccionar = Respuesta['Redireccionar'];
+        String status = Respuesta['status'];
 
-          /*if (status == "Error") {
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (_) => FinSolicitar10(widget.idCredito)));
+        FocusScope.of(context).unfocus();
+
+        /*if (status == "Error") {
             //if (Redireccionar == "Verificar") {
                 Navigator.of(context).pushReplacement(
                     MaterialPageRoute(builder: (_) => VerificarCuenta()));
@@ -165,11 +170,11 @@ class MyCustomPerfilSolVerificarState
                       FocusScope.of(context).unfocus();
                     } else if (Redireccionar == "FinSolicitar14") {
                       Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (_) => FinSolicitar14()));
+                          MaterialPageRoute(builder: (_) => FinSolicitar14("")));
                       FocusScope.of(context).unfocus();
                     }else if (Redireccionar == "FinSolicitar15") {
                       Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (_) => FinSolicitar15()));
+                          MaterialPageRoute(builder: (_) => FinSolicitar15("")));
                       FocusScope.of(context).unfocus();
                     } else if (Redireccionar == "FinSolicitar16") {
                       Navigator.of(context).pushReplacement(
@@ -238,19 +243,18 @@ class MyCustomPerfilSolVerificarState
               //MaterialPageRoute(builder: (_) => PerfilSolVerificar()));
             //FocusScope.of(context).unfocus();    
           } */
-      } 
-      else{        
-         showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: Text("Error en el login"),
-                );
-              });
-          /*Navigator.of(context).pushReplacement(
+      } else {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text("Error en el login"),
+              );
+            });
+        /*Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (_) => PerfilSolVerificar()));
-          FocusScope.of(context).unfocus();*/    
-      }        
+          FocusScope.of(context).unfocus();*/
+      }
     } on TimeoutException catch (e) {
       //print('Tardo muco la conexion');
       showDialog(
@@ -260,10 +264,10 @@ class MyCustomPerfilSolVerificarState
               title: Text('La conexión tardo mucho'),
             );
           });
-          Navigator.of(context).push(
-              MaterialPageRoute<Null>(builder: (BuildContext context) {
-            return new PerfilSolVerificar();
-          }));
+      Navigator.of(context)
+          .push(MaterialPageRoute<Null>(builder: (BuildContext context) {
+        return new PerfilSolVerificar(widget.idCredito);
+      }));
     } on Error catch (e) {
       //print('http error');
       showDialog(
@@ -273,10 +277,10 @@ class MyCustomPerfilSolVerificarState
               title: Text('Error: HTTP://'),
             );
           });
-           Navigator.of(context).push(
-              MaterialPageRoute<Null>(builder: (BuildContext context) {
-            return new PerfilSolVerificar();
-          }));
+      Navigator.of(context)
+          .push(MaterialPageRoute<Null>(builder: (BuildContext context) {
+        return new PerfilSolVerificar(widget.idCredito);
+      }));
     }
   }
 
@@ -310,7 +314,6 @@ class MyCustomPerfilSolVerificarState
     var ContrasenaSession = await prefs.getString('ContrasenaSession');
     var TelefonoSession = await prefs.getString('TelefonoSession');
 
- 
     Ingresar(CorreoSession, ContrasenaSession, id_solicitud);
   }
 

@@ -111,7 +111,7 @@ class _RegistroMedState extends State<RegistroMed> {
       appBar: AppBar(
         title: const Text('Registro de médicos'),
       ),
-      drawer: MenuLateralPage(),
+      drawer: MenuLateralPage(""),
       bottomNavigationBar: MenuFooterPage(),
       body: SafeArea(
           child: SingleChildScrollView(

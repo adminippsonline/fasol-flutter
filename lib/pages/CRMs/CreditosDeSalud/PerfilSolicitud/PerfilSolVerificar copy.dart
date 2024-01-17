@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../Includes/colors/colors.dart';
-import '../headers.dart';  
+import '../headers.dart';
 import '../menu_lateral.dart';
 import '../menu_footer.dart';
 //estas dos creo son para las apis que se consumen
@@ -59,7 +59,7 @@ class _PerfilSolVerificarState extends State<PerfilSolVerificar> {
         title: const Text(''),
         backgroundColor: COLOR_PRINCIPAL,
       ),
-      drawer: MenuLateralPage(),
+      drawer: MenuLateralPage(""),
       bottomNavigationBar: MenuFooterPage(),
       body: const MyCustomPerfilSolVerificar(),
     );
@@ -118,8 +118,7 @@ class MyCustomPerfilSolVerificarState
                     title: Text('Ingresando correctamente'),
                   );
                 });
-            String NombreCompleto =
-                Respuesta['data']['PrimerNombre'] ?? "";
+            String NombreCompleto = Respuesta['data']['PrimerNombre'] ?? "";
             //print(NombreCompleto);
             if (NombreCompleto == "") {
               NombreCompleto = "";
@@ -134,80 +133,79 @@ class MyCustomPerfilSolVerificarState
             //print(Redireccionar);
             if (Redireccionar == "FinSolicitar10") {
               Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (_) => FinSolicitar10()));
+                  MaterialPageRoute(builder: (_) => FinSolicitar10("")));
               FocusScope.of(context).unfocus();
-            } 
-            else if (Redireccionar == "FinSolicitar11") {
+            } else if (Redireccionar == "FinSolicitar11") {
               Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (_) => FinSolicitar11()));
+                  MaterialPageRoute(builder: (_) => FinSolicitar11("")));
               FocusScope.of(context).unfocus();
             } else if (Redireccionar == "FinSolicitar12") {
               Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (_) => FinSolicitar12()));
+                  MaterialPageRoute(builder: (_) => FinSolicitar12("")));
               FocusScope.of(context).unfocus();
             } else if (Redireccionar == "FinSolicitar13_1") {
               Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (_) => FinSolicitar13_1()));
+                  MaterialPageRoute(builder: (_) => FinSolicitar13_1("")));
               FocusScope.of(context).unfocus();
             } else if (Redireccionar == "FinSolicitar14") {
               Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (_) => FinSolicitar14()));
+                  MaterialPageRoute(builder: (_) => FinSolicitar14("")));
               FocusScope.of(context).unfocus();
-            }else if (Redireccionar == "FinSolicitar15") {
+            } else if (Redireccionar == "FinSolicitar15") {
               Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (_) => FinSolicitar15()));
+                  MaterialPageRoute(builder: (_) => FinSolicitar15("")));
               FocusScope.of(context).unfocus();
             } else if (Redireccionar == "FinSolicitar16") {
               Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (_) => FinSolicitar16()));
+                  MaterialPageRoute(builder: (_) => FinSolicitar16("")));
               FocusScope.of(context).unfocus();
-            }else if (Redireccionar == "FinSolicitar17") {
+            } else if (Redireccionar == "FinSolicitar17") {
               Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (_) => FinSolicitar17()));
+                  MaterialPageRoute(builder: (_) => FinSolicitar17("")));
               FocusScope.of(context).unfocus();
-            }else if (Redireccionar == "FinSolicitar19") {
+            } else if (Redireccionar == "FinSolicitar19") {
               Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (_) => FinSolicitar19()));
+                  MaterialPageRoute(builder: (_) => FinSolicitar19("")));
               FocusScope.of(context).unfocus();
-            }else if (Redireccionar == "FinSolicitar20") {
+            } else if (Redireccionar == "FinSolicitar20") {
               Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (_) => FinSolicitar20()));
+                  MaterialPageRoute(builder: (_) => FinSolicitar20("")));
               FocusScope.of(context).unfocus();
-            }else if (Redireccionar == "FinSolicitar21") {
+            } else if (Redireccionar == "FinSolicitar21") {
               Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (_) => FinSolicitar20()));
+                  MaterialPageRoute(builder: (_) => FinSolicitar20("")));
               FocusScope.of(context).unfocus();
-            }else if (Redireccionar == "FinSolicitar22_1") {
+            } else if (Redireccionar == "FinSolicitar22_1") {
               Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (_) => FinSolicitar22_1()));
+                  MaterialPageRoute(builder: (_) => FinSolicitar22_1("")));
               FocusScope.of(context).unfocus();
-            }else if (Redireccionar == "FinSolicitar23") {
+            } else if (Redireccionar == "FinSolicitar23") {
               Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (_) => FinSolicitar23()));
+                  MaterialPageRoute(builder: (_) => FinSolicitar23("")));
               FocusScope.of(context).unfocus();
-            }else if (Redireccionar == "FinSolicitar23_0") {
+            } else if (Redireccionar == "FinSolicitar23_0") {
               Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (_) => FinSolicitar23_0()));
+                  MaterialPageRoute(builder: (_) => FinSolicitar23_0("")));
               FocusScope.of(context).unfocus();
-            }else if (Redireccionar == "FinSolicitar23_1") {
+            } else if (Redireccionar == "FinSolicitar23_1") {
               Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (_) => FinSolicitar23_1()));
+                  MaterialPageRoute(builder: (_) => FinSolicitar23_1("")));
               FocusScope.of(context).unfocus();
-            }else {
+            } else {
               //print(Redireccionar);
               Navigator.of(context).push(
                   MaterialPageRoute<Null>(builder: (BuildContext context) {
-                return new PerfilSolicitudWebView( 
-                    CorreoSession, ContrasenaSession,id_solicitud);
+                return new PerfilSolicitudWebView(
+                    CorreoSession, ContrasenaSession, id_solicitud);
               }));
-            }  
+            }
             //
           } else {
             //print('Error en el registro');
             showDialog(
                 context: context,
                 builder: (BuildContext context) {
-                  return AlertDialog( 
+                  return AlertDialog(
                     title: Text('Error en el login'),
                   );
                 });
@@ -241,10 +239,10 @@ class MyCustomPerfilSolVerificarState
               title: Text('Error: HTTP://'),
             );
           });
-           Navigator.of(context).push(
-              MaterialPageRoute<Null>(builder: (BuildContext context) {
-            return new PerfilSolVerificar();
-          }));
+      Navigator.of(context)
+          .push(MaterialPageRoute<Null>(builder: (BuildContext context) {
+        return new PerfilSolVerificar();
+      }));
     }
   }
 

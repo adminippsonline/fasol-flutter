@@ -14,7 +14,6 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:email_validator/email_validator.dart';
 
-
 import 'PerfilSolVerificar.dart';
 import '../RegSolicitud/RegistroSol.dart';
 import '../RegSolicitud/RegistroSolOlvidaste.dart';
@@ -58,7 +57,7 @@ class MyCustomFormSolicitudState extends State<MyCustomFormSolicitud> {
 
   String email = "";
 
-  void Ingresar(Corr, Pass) async { 
+  void Ingresar(Corr, Pass) async {
     try {
       var data = {'Correo': Corr, 'Contrasena': Pass};
       //print(data);
@@ -75,18 +74,17 @@ class MyCustomFormSolicitudState extends State<MyCustomFormSolicitud> {
           String ContrasenaSession = Pass;
 
           String msg = Respuesta['msg'];
-          
+
           //int id_info = Respuesta['id_info'];
-          if (status == "Error") {            
+          if (status == "Error") {
             showDialog(
-                context: context, 
+                context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(
                     title: Text(msg),
                   );
                 });
-          }
-          else if (status == "OK") {
+          } else if (status == "OK") {
             int id_solicitud = Respuesta['id_solicitud'];
             //print('si existe aqui -----');
             /*showDialog(
@@ -96,12 +94,8 @@ class MyCustomFormSolicitudState extends State<MyCustomFormSolicitud> {
                     title: Text(response.body),
                   );
                 });*/
-                
 
-            guardar_datos(
-                id_solicitud,
-                Corr,
-                Pass);
+            guardar_datos(id_solicitud, Corr, Pass);
 
             /*showDialog(
                 context: context, 
@@ -109,12 +103,10 @@ class MyCustomFormSolicitudState extends State<MyCustomFormSolicitud> {
                   return AlertDialog(
                     title: Text("paso"),
                   );
-                });*/    
-            Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  builder: (_) =>
-                      PerfilSolVerificar()));
-              FocusScope.of(context).unfocus();
-
+                });*/
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (_) => PerfilSolVerificar("")));
+            FocusScope.of(context).unfocus();
           } else {
             //print('Error en el registro');
             showDialog(
@@ -159,10 +151,9 @@ class MyCustomFormSolicitudState extends State<MyCustomFormSolicitud> {
 
   //Esto es iun metodo
   //se usa para guarar dtos es tipo sesiones
-  Future<void> guardar_datos(id_solicitud,
-      CorreoSession, ContrasenaSession) async {
-
-      /*print("***********************************");
+  Future<void> guardar_datos(
+      id_solicitud, CorreoSession, ContrasenaSession) async {
+    /*print("***********************************");
       print(id_solicitud); 
       print(id_info);
       print(NombreCompletoSession);
@@ -199,7 +190,7 @@ class MyCustomFormSolicitudState extends State<MyCustomFormSolicitud> {
       if (id_solicitud != null) {
         if (id_solicitud >= 1) {
           Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (_) => PerfilSolVerificar()));
+              MaterialPageRoute(builder: (_) => PerfilSolVerificar("")));
           FocusScope.of(context).unfocus();
         }
       }
@@ -370,8 +361,8 @@ class MyCustomFormSolicitudState extends State<MyCustomFormSolicitud> {
         )),
         onTap: () {
           Navigator.of(context).pop();
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => RegistroSol()));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => RegistroSol("")));
         },
       ),
     );

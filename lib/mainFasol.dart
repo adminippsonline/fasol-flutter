@@ -16,7 +16,8 @@ class MyApp extends StatelessWidget {
 
     '/RegMedico': (context) => const RegMedico(),
     '/RegMedico/RegistroMed': (context) => const RegistroMed(),
-    '/RegMedico/RegistroMedOlvidaste': (context) => const RegistroMedOlvidaste(),
+    '/RegMedico/RegistroMedOlvidaste': (context) =>
+        const RegistroMedOlvidaste(),
 
     '/RegMedico/FinRegMedico30': (context) => const FinRegMedico30(),
     '/RegMedico/FinRegMedico30_1': (context) => const FinRegMedico30_1(),
@@ -33,12 +34,13 @@ class MyApp extends StatelessWidget {
     '/PerfilMedico/LoginMed': (context) => const LoginMed(),
     '/PerfilMedico/PerfilMed': (context) => const PerfilMed(),
     '/PerfilMedico/PerfilMedVerificar': (context) => const PerfilMedVerificar(),
-    '/PerfilMedico/PerfilMedWebView': (context) => PerfilMedicoWebView("", "", 0),
-    
+    '/PerfilMedico/PerfilMedWebView': (context) =>
+        PerfilMedicoWebView("", "", 0),
 
     '/RegClinica': (context) => const RegClinica(),
     '/RegClinica/RegistroCli': (context) => const RegistroCli(),
-    '/RegClinica/RegistroCliOlvidaste': (context) => const RegistroCliOlvidaste(),
+    '/RegClinica/RegistroCliOlvidaste': (context) =>
+        const RegistroCliOlvidaste(),
 
     '/RegClinica/FinClinicas3': (context) => const FinClinicas3(),
     '/RegClinica/FinClinicas4_1': (context) => const FinClinicas4_1(),
@@ -65,45 +67,47 @@ class MyApp extends StatelessWidget {
     '/RegClinica/FinClinicas18': (context) => const FinClinicas18(),
     '/RegClinica/FinClinicas19': (context) => const FinClinicas19(),
 
-     '/RegClinica/FirmarClinica': (context) => const FirmarClinica(),
+    '/RegClinica/FirmarClinica': (context) => const FirmarClinica(),
 
     '/PerfilClinica/LoginCli': (context) => const LoginCli(),
     '/PerfilClinica/PerfilCli': (context) => const PerfilCli(),
     '/PerfilClinica/PerfilCliVerificar': (context) =>
-        const PerfilCliVerificar(), 
+        const PerfilCliVerificar(),
     '/PerfilClinica/PerfilCliWebView': (context) =>
         PerfilClinicaWebView("", "", 0),
 
     '/RegSolicitud': (context) => const RegSolicitud(),
-    '/RegSolicitud/Desgloce': (context) =>  Desgloce("","","",""),
-    '/RegSolicitud/RegistroSol': (context) => const RegistroSol(),
-   
+    '/RegSolicitud/Desgloce': (context) => Desgloce("", "", "", ""),
+    '/RegSolicitud/RegistroSol': (context) => RegistroSol(""),
+
     '/RegSolicitud/RegistroSolOlvidaste': (context) =>
         const RegistroSolOlvidaste(),
-    '/RegSolicitud/FinSolicitar10': (context) => const FinSolicitar10(),
-    '/RegSolicitud/FinSolicitar11': (context) => const FinSolicitar11(),
-    '/RegSolicitud/FinSolicitar12': (context) => const FinSolicitar12(),
-    '/RegSolicitud/FinSolicitar13_0': (context) => const FinSolicitar13_0(),
-    '/RegSolicitud/FinSolicitar13_1': (context) => const FinSolicitar13_1(),
-    '/RegSolicitud/FinSolicitar14': (context) => const FinSolicitar14(),
-    '/RegSolicitud/FinSolicitar15': (context) => const FinSolicitar15(),
-    '/RegSolicitud/FinSolicitar15_negativa': (context) => const FinSolicitar15_negativa(),
-    '/RegSolicitud/FinSolicitar16': (context) => const FinSolicitar16(),
-    '/RegSolicitud/FinSolicitar17_1': (context) => const FinSolicitar17_1(),
-    '/RegSolicitud/FinSolicitar17_2': (context) => const FinSolicitar17_2(),
-    '/RegSolicitud/FinSolicitar18': (context) => const FinSolicitar18(),
-    '/RegSolicitud/FinSolicitar19': (context) => const FinSolicitar19(),
-    '/RegSolicitud/FinSolicitar19_noAprobada': (context) => const FinSolicitar19_noAprobada(),
-    '/RegSolicitud/FinSolicitar20': (context) => const FinSolicitar20(),
-    '/RegSolicitud/FinSolicitar21': (context) => const FinSolicitar21(),
-    '/RegSolicitud/FinSolicitar22': (context) => const FinSolicitar22(),
-    '/RegSolicitud/FinSolicitar22_1': (context) => const FinSolicitar22_1(),
-    '/RegSolicitud/FinSolicitar23': (context) => const FinSolicitar23(),
-    '/RegSolicitud/FinSolicitar23_0': (context) => const FinSolicitar23_0(),
-    '/RegSolicitud/FinSolicitar23_1': (context) => const FinSolicitar23_1(),
-    '/RegSolicitud/FinSolicitar23_2': (context) => const FinSolicitar23_2(),
-    '/RegSolicitud/FinSolicitar23_4': (context) => const FinSolicitar23_4(),
-    '/RegSolicitud/FinSolicitar24': (context) => const FinSolicitar24(),
+    '/RegSolicitud/FinSolicitar10': (context) => FinSolicitar10(""),
+    '/RegSolicitud/FinSolicitar11': (context) => FinSolicitar11(""),
+    '/RegSolicitud/FinSolicitar12': (context) => FinSolicitar12(""),
+    '/RegSolicitud/FinSolicitar13_0': (context) => FinSolicitar13_0(""),
+    '/RegSolicitud/FinSolicitar13_1': (context) => FinSolicitar13_1(""),
+    '/RegSolicitud/FinSolicitar14': (context) => FinSolicitar14(""),
+    '/RegSolicitud/FinSolicitar15': (context) => FinSolicitar15(""),
+    '/RegSolicitud/FinSolicitar15_negativa': (context) =>
+        FinSolicitar15_negativa(""),
+    '/RegSolicitud/FinSolicitar16': (context) => FinSolicitar16(""),
+    '/RegSolicitud/FinSolicitar17_1': (context) => FinSolicitar17_1(""),
+    '/RegSolicitud/FinSolicitar17_2': (context) => FinSolicitar17_2(""),
+    '/RegSolicitud/FinSolicitar18': (context) => FinSolicitar18(""),
+    '/RegSolicitud/FinSolicitar19': (context) => FinSolicitar19(""),
+    '/RegSolicitud/FinSolicitar19_noAprobada': (context) =>
+        FinSolicitar19_noAprobada(""),
+    '/RegSolicitud/FinSolicitar20': (context) => FinSolicitar20(""),
+    '/RegSolicitud/FinSolicitar21': (context) => FinSolicitar21(""),
+    '/RegSolicitud/FinSolicitar22': (context) => FinSolicitar22(""),
+    '/RegSolicitud/FinSolicitar22_1': (context) => FinSolicitar22_1(""),
+    '/RegSolicitud/FinSolicitar23': (context) => FinSolicitar23(""),
+    '/RegSolicitud/FinSolicitar23_0': (context) => FinSolicitar23_0(""),
+    '/RegSolicitud/FinSolicitar23_1': (context) => FinSolicitar23_1(""),
+    '/RegSolicitud/FinSolicitar23_2': (context) => FinSolicitar23_2(),
+    '/RegSolicitud/FinSolicitar23_4': (context) => FinSolicitar23_4(""),
+    '/RegSolicitud/FinSolicitar24': (context) => FinSolicitar24(),
     '/RegSolicitud/FinSolicitar25_1': (context) => const FinSolicitar25_1(),
     '/RegSolicitud/FinSolicitar25': (context) => const FinSolicitar25(),
     '/RegSolicitud/FinSolicitar26': (context) => const FinSolicitar26(),
@@ -113,8 +117,7 @@ class MyApp extends StatelessWidget {
 
     '/PerfilSolicitud/LoginSol': (context) => const LoginSol(),
     '/PerfilSolicitud/PerfilSol': (context) => const PerfilSol(),
-    '/PerfilSolicitud/PerfilSolVerificar': (context) =>
-        const PerfilSolVerificar(),
+    '/PerfilSolicitud/PerfilSolVerificar': (context) => PerfilSolVerificar(""),
     '/PerfilSolicitud/PerfilSolWebView': (context) =>
         PerfilSolicitudWebView("", "", 0),
 
@@ -122,7 +125,7 @@ class MyApp extends StatelessWidget {
     ///
     /*'/Ejemplos/Listado': (context) => const ListadoPage(),
     '/Ejemplos/Formulario': (context) => const FormularioPage(),
-    '/Ejemplos/MenuLateral': (context) => const MenuLateralPage(),*/
+    '/Ejemplos/MenuLateral': (context) => const MenuLateralPage(""),*/
     //'/otra': (context) => const OtraPage(),
     //'/servicios': (context) => const ServiciosPage(),
   };

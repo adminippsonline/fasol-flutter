@@ -25,7 +25,8 @@ import 'FinSolicitar17.dart';
 import 'package:intl/intl.dart';
 
 class FinSolicitar16 extends StatefulWidget {
-  const FinSolicitar16({super.key});
+  String idCredito = "";
+  FinSolicitar16(this.idCredito);
 
   @override
   State<FinSolicitar16> createState() => _FinSolicitar16State();
@@ -57,13 +58,14 @@ class _FinSolicitar16State extends State<FinSolicitar16> {
 
   @override
   Widget build(BuildContext context) {
-    return MyCustomFormFinSolicitar16();
+    return MyCustomFormFinSolicitar16(widget.idCredito);
   }
 }
 
 // Create a Form widget.
 class MyCustomFormFinSolicitar16 extends StatefulWidget {
-  const MyCustomFormFinSolicitar16({super.key});
+  String idCredito = "";
+  MyCustomFormFinSolicitar16(this.idCredito);
 
   @override
   MyCustomFormFinSolicitar16State createState() {
@@ -161,22 +163,21 @@ class MyCustomFormFinSolicitar16State
       var bodyEnviar = {
         'Pantalla': Pantalla,
         'id_solicitud': IDLR,
-        'id_credito': IDInfo,
+        'id_credito': widget.idCredito,
         'CunetasConTarjeta': CunetasConTarjeta,
-        'Ultimos4DigitosDesempeñado': Ultimos4Digitos,
+        'Ultimos4Digitos': Ultimos4Digitos,
         'EsConCredito': EsConCredito,
-        'InstitucionOtorgante': InstitucionOtorgante,
-        'NumCredito': NumCredito,
+        'NombreConTarjeta': InstitucionOtorgante,
+        'NumeroDeCredito': NumCredito,
         'HasEjercido': HasEjercido,
-        'Ultimos4DigitosDesempeñado2': InstitucionOtorgante2,
-        'PeriodoDesempeñado2': NumCredito2
+        'CredAutoNombreConTarjeta': InstitucionOtorgante2,
+        'CredAutoNumCred': NumCredito2
       };
-      print(bodyEnviar);
+
       var response = await http
           .post(url, body: bodyEnviar)
           .timeout(const Duration(seconds: 90));
-      print("llego aqui 111");
-      print(response.body);
+      dev.log(response.body);
 
       if (response.body != "0" && response.body != "") {
         var Respuesta = jsonDecode(response.body);
@@ -191,9 +192,9 @@ class MyCustomFormFinSolicitar16State
                   title: Text('Registrado correctamente'),
                 );
               });
-           Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (_) => FinSolicitar17()));
-            FocusScope.of(context).unfocus();
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (_) => FinSolicitar17(widget.idCredito)));
+          FocusScope.of(context).unfocus();
         } else {
           //print('Error en el registro');
           showDialog(
@@ -252,8 +253,7 @@ class MyCustomFormFinSolicitar16State
   void mostrar_datos() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      NombreCompletoSession =
-          prefs.getString('NombreCompletoSession') ?? '';
+      NombreCompletoSession = prefs.getString('NombreCompletoSession') ?? '';
       id_solicitud = prefs.getInt('id_solicitud') ?? 0;
       id_credito = prefs.getInt('id_credito') ?? 0;
     });
@@ -263,257 +263,254 @@ class MyCustomFormFinSolicitar16State
     IDInfo.text = "$id_credito";
   }
 
-
-  @override 
+  @override
   Widget build(BuildContext context) {
     return BuildScreens(
         'Solicitud', '', '', 'Datos de la solicitud', '', _formulario());
-  } 
-
+  }
 
   Widget _formulario() {
     return Form(
-            key: _formKey,
-            child: SingleChildScrollView(
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    SubitleCards("Vamos a revisar tu información crediticia "),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _Pantalla(),
-                    _IDLR(),
-                    _IDInfo(),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Container(
-                        padding: EdgeInsets.only(left: 10.0),
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            //border: Border.all(
+        key: _formKey,
+        child: SingleChildScrollView(
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                SubitleCards("Vamos a revisar tu información crediticia "),
+                SizedBox(
+                  height: 20,
+                ),
+                _Pantalla(),
+                _IDLR(),
+                _IDInfo(),
+                SizedBox(
+                  height: 20,
+                ),
+                Container(
+                    padding: EdgeInsets.only(left: 10.0),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        //border: Border.all(
 
-                            //)
-                            ),
-                        child: Text(
-                          "¿Cuentas con una o varias tarjetas de crédito? ",
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            fontSize: 17,
-                          ),
-                          textScaleFactor: 1,
-                        )),
-                    Container(
-                      padding: EdgeInsets.all(10),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: RadioListTile(
-                              title: const Text('Si',
-                                  style: TextStyle(
-                                    fontSize: 17,
-                                  )),
-                              value: "Si",
-                              groupValue: _opcionesCunetasConTarjeta,
-                              onChanged: SeleccionadoCunetasConTarjeta,
-                            ),
-                          ),
-                          Expanded(
-                              child: RadioListTile(
-                            title: const Text('No',
-                                style: TextStyle(
-                                  fontSize: 17,
-                                )),
-                            value: "No",
-                            groupValue: _opcionesCunetasConTarjeta,
-                            onChanged: SeleccionadoCunetasConTarjeta,
-                          )),
-                        ],
+                        //)
+                        ),
+                    child: Text(
+                      "¿Cuentas con una o varias tarjetas de crédito? ",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontSize: 17,
                       ),
-                    ),
-                    if (_siCunetasConTarjeta)
-                      Container(
-                          padding: EdgeInsets.only(left: 1.0),
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                              //border: Border.all(
+                      textScaleFactor: 1,
+                    )),
+                Container(
+                  padding: EdgeInsets.all(10),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: RadioListTile(
+                          title: const Text('Si',
+                              style: TextStyle(
+                                fontSize: 17,
+                              )),
+                          value: "Si",
+                          groupValue: _opcionesCunetasConTarjeta,
+                          onChanged: SeleccionadoCunetasConTarjeta,
+                        ),
+                      ),
+                      Expanded(
+                          child: RadioListTile(
+                        title: const Text('No',
+                            style: TextStyle(
+                              fontSize: 17,
+                            )),
+                        value: "No",
+                        groupValue: _opcionesCunetasConTarjeta,
+                        onChanged: SeleccionadoCunetasConTarjeta,
+                      )),
+                    ],
+                  ),
+                ),
+                if (_siCunetasConTarjeta)
+                  Container(
+                      padding: EdgeInsets.only(left: 1.0),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          //border: Border.all(
 
-                              //)
-                              ),
-                          child: Column(
-                            children: [
-                              Row(
-                                children: <Widget>[
-                                  Expanded(
-                                    child: _Ultimos4Digitos(),
-                                  ),
-                                ],
+                          //)
+                          ),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: _Ultimos4Digitos(),
                               ),
                             ],
-                          )),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Container(
-                        padding: EdgeInsets.only(left: 10.0),
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            //border: Border.all(
-
-                            //)
-                            ),
-                        child: Text(
-                          "¿Cuentas con crédito hipotecario? ",
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            fontSize: 17,
                           ),
-                          textScaleFactor: 1,
-                        )),
-                    Container(
-                      padding: EdgeInsets.all(10),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: RadioListTile(
-                              title: const Text('Si',
-                                  style: TextStyle(
-                                    fontSize: 17,
-                                  )),
-                              value: "Si",
-                              groupValue: _opcionesEsConCredito,
-                              onChanged: SeleccionadoEsConCredito,
-                            ),
-                          ),
-                          Expanded(
-                              child: RadioListTile(
-                            title: const Text('No',
-                                style: TextStyle(
-                                  fontSize: 17,
-                                )),
-                            value: "No",
-                            groupValue: _opcionesEsConCredito,
-                            onChanged: SeleccionadoEsConCredito,
-                          )),
                         ],
+                      )),
+                SizedBox(
+                  height: 20,
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Container(
+                    padding: EdgeInsets.only(left: 10.0),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        //border: Border.all(
+
+                        //)
+                        ),
+                    child: Text(
+                      "¿Cuentas con crédito hipotecario? ",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontSize: 17,
                       ),
-                    ),
-                    if (_siEsConCredito)
-                      Container(
-                          padding: EdgeInsets.only(left: 1.0),
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                              //border: Border.all(
+                      textScaleFactor: 1,
+                    )),
+                Container(
+                  padding: EdgeInsets.all(10),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: RadioListTile(
+                          title: const Text('Si',
+                              style: TextStyle(
+                                fontSize: 17,
+                              )),
+                          value: "Si",
+                          groupValue: _opcionesEsConCredito,
+                          onChanged: SeleccionadoEsConCredito,
+                        ),
+                      ),
+                      Expanded(
+                          child: RadioListTile(
+                        title: const Text('No',
+                            style: TextStyle(
+                              fontSize: 17,
+                            )),
+                        value: "No",
+                        groupValue: _opcionesEsConCredito,
+                        onChanged: SeleccionadoEsConCredito,
+                      )),
+                    ],
+                  ),
+                ),
+                if (_siEsConCredito)
+                  Container(
+                      padding: EdgeInsets.only(left: 1.0),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          //border: Border.all(
 
-                              //)
-                              ),
-                          child: Column(
-                            children: [
-                              Row(
-                                children: <Widget>[
-                                  Expanded(
-                                    child: _InstitucionOtorgante(),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                children: <Widget>[
-                                  Expanded(
-                                    child: _NumCredito(),
-                                  ),
-                                ],
-                              )
-                            ],
-                          )),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Container(
-                        padding: EdgeInsets.only(left: 10.0),
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            //border: Border.all(
-
-                            //)
-                            ),
-                        child: Text(
-                          "¿Has ejercido en los últimos dos años un crédito automotriz?.",
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            fontSize: 17,
+                          //)
                           ),
-                          textScaleFactor: 1,
-                        )),
-                    Container(
-                      padding: EdgeInsets.all(10),
-                      child: Row(
+                      child: Column(
                         children: [
-                          Expanded(
-                            child: RadioListTile(
-                              title: const Text('Si',
-                                  style: TextStyle(
-                                    fontSize: 17,
-                                  )),
-                              value: "Si",
-                              groupValue: _opcionesHasEjercido,
-                              onChanged: SeleccionadoHasEjercido,
-                            ),
-                          ),
-                          Expanded(
-                              child: RadioListTile(
-                            title: const Text('No',
-                                style: TextStyle(
-                                  fontSize: 17,
-                                )),
-                            value: "No",
-                            groupValue: _opcionesHasEjercido,
-                            onChanged: SeleccionadoHasEjercido,
-                          )),
-                        ],
-                      ),
-                    ),
-                    if (_siHasEjercido)
-                      Container(
-                          padding: EdgeInsets.only(left: 1.0),
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                              //border: Border.all(
-
-                              //)
-                              ),
-                          child: Column(
-                            children: [
-                              Row(
-                                children: <Widget>[
-                                  Expanded(
-                                    child: _InstitucionOtorgante2(),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                children: <Widget>[
-                                  
-                                  Expanded(
-                                    child: _NumCredito2(),
-                                  ),
-                                ],
+                          Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: _InstitucionOtorgante(),
                               ),
                             ],
-                          )),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _BotonEnviar(),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _Avanzar()
-                  ]),
-            ));
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: _NumCredito(),
+                              ),
+                            ],
+                          )
+                        ],
+                      )),
+                SizedBox(
+                  height: 20,
+                ),
+                Container(
+                    padding: EdgeInsets.only(left: 10.0),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        //border: Border.all(
+
+                        //)
+                        ),
+                    child: Text(
+                      "¿Has ejercido en los últimos dos años un crédito automotriz?.",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontSize: 17,
+                      ),
+                      textScaleFactor: 1,
+                    )),
+                Container(
+                  padding: EdgeInsets.all(10),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: RadioListTile(
+                          title: const Text('Si',
+                              style: TextStyle(
+                                fontSize: 17,
+                              )),
+                          value: "Si",
+                          groupValue: _opcionesHasEjercido,
+                          onChanged: SeleccionadoHasEjercido,
+                        ),
+                      ),
+                      Expanded(
+                          child: RadioListTile(
+                        title: const Text('No',
+                            style: TextStyle(
+                              fontSize: 17,
+                            )),
+                        value: "No",
+                        groupValue: _opcionesHasEjercido,
+                        onChanged: SeleccionadoHasEjercido,
+                      )),
+                    ],
+                  ),
+                ),
+                if (_siHasEjercido)
+                  Container(
+                      padding: EdgeInsets.only(left: 1.0),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          //border: Border.all(
+
+                          //)
+                          ),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: _InstitucionOtorgante2(),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: _NumCredito2(),
+                              ),
+                            ],
+                          ),
+                        ],
+                      )),
+                SizedBox(
+                  height: 20,
+                ),
+                _BotonEnviar(),
+                SizedBox(
+                  height: 20,
+                ),
+                _Avanzar()
+              ]),
+        ));
   }
 
   Widget _Pantalla() {
@@ -668,19 +665,20 @@ class MyCustomFormFinSolicitar16State
               IDInfoRecibe = IDInfo.text;
 
               String? CunetasConTarjetaRecibe = _opcionesCunetasConTarjeta;
-              if (CunetasConTarjetaRecibe == "" || CunetasConTarjetaRecibe == null) {
+              if (CunetasConTarjetaRecibe == "" ||
+                  CunetasConTarjetaRecibe == null) {
                 showDialog(
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: Text('La opción Ultimos4Digitos político es obligatoria'),
+                        title: Text(
+                            'La opción Ultimos4Digitos político es obligatoria'),
                       );
                     });
               }
               Ultimos4DigitosRecibe = Ultimos4Digitos.text;
               String? EsConCreditoRecibe = _opcionesEsConCredito;
-              if (EsConCreditoRecibe == "" ||
-                  EsConCreditoRecibe == null) {
+              if (EsConCreditoRecibe == "" || EsConCreditoRecibe == null) {
                 showDialog(
                     context: context,
                     builder: (BuildContext context) {
@@ -699,19 +697,20 @@ class MyCustomFormFinSolicitar16State
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: Text('La opción Ultimos4Digitos político es obligatoria'),
+                        title: Text(
+                            'La opción Ultimos4Digitos político es obligatoria'),
                       );
                     });
               }
               InstitucionOtorgante2Recibe = InstitucionOtorgante2.text;
               NumCredito2Recibe = NumCredito2.text;
 
-print(PantallaRecibe);
-print(IDLRRecibe);
-print(IDInfoRecibe);
-print(CunetasConTarjetaRecibe);
-print(EsConCreditoRecibe);
-print(HasEjercidoRecibe);
+              print(PantallaRecibe);
+              print(IDLRRecibe);
+              print(IDInfoRecibe);
+              print(CunetasConTarjetaRecibe);
+              print(EsConCreditoRecibe);
+              print(HasEjercidoRecibe);
 
               if (PantallaRecibe == "" ||
                   IDLRRecibe == "" ||
@@ -745,6 +744,7 @@ print(HasEjercidoRecibe);
           child: const Text('Siguiente')),
     );
   }
+
   Widget _Avanzar() {
     return Container(
       width: double.infinity,
@@ -757,8 +757,10 @@ print(HasEjercidoRecibe);
         )),
         onTap: () {
           Navigator.of(context).pop();
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => FinSolicitar17()));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => FinSolicitar17(widget.idCredito)));
         },
       ),
     );

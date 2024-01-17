@@ -21,7 +21,7 @@ class _RegMedicoState extends State<RegMedico> {
       appBar: AppBar(
         title: const Text('Reg medico '),
       ),
-      drawer: MenuLateralPage(),
+      drawer: MenuLateralPage(""),
       bottomNavigationBar: MenuFooterPage(),
       body: GridView.count(
         primary: false,

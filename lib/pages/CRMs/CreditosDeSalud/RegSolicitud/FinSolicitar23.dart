@@ -20,7 +20,6 @@ import 'package:email_validator/email_validator.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 
-
 import 'FinSolicitar23_0.dart';
 //import 'FinRegMedico32.dart';
 //import 'FinRegMedico33.dart';
@@ -28,7 +27,8 @@ import 'FinSolicitar23_0.dart';
 import 'package:intl/intl.dart';
 
 class FinSolicitar23 extends StatefulWidget {
-  const FinSolicitar23({super.key});
+  String idCredito = "";
+  FinSolicitar23(this.idCredito);
 
   @override
   State<FinSolicitar23> createState() => _FinSolicitar23State();
@@ -60,13 +60,14 @@ class _FinSolicitar23State extends State<FinSolicitar23> {
 
   @override
   Widget build(BuildContext context) {
-    return MyCustomFormFinSolicitar23();
+    return MyCustomFormFinSolicitar23(widget.idCredito);
   }
 }
 
 // Create a Form widget.
 class MyCustomFormFinSolicitar23 extends StatefulWidget {
-  const MyCustomFormFinSolicitar23({super.key});
+  String idCredito = "";
+  MyCustomFormFinSolicitar23(this.idCredito);
 
   @override
   MyCustomFormFinSolicitar23State createState() {
@@ -83,8 +84,6 @@ class MyCustomFormFinSolicitar23State
   //el fomrKey para formulario
   final _formKey = GlobalKey<FormState>();
 
-  
-  
   String? _opcionesTipoDeComprobante;
   bool _siTipoDeComprobante = false;
 
@@ -95,7 +94,6 @@ class MyCustomFormFinSolicitar23State
     });
   }
 
-  
   //Los controladores para los input
   final Pantalla = TextEditingController();
   final IDLR = TextEditingController();
@@ -118,25 +116,26 @@ class MyCustomFormFinSolicitar23State
       IDLR,
       IDInfo,
       TipoDeComprobante,
-      globalimageUpdateComprobante1, globalimageUpdateComprobante2, globalimageUpdateComprobante3) async {
+      globalimageUpdateComprobante1,
+      globalimageUpdateComprobante2,
+      globalimageUpdateComprobante3) async {
     try {
+      dev.log("message");
       var url = Uri.https('fasoluciones.mx', 'api/Solicitud/Agregar');
 
       var bodyEnviar = {
         'Pantalla': Pantalla,
         'id_solicitud': IDLR,
-        'id_credito': IDInfo,
+        'id_credito': widget.idCredito,
         'TipoDeComprobante': TipoDeComprobante,
-        'Comprobante1':globalimageUpdateComprobante1,
-        'Comprobante2': globalimageUpdateComprobante2,
-        'Comprobante3': globalimageUpdateComprobante3
+        'ComDeNom1': globalimageUpdateComprobante1,
+        'ComDeNom2': globalimageUpdateComprobante2,
+        'ComDeNom3': globalimageUpdateComprobante3
       };
-      print(bodyEnviar);
+
       var response = await http
           .post(url, body: bodyEnviar)
           .timeout(const Duration(seconds: 90));
-      print("llego aqui 111");
-      print(response.body);
 
       if (response.body != "0" && response.body != "") {
         var Respuesta = jsonDecode(response.body);
@@ -151,9 +150,9 @@ class MyCustomFormFinSolicitar23State
                   title: Text('Registrado correctamente'),
                 );
               });
-            Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (_) => FinSolicitar23_0()));
-            FocusScope.of(context).unfocus();
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (_) => FinSolicitar23_0(widget.idCredito)));
+          FocusScope.of(context).unfocus();
         } else {
           //print('Error en el registro');
           showDialog(
@@ -212,24 +211,21 @@ class MyCustomFormFinSolicitar23State
   void mostrar_datos() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      NombreCompletoSession =
-          prefs.getString('NombreCompletoSession') ?? '';
+      NombreCompletoSession = prefs.getString('NombreCompletoSession') ?? '';
       id_solicitud = prefs.getInt('id_solicitud') ?? 0;
       id_credito = prefs.getInt('id_credito') ?? 0;
     });
 
-    Pantalla.text = 'FinSolicitar14';
+    Pantalla.text = 'FinSolicitar23';
     IDLR.text = "$id_solicitud";
     IDInfo.text = "$id_credito";
   }
 
-
-
-  @override 
+  @override
   Widget build(BuildContext context) {
     return BuildScreens(
         'Solicitud', '', '', 'Datos de la solicitud', '', _formulario());
-  } 
+  }
 
   String? imagePath;
   var globalimageUpdateComprobante1 = "";
@@ -238,78 +234,75 @@ class MyCustomFormFinSolicitar23State
 
   Widget _formulario() {
     return Form(
-            key: _formKey,
-            child: SingleChildScrollView(
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    SubitleCards("Carga de comprobación de ingresos  "),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _Pantalla(),
-                    _IDLR(),
-                    _IDInfo(),
-                    Container(
-                        padding: EdgeInsets.only(left: 10.0),
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            //border: Border.all(
-                            //color: Colors.blueAccent
-                            //)
-                            ),
-                        child: Text(
-                          "Por favor, adjunta tus 03 últimos comprobantes de ingresos ",
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            fontSize: 17,
-                            //color: Colors.blue
-                          ),
-                          textScaleFactor: 1,
-                        )),
-                    Container(
-                      padding: EdgeInsets.all(10),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: RadioListTile(
-                              title: const Text('Comprobantes de nómina',
-                                  style: TextStyle(
-                                    fontSize: 17,
-                                    color: Color.fromARGB(255, 126, 126, 126),
-                                  )),
-                              value: "Comprobantes de nómina",
-                              groupValue: _opcionesTipoDeComprobante,
-                              onChanged: SeleccionadoTipoDeComprobante,
-                            ),
-                          )
-                        ],
+        key: _formKey,
+        child: SingleChildScrollView(
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                SubitleCards("Carga de comprobación de ingresos  "),
+                SizedBox(
+                  height: 20,
+                ),
+                _Pantalla(),
+                _IDLR(),
+                _IDInfo(),
+                Container(
+                    padding: EdgeInsets.only(left: 10.0),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        //border: Border.all(
+                        //color: Colors.blueAccent
+                        //)
+                        ),
+                    child: Text(
+                      "Por favor, adjunta tus 03 últimos comprobantes de ingresos ",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontSize: 17,
+                        //color: Colors.blue
                       ),
-                    ),
+                      textScaleFactor: 1,
+                    )),
+                Container(
+                  padding: EdgeInsets.all(10),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: RadioListTile(
+                          title: const Text('Comprobantes de nómina',
+                              style: TextStyle(
+                                fontSize: 17,
+                                color: Color.fromARGB(255, 126, 126, 126),
+                              )),
+                          value: "Comprobantes de nómina",
+                          groupValue: _opcionesTipoDeComprobante,
+                          onChanged: SeleccionadoTipoDeComprobante,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
 
+                Container(
+                  padding: EdgeInsets.all(10),
+                  child: Row(
+                    children: [
+                      Expanded(
+                          child: RadioListTile(
+                        title: const Text('Estados bancarios',
+                            style: TextStyle(
+                              fontSize: 17,
+                              color: Color.fromARGB(255, 126, 126, 126),
+                            )),
+                        value: "Estados bancarios",
+                        groupValue: _opcionesTipoDeComprobante,
+                        onChanged: SeleccionadoTipoDeComprobante,
+                      )),
+                    ],
+                  ),
+                ),
 
-                    Container(
-                      padding: EdgeInsets.all(10),
-                      child: Row(
-                        children: [
-                          Expanded(
-                              child: RadioListTile(
-                            title: const Text('Estados bancarios',
-                                style: TextStyle(
-                                  fontSize: 17,
-                                  color: Color.fromARGB(255, 126, 126, 126),
-                                )),
-                            value: "Estados bancarios",
-                            groupValue: _opcionesTipoDeComprobante,
-                            onChanged: SeleccionadoTipoDeComprobante,
-                          )),
-                        ],
-                      ),
-                    ),
-                    
-                    
-                    
-                    Container(
+                Container(
                     padding: EdgeInsets.only(left: 10.0),
                     width: double.infinity,
                     decoration: BoxDecoration(
@@ -332,7 +325,6 @@ class MyCustomFormFinSolicitar23State
                     ElevatedButton(
                         child: Text("Busca archivo"),
                         onPressed: () async {
-                          dev.log("Comprobante1");
                           setState(() {
                             dialogComprobante1(context);
                           });
@@ -371,7 +363,6 @@ class MyCustomFormFinSolicitar23State
                     ElevatedButton(
                         child: Text("Busca archivo"),
                         onPressed: () async {
-                          dev.log("Comprobante1");
                           setState(() {
                             dialogComprobante2(context);
                           });
@@ -384,7 +375,6 @@ class MyCustomFormFinSolicitar23State
                         "${imagenComprobante2!.path.toString()}",
                         style: TextStyle(color: Colors.black),
                       ),
-
 
                 /////////////////
                 ///
@@ -413,7 +403,6 @@ class MyCustomFormFinSolicitar23State
                     ElevatedButton(
                         child: Text("Busca archivo"),
                         onPressed: () async {
-                          dev.log("Etado");
                           setState(() {
                             dialogComprobante3(context);
                           });
@@ -425,22 +414,19 @@ class MyCustomFormFinSolicitar23State
                     : Text(
                         "${imagenComprobante3!.path.toString()}",
                         style: TextStyle(color: Colors.black),
-                      ),      
+                      ),
 
+                SizedBox(
+                  height: 20,
+                ),
+                _Avanzar(),
 
-
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _Avanzar(),
-
-                    _BotonEnviar(),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    
-                  ]),
-            ));
+                _BotonEnviar(),
+                SizedBox(
+                  height: 20,
+                ),
+              ]),
+        ));
   }
 
   Future<void> dialogComprobante1(BuildContext context) {
@@ -468,7 +454,7 @@ class MyCustomFormFinSolicitar23State
                         imagePath = _pickedFile.path;
                         imagenComprobante1 = File(_pickedFile.name);
                         final bytes = File(imagePath!).readAsBytesSync();
-                        dev.log(bytes.toString());
+
                         globalimageUpdateComprobante1 = base64Encode(bytes);
                       });
                       Navigator.pop(context);
@@ -508,7 +494,7 @@ class MyCustomFormFinSolicitar23State
                         imagePath = _pickedFile.path;
                         imagenComprobante2 = File(_pickedFile.name);
                         final bytes = File(imagePath!).readAsBytesSync();
-                        dev.log(bytes.toString());
+
                         globalimageUpdateComprobante2 = base64Encode(bytes);
                       });
                       Navigator.pop(context);
@@ -522,7 +508,6 @@ class MyCustomFormFinSolicitar23State
           );
         });
   }
-
 
   Future<void> dialogComprobante3(BuildContext context) {
     return showDialog(
@@ -549,7 +534,7 @@ class MyCustomFormFinSolicitar23State
                         imagePath = _pickedFile.path;
                         imagenComprobante3 = File(_pickedFile.name);
                         final bytes = File(imagePath!).readAsBytesSync();
-                        dev.log(bytes.toString());
+
                         globalimageUpdateComprobante3 = base64Encode(bytes);
                       });
                       Navigator.pop(context);
@@ -563,7 +548,6 @@ class MyCustomFormFinSolicitar23State
           );
         });
   }
-
 
   Widget _Pantalla() {
     return Visibility(
@@ -629,9 +613,10 @@ class MyCustomFormFinSolicitar23State
               PantallaRecibe = Pantalla.text;
               IDLRRecibe = IDLR.text;
               IDInfoRecibe = IDInfo.text;
-              
+
               String? TipoDeComprobanteRecibe = _opcionesTipoDeComprobante;
-              if (TipoDeComprobanteRecibe == "" || TipoDeComprobanteRecibe == null) {
+              if (TipoDeComprobanteRecibe == "" ||
+                  TipoDeComprobanteRecibe == null) {
                 showDialog(
                     context: context,
                     builder: (BuildContext context) {
@@ -645,8 +630,8 @@ class MyCustomFormFinSolicitar23State
                   IDLRRecibe == "" ||
                   IDInfoRecibe == "" ||
                   TipoDeComprobanteRecibe == "" ||
-                  globalimageUpdateComprobante1 == ""  ||
-                  globalimageUpdateComprobante2 == ""  ||
+                  globalimageUpdateComprobante1 == "" ||
+                  globalimageUpdateComprobante2 == "" ||
                   globalimageUpdateComprobante3 == "") {
                 showDialog(
                     context: context,
@@ -661,13 +646,16 @@ class MyCustomFormFinSolicitar23State
                     IDLRRecibe,
                     IDInfoRecibe,
                     TipoDeComprobanteRecibe,
-                    globalimageUpdateComprobante1!, globalimageUpdateComprobante2!, globalimageUpdateComprobante3!);
+                    globalimageUpdateComprobante1!,
+                    globalimageUpdateComprobante2!,
+                    globalimageUpdateComprobante3!);
               }
             }
           },
           child: const Text('Siguiente')),
     );
   }
+
   Widget _Avanzar() {
     return Container(
       width: double.infinity,
@@ -680,8 +668,10 @@ class MyCustomFormFinSolicitar23State
         )),
         onTap: () {
           Navigator.of(context).pop();
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => FinSolicitar23_0()));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => FinSolicitar23_0(widget.idCredito)));
         },
       ),
     );

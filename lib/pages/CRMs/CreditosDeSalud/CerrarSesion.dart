@@ -16,7 +16,6 @@ import 'package:percent_indicator/percent_indicator.dart';
 
 import 'home_page.dart';
 
-
 //PAra validar
 //void main() => runApp(const CerrarSesion());
 
@@ -34,7 +33,7 @@ class _CerrarSesionState extends State<CerrarSesion> {
       appBar: AppBar(
         title: const Text(''),
       ),
-      drawer: MenuLateralPage(),
+      drawer: MenuLateralPage(""),
       bottomNavigationBar: MenuFooterPage(),
       body: const MyCustomCerrarSesion(),
     );
@@ -51,8 +50,7 @@ class MyCustomCerrarSesion extends StatefulWidget {
   }
 }
 
-class MyCustomCerrarSesionState
-    extends State<MyCustomCerrarSesion> {
+class MyCustomCerrarSesionState extends State<MyCustomCerrarSesion> {
   //el fomrKey para formulario
   final _formKey = GlobalKey<FormState>();
   //Los controladores para los input
@@ -66,11 +64,9 @@ class MyCustomCerrarSesionState
 
   void Ingresar() async {
     Navigator.of(context).pushReplacement(
-    MaterialPageRoute(builder: (_) => HomePageCreditosDeSalud()));
+        MaterialPageRoute(builder: (_) => HomePageCreditosDeSalud()));
     FocusScope.of(context).unfocus();
   }
-
-  
 
   //Esto es un metodo
   //se usa para mostrar los datos del estado

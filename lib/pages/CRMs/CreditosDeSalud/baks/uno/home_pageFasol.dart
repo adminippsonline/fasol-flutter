@@ -58,7 +58,7 @@ class _HomePageCreditosDeSaludState extends State<HomePageCreditosDeSalud> {
       appBar: AppBar(
         title: Text("Bienvenido $id_medico $id_info  $NombreCompletoSession"),
       ),
-      drawer: MenuLateralPage(),
+      drawer: MenuLateralPage(""),
       bottomNavigationBar: MenuFooterPage(),
       body: const MyCustomFormHomePageCreditosDeSalud(),
     );
@@ -139,7 +139,7 @@ class MyCustomFormHomePageCreditosDeSaludState
       print(response.body);
 
       Navigator.of(context)
-          .pushReplacement(MaterialPageRoute(builder: (_) => RegistroSol()));
+          .pushReplacement(MaterialPageRoute(builder: (_) => RegistroSol("")));
       FocusScope.of(context).unfocus();
     } on TimeoutException catch (e) {
       //print('Tardo muco la conexion');

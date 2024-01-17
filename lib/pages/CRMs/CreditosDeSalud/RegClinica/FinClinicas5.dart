@@ -62,7 +62,7 @@ class _FinClinicas5State extends State<FinClinicas5> {
     //   appBar: AppBar(
     //     title: Text(NombreCompletoSession),
     //   ),
-    //   drawer: MenuLateralPage(),
+    //   drawer: MenuLateralPage(""),
     //   bottomNavigationBar: MenuFooterPage(),
     //   body: const MyCustomFormFinClinicas5(),
     // );
@@ -221,7 +221,7 @@ class MyCustomFormFinClinicas5State extends State<MyCustomFormFinClinicas5> {
         'ApellidoPaterno': PrimerApellido,
         'ApellidoMaterno': SegundoApellido,
         'Genero': Genero,
-        'FechaNacimiento': FechaDeNacimiento,        
+        'FechaNacimiento': FechaDeNacimiento,
         'PaisDeNacimiento': PaisDeNacimiento,
         'EstadoDeNacimiento': EstadoDeNacimiento,
         'Nacionalidad': Nacionalidad,
@@ -332,8 +332,8 @@ class MyCustomFormFinClinicas5State extends State<MyCustomFormFinClinicas5> {
 
   //funcion para obtener profesiones
   Future obtenerProfesiones() async {
-    final response = await http.get(
-        Uri.parse('https://fasoluciones.mx/api/Solicitud/Catalogos/Profesiones'));
+    final response = await http.get(Uri.parse(
+        'https://fasoluciones.mx/api/Solicitud/Catalogos/Profesiones'));
 
     if (response.statusCode == 200) {
       var jsonData = json.decode(response.body);
@@ -362,7 +362,7 @@ class MyCustomFormFinClinicas5State extends State<MyCustomFormFinClinicas5> {
   Widget build(BuildContext context) {
     return BuildScreens(
         'Clínica', '', '', 'Datos de la clínica', '', _formulario());
-  } 
+  }
 
   Widget _formulario() {
     return Form(
@@ -520,8 +520,6 @@ class MyCustomFormFinClinicas5State extends State<MyCustomFormFinClinicas5> {
           ),
         ));
   }
-
-  
 
   Widget _PrimerNombre() {
     return Container(
@@ -1214,6 +1212,7 @@ class MyCustomFormFinClinicas5State extends State<MyCustomFormFinClinicas5> {
           child: const Text('Siguiente')),
     );
   }
+
   Widget _Avanzar() {
     return Container(
       width: double.infinity,
@@ -1226,8 +1225,8 @@ class MyCustomFormFinClinicas5State extends State<MyCustomFormFinClinicas5> {
         )),
         onTap: () {
           Navigator.of(context).pop();
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => FinClinicas6()));
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => FinClinicas6()));
         },
       ),
     );

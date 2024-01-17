@@ -24,7 +24,8 @@ import 'FinSolicitar14.dart';
 import 'package:intl/intl.dart';
 
 class FinSolicitar13_1 extends StatefulWidget {
-  const FinSolicitar13_1({super.key});
+  String idCredito = "";
+  FinSolicitar13_1(this.idCredito);
 
   @override
   State<FinSolicitar13_1> createState() => _FinSolicitar13_1State();
@@ -42,8 +43,6 @@ class _FinSolicitar13_1State extends State<FinSolicitar13_1> {
   void initState() {
     super.initState();
     mostrar_datos();
-    
-    
   }
 
   void mostrar_datos() async {
@@ -58,13 +57,14 @@ class _FinSolicitar13_1State extends State<FinSolicitar13_1> {
 
   @override
   Widget build(BuildContext context) {
-    return MyCustomFormFinSolicitar13_1();
+    return MyCustomFormFinSolicitar13_1(widget.idCredito);
   }
 }
 
 // Create a Form widget.
 class MyCustomFormFinSolicitar13_1 extends StatefulWidget {
-  const MyCustomFormFinSolicitar13_1({super.key});
+  String idCredito = "";
+  MyCustomFormFinSolicitar13_1(this.idCredito);
 
   @override
   MyCustomFormFinSolicitar13_1State createState() {
@@ -237,14 +237,14 @@ class MyCustomFormFinSolicitar13_1State
       var response = await http.post(url, body: {
         'Pantalla': Pantalla,
         'id_solicitud': IDLR,
-        'id_credito': IDInfo,
-        'PagarasSolo': IDInfo,
-        'PrimerNombre': IDInfo,
-        'SegundoNombre': IDInfo,
-        'ApellidoPaterno': IDInfo,
-        'ApellidoMaterno': IDInfo,
-        'Conyuge_Direccion': IDInfo,
+        'id_credito': widget.idCredito,
+        'PagarasSolo': PagarasSolo,
+        'PrimerNombre': PrimerNombre,
+        'SegundoNombre': SegundoNombre,
+        'ApellidoPaterno': ApellidoPaterno,
+        'ApellidoMaterno': ApellidoMaterno,
         'Genero': Genero,
+        'FechaDeNacimiento': FechaDeNacimientoRecibe,
         'PaisDeNacimiento': PaisDeNacimiento,
         'EstadoDeNacimiento': EstadoDeNacimiento,
         'Nacionalidad': Nacionalidad,
@@ -252,7 +252,7 @@ class MyCustomFormFinSolicitar13_1State
         'RFC': RFC,
         'PorqueAportara': PorqueAportara,
         'RelacionContigo': RelacionContigo,
-        'NumerpPagos': NumerpPagos,
+        'NumeroPagos': NumerpPagos,
         'ConqueFrecuenciaLoHara': ConqueFrecuenciaLoHara,
         'ACuantoAsciendeIngresos': ACuantoAsciendeIngresos,
         'ActividadEconomica': ActividadEconomica,
@@ -260,8 +260,6 @@ class MyCustomFormFinSolicitar13_1State
         'FirmaElectronica': FirmaElectronica,
         'NumeroFirmaElectronica': NumeroFirmaElectronica,
       }).timeout(const Duration(seconds: 90));
-      //print("llego aqui 111");
-      //print(response.body);
 
       if (response.body != "0" && response.body != "") {
         var Respuesta = jsonDecode(response.body);
@@ -276,8 +274,8 @@ class MyCustomFormFinSolicitar13_1State
                   title: Text('Registrado correctamente'),
                 );
               });
-          Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (_) => FinSolicitar14()));
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (_) => FinSolicitar14(widget.idCredito)));
           FocusScope.of(context).unfocus();
         } else {
           //print('Error en el registro');
@@ -342,8 +340,7 @@ class MyCustomFormFinSolicitar13_1State
   void mostrar_datos() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      NombreCompletoSession =
-          prefs.getString('NombreCompletoSession') ?? '';
+      NombreCompletoSession = prefs.getString('NombreCompletoSession') ?? '';
       id_solicitud = prefs.getInt('id_solicitud') ?? 0;
       id_credito = prefs.getInt('id_credito') ?? 0;
     });
@@ -355,8 +352,8 @@ class MyCustomFormFinSolicitar13_1State
 
   //funcion para obtener profesiones
   Future obtenerOpciones() async {
-    final response = await http.get(
-        Uri.parse('https://fasoluciones.mx/api/Solicitud/Catalogos/Profesiones'));
+    final response = await http.get(Uri.parse(
+        'https://fasoluciones.mx/api/Solicitud/Catalogos/Profesiones'));
 
     if (response.statusCode == 200) {
       var jsonData = json.decode(response.body);
@@ -384,24 +381,23 @@ class MyCustomFormFinSolicitar13_1State
     }
   }
 
-  @override 
+  @override
   Widget build(BuildContext context) {
     return BuildScreens(
         'Solicitud', '', '', 'Datos de la solicitud', '', _formulario());
-  } 
-
+  }
 
   Widget _formulario() {
     return Form(
-            key: _formKey,
-            child: SingleChildScrollView(
-              child:
-                  Column(mainAxisAlignment: MainAxisAlignment.start, children: <
-                      Widget>[
+        key: _formKey,
+        child: SingleChildScrollView(
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
                 SubitleCards("A cerca de ti "),
-                    SizedBox(
-                      height: 20,
-                    ),
+                SizedBox(
+                  height: 20,
+                ),
                 _Pantalla(),
                 _IDLR(),
                 _IDInfo(),
@@ -435,15 +431,12 @@ class MyCustomFormFinSolicitar13_1State
                               )),
                           value: "Yo",
                           groupValue: _opcionesPagarasSolo,
-
-                          
                           onChanged: SeleccionadoPagarasSolo,
                         ),
                       ),
                     ],
                   ),
                 ),
-
                 Container(
                   padding: EdgeInsets.all(0),
                   child: Row(
@@ -462,7 +455,6 @@ class MyCustomFormFinSolicitar13_1State
                     ],
                   ),
                 ),
-
                 if (_noPagarasSolo)
                   Container(
                     padding: EdgeInsets.only(left: 1.0),
@@ -475,14 +467,14 @@ class MyCustomFormFinSolicitar13_1State
                     child: Column(
                       children: [
                         _PrimerNombre(),
-                        
+
                         _SegundoNombre(),
                         _ApellidoPaterno(),
                         _ApellidoMaterno(),
-                          
+
                         SizedBox(
-                  height: 20,
-                ),  
+                          height: 20,
+                        ),
                         Container(
                             padding: EdgeInsets.only(left: 10.0),
                             width: double.infinity,
@@ -546,20 +538,21 @@ class MyCustomFormFinSolicitar13_1State
                         _RelacionContigo(),
 
                         const SizedBox(
-                  height: 20,
-                ),
-                Container(
-                  padding: EdgeInsets.all(15),
-                  child: Text(
-                    "¿Con qué periódicidad o frecuencia lo hará? ",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontSize: 12, color: Color.fromARGB(255, 51, 131, 250)),
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
+                          height: 20,
+                        ),
+                        Container(
+                          padding: EdgeInsets.all(15),
+                          child: Text(
+                            "¿Con qué periódicidad o frecuencia lo hará? ",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: Color.fromARGB(255, 51, 131, 250)),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
                         Row(
                           children: <Widget>[
                             Expanded(
@@ -571,12 +564,12 @@ class MyCustomFormFinSolicitar13_1State
                           ],
                         ),
 
-                      const SizedBox(
-                  height: 20,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
 
                         _ACuantoAsciendeIngresos(),
                         _ActividadEconomica(),
@@ -591,7 +584,6 @@ class MyCustomFormFinSolicitar13_1State
                         /*SizedBox(
                       height: 20,
                     ),*/
-                        
 
                         ////////////////////////
                         ///
@@ -666,7 +658,7 @@ class MyCustomFormFinSolicitar13_1State
                 ),
                 _Avanzar()
               ]),
-            ));
+        ));
   }
 
   Widget _Pantalla() {
@@ -1151,7 +1143,6 @@ class MyCustomFormFinSolicitar13_1State
     );
   }
 
-
   String? _opcionSeleccionada;
   var dropdownvalue;
   Widget _Profesion() {
@@ -1169,7 +1160,6 @@ class MyCustomFormFinSolicitar13_1State
               borderRadius: BorderRadius.circular(5),
             ),
           ),
-          
           isExpanded: true,
           hint: Text(
             'Profesiones',
@@ -1177,15 +1167,14 @@ class MyCustomFormFinSolicitar13_1State
           ),
           items: _opcionesProfesiones.map((item) {
             return DropdownMenuItem(
-              value: item['NombreProfesion'].toString(), //id_profesion
-              child: Text(item['NombreProfesion'].toString()),
+              value: item['nombreprofesion'].toString(), //id_profesion
+              child: Text(item['nombreprofesion'].toString()),
             );
           }).toList(),
           buttonStyleData: const ButtonStyleData(
             height: 50,
             padding: EdgeInsets.only(left: 0, right: 9),
           ),
-          
           onChanged: (newVal) {
             setState(() {
               dropdownvalue = newVal;
@@ -1221,8 +1210,8 @@ class MyCustomFormFinSolicitar13_1State
           ),
           items: _opcionesActividadesEconomicas.map((item) {
             return DropdownMenuItem(
-              value: item['NombreActividadEconomica'].toString(),
-              child: Text(item['NombreActividadEconomica'].toString()),
+              value: item['nombreactividadeconomica'].toString(),
+              child: Text(item['nombreactividadeconomica'].toString()),
             );
           }).toList(),
           buttonStyleData: const ButtonStyleData(
@@ -1280,10 +1269,10 @@ class MyCustomFormFinSolicitar13_1State
                         title: Text('Selecciona una opción'),
                       );
                     });
-                    PagarasSoloRecibe="";
+                PagarasSoloRecibe = "";
               }
 
-            /*print("**");
+              /*print("**");
             print(PantallaRecibe);
             print(IDLRRecibe);
             print(IDInfoRecibe);
@@ -1302,176 +1291,179 @@ class MyCustomFormFinSolicitar13_1State
                       );
                     });
               } else {
+                if (PagarasSoloRecibe == "Un tercero") {
+                  PrimerNombreRecibe = PrimerNombre.text;
+                  SegundoNombreRecibe = SegundoNombre.text;
+                  ApellidoPaternoRecibe = ApellidoPaterno.text;
+                  ApellidoMaternoRecibe = ApellidoMaterno.text;
 
-
-              if( PagarasSoloRecibe=="Un tercero") {   
-
-                PrimerNombreRecibe = PrimerNombre.text;
-                SegundoNombreRecibe = SegundoNombre.text;
-                ApellidoPaternoRecibe = ApellidoPaterno.text;
-                ApellidoMaternoRecibe = ApellidoMaterno.text;
-
-                String? GeneroRecibe = OpcionesGenero;
-                print(GeneroRecibe);
-                if (GeneroRecibe == "" || GeneroRecibe == null) {
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text('El genero es obligatorio'),
-                        );
-                      });
-                }
-                FechaDeNacimientoRecibe = FechaDeNacimientoInput.text;
-                if (FechaDeNacimientoRecibe == "") {
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text('La fecha de nacimiento es obligatoria'),
-                        );
-                      });
-                }
-
-                String? PaisDeNacimientoRecibe = SelectedListaPaisDeNacimiento;
-                if (PaisDeNacimientoRecibe == "") {
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text('El pais de nacimiento es obligatorio'),
-                        );
-                      });
-                }
-
-                String? EstadoDeNacimientoRecibe =
-                    SelectedListaEstadoDeNacimiento;
-                if (EstadoDeNacimientoRecibe == "") {
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text('El estado de nacimiento es obligatorio'),
-                        );
-                      });
-                }
-                //NacionalidadRecibe = Nacionalidad.text;
-
-                String? NacionalidadRecibe = SelectedListaNacionalidad;
-                if (NacionalidadRecibe == "") {
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text('La nacionalidad es obligatoria'),
-                        );
-                      });
-                }
-                CURPRecibe = CURP.text;
-                RFCRecibe = RFC.text;
-
-                PorqueAportaraRecibe = PorqueAportara.text;
-                RelacionContigoRecibe = RelacionContigo.text;
-                NumerpPagosRecibe = NumerpPagos.text;
-                ConqueFrecuenciaLoHaraRecibe = ConqueFrecuenciaLoHara.text;
-                ACuantoAsciendeIngresosRecibe = ACuantoAsciendeIngresos.text;
-                
-
-
-                
-                String? ProfesionRecibe =
-                  dropdownvalue.toString(); // SelectedListaProfesion;
-              if (ProfesionRecibe == "") {
-                showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text('La profesión es obligatoria'),
-                      );
-                    });
-              }
-              dev.log(ProfesionRecibe);
-              
-              String? ActividadEconomicaRecibe = dropdownvalueActividadEconomica
-                  .toString(); //SelectedListaActividadEconomica;
-              if (ActividadEconomicaRecibe == "") {
-                showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text('La actividad económica es obligatoria'),
-                      );
-                    });
-              }
-              print(ActividadEconomicaRecibe);
-              
-              
-                String? FirmaElectronicaRecibe = _opcionesFirmaElectronica;
-                if (FirmaElectronicaRecibe == "" ||
-                    FirmaElectronicaRecibe == null) {
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title:
-                              Text('La opción firma electrónica es obligatoria'),
-                        );
-                      });
-                }
-
-                NumeroFirmaElectronicaRecibe = NumeroFirmaElectronica.text;
-
-
-/*print(PrimerNombreRecibe);
-print(SegundoNombreRecibe);
-print(ApellidoPaternoRecibe);
-print(ApellidoMaternoRecibe);
-print(GeneroRecibe);
-print(FechaDeNacimientoRecibe);
-print(PaisDeNacimientoRecibe);
-print(EstadoDeNacimientoRecibe);
-print(NacionalidadRecibe);
-print(CURPRecibe);
-print(RFCRecibe);
-print(PorqueAportaraRecibe);
-print(RelacionContigoRecibe);
-print(NumerpPagosRecibe);
-print(ConqueFrecuenciaLoHaraRecibe);
-print(ACuantoAsciendeIngresosRecibe);
-print(ActividadEconomicaRecibe);
-print(ProfesionRecibe);
-print(FirmaElectronicaRecibe);*/
-
-                if(PrimerNombreRecibe=="" ||
-                  SegundoNombreRecibe=="" ||
-                  ApellidoPaternoRecibe=="" ||
-                  ApellidoMaternoRecibe=="" ||
-                  GeneroRecibe=="" ||
-                  FechaDeNacimientoRecibe=="" ||
-                  PaisDeNacimientoRecibe=="" ||
-                  EstadoDeNacimientoRecibe=="" ||
-                  NacionalidadRecibe=="" ||
-                  CURPRecibe=="" ||
-                  RFCRecibe=="" ||
-                  PorqueAportaraRecibe=="" ||
-                  RelacionContigoRecibe=="" ||
-                  NumerpPagosRecibe=="" ||
-                  ConqueFrecuenciaLoHaraRecibe=="" ||
-                  ACuantoAsciendeIngresosRecibe=="" ||
-                  ActividadEconomicaRecibe=="" ||
-                  ProfesionRecibe=="" ||
-                  FirmaElectronicaRecibe==""){
-                    
-
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text('Error: Todos los campos son obligatorios (Propietario de los recursos)'),
-                      );
-                    });
+                  String? GeneroRecibe = OpcionesGenero;
+                  FechaDeNacimientoRecibe = FechaDeNacimientoInput.text;
+                  print(GeneroRecibe);
+                  if (GeneroRecibe == "" || GeneroRecibe == null) {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('El genero es obligatorio'),
+                          );
+                        });
                   }
-                  else{  
+                  FechaDeNacimientoRecibe = FechaDeNacimientoInput.text;
+                  if (FechaDeNacimientoRecibe == "") {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title:
+                                Text('La fecha de nacimiento es obligatoria'),
+                          );
+                        });
+                  }
+
+                  String? PaisDeNacimientoRecibe =
+                      SelectedListaPaisDeNacimiento;
+                  if (PaisDeNacimientoRecibe == "") {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('El pais de nacimiento es obligatorio'),
+                          );
+                        });
+                  }
+
+                  String? EstadoDeNacimientoRecibe =
+                      SelectedListaEstadoDeNacimiento;
+                  if (EstadoDeNacimientoRecibe == "") {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title:
+                                Text('El estado de nacimiento es obligatorio'),
+                          );
+                        });
+                  }
+                  //NacionalidadRecibe = Nacionalidad.text;
+
+                  String? NacionalidadRecibe = SelectedListaNacionalidad;
+                  if (NacionalidadRecibe == "") {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('La nacionalidad es obligatoria'),
+                          );
+                        });
+                  }
+                  CURPRecibe = CURP.text;
+                  RFCRecibe = RFC.text;
+
+                  PorqueAportaraRecibe = PorqueAportara.text;
+                  RelacionContigoRecibe = RelacionContigo.text;
+                  NumerpPagosRecibe = NumerpPagos.text;
+                  ConqueFrecuenciaLoHaraRecibe = ConqueFrecuenciaLoHara.text;
+                  ACuantoAsciendeIngresosRecibe = ACuantoAsciendeIngresos.text;
+
+                  String? ProfesionRecibe =
+                      dropdownvalue.toString(); // SelectedListaProfesion;
+                  if (ProfesionRecibe == "") {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('La profesión es obligatoria'),
+                          );
+                        });
+                  }
+                  dev.log(ProfesionRecibe);
+
+                  String? ActividadEconomicaRecibe =
+                      dropdownvalueActividadEconomica
+                          .toString(); //SelectedListaActividadEconomica;
+                  if (ActividadEconomicaRecibe == "") {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title:
+                                Text('La actividad económica es obligatoria'),
+                          );
+                        });
+                  }
+                  print(ActividadEconomicaRecibe);
+
+                  String? FirmaElectronicaRecibe = _opcionesFirmaElectronica;
+                  if (FirmaElectronicaRecibe == "" ||
+                      FirmaElectronicaRecibe == null) {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text(
+                                'La opción firma electrónica es obligatoria'),
+                          );
+                        });
+                  }
+
+                  NumeroFirmaElectronicaRecibe = NumeroFirmaElectronica.text;
+
+                  if (PrimerNombreRecibe == "" ||
+                      SegundoNombreRecibe == "" ||
+                      ApellidoPaternoRecibe == "" ||
+                      ApellidoMaternoRecibe == "" ||
+                      GeneroRecibe == "" ||
+                      FechaDeNacimientoRecibe == "" ||
+                      PaisDeNacimientoRecibe == "" ||
+                      EstadoDeNacimientoRecibe == "" ||
+                      NacionalidadRecibe == "" ||
+                      CURPRecibe == "" ||
+                      RFCRecibe == "" ||
+                      PorqueAportaraRecibe == "" ||
+                      RelacionContigoRecibe == "" ||
+                      NumerpPagosRecibe == "" ||
+                      ConqueFrecuenciaLoHaraRecibe == "" ||
+                      ACuantoAsciendeIngresosRecibe == "" ||
+                      ActividadEconomicaRecibe == "" ||
+                      ProfesionRecibe == "" ||
+                      FirmaElectronicaRecibe == "") {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text(
+                                'Error: Todos los campos son obligatorios (Propietario de los recursos)'),
+                          );
+                        });
+                  } else {
+                    Ingresar(
+                        PantallaRecibe,
+                        IDLRRecibe,
+                        IDInfoRecibe,
+                        PagarasSoloRecibe,
+                        PrimerNombreRecibe,
+                        SegundoNombreRecibe,
+                        ApellidoPaternoRecibe,
+                        ApellidoMaternoRecibe,
+                        GeneroRecibe,
+                        FechaDeNacimientoRecibe,
+                        PaisDeNacimientoRecibe,
+                        EstadoDeNacimientoRecibe,
+                        NacionalidadRecibe,
+                        CURPRecibe,
+                        RFCRecibe,
+                        PorqueAportaraRecibe,
+                        RelacionContigoRecibe,
+                        NumerpPagosRecibe,
+                        ConqueFrecuenciaLoHaraRecibe,
+                        ACuantoAsciendeIngresosRecibe,
+                        ActividadEconomicaRecibe,
+                        ProfesionRecibe,
+                        FirmaElectronicaRecibe,
+                        NumeroFirmaElectronicaRecibe);
+                  }
+                } else {
                   Ingresar(
                       PantallaRecibe,
                       IDLRRecibe,
@@ -1497,41 +1489,14 @@ print(FirmaElectronicaRecibe);*/
                       ProfesionRecibe,
                       FirmaElectronicaRecibe,
                       NumeroFirmaElectronicaRecibe);
-                  }      
                 }
-                else{  
-                  Ingresar(
-                      PantallaRecibe,
-                      IDLRRecibe,
-                      IDInfoRecibe,
-                      PagarasSoloRecibe,
-                      PrimerNombreRecibe,
-                      SegundoNombreRecibe,
-                      ApellidoPaternoRecibe,
-                      ApellidoMaternoRecibe,
-                      GeneroRecibe,
-                      FechaDeNacimientoRecibe,
-                      PaisDeNacimientoRecibe,
-                      EstadoDeNacimientoRecibe,
-                      NacionalidadRecibe,
-                      CURPRecibe,
-                      RFCRecibe,
-                      PorqueAportaraRecibe,
-                      RelacionContigoRecibe,
-                      NumerpPagosRecibe,
-                      ConqueFrecuenciaLoHaraRecibe,
-                      ACuantoAsciendeIngresosRecibe,
-                      ActividadEconomicaRecibe,
-                      ProfesionRecibe,
-                      FirmaElectronicaRecibe,
-                      NumeroFirmaElectronicaRecibe);
-                  }
               }
             }
           },
           child: const Text('Siguiente')),
     );
   }
+
   Widget _Avanzar() {
     return Container(
       width: double.infinity,
@@ -1544,8 +1509,10 @@ print(FirmaElectronicaRecibe);*/
         )),
         onTap: () {
           Navigator.of(context).pop();
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => FinSolicitar14()));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => FinSolicitar14(widget.idCredito)));
         },
       ),
     );

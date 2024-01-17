@@ -14,12 +14,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
-
-
-
-
-
-
 //PAra validar
 //void main() => runApp(const VerificarCuenta());
 
@@ -38,7 +32,7 @@ class _VerificarCuentaState extends State<VerificarCuenta> {
         title: const Text(''),
         backgroundColor: COLOR_PRINCIPAL,
       ),
-      drawer: MenuLateralPage(),
+      drawer: MenuLateralPage(""),
       bottomNavigationBar: MenuFooterPage(),
       body: const MyCustomVerificarCuenta(),
     );
@@ -55,8 +49,7 @@ class MyCustomVerificarCuenta extends StatefulWidget {
   }
 }
 
-class MyCustomVerificarCuentaState
-    extends State<MyCustomVerificarCuenta> {
+class MyCustomVerificarCuentaState extends State<MyCustomVerificarCuenta> {
   //el fomrKey para formulario
   final _formKey = GlobalKey<FormState>();
   //Los controladores para los input
@@ -67,14 +60,6 @@ class MyCustomVerificarCuentaState
   String ContrasenaRecibe = "";
 
   String email = "";
-
- 
- 
-
-
-
-  
-  
 
   //Pra pintar datos initState() es un estado es como sesiones valida que haya sesiones, si exite te redirecciona al ligin
   @override

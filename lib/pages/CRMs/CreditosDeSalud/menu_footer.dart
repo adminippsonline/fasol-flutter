@@ -48,8 +48,6 @@ class _MenuFooterPageState extends State<MenuFooterPage> {
     ),
   ];
   @override
-
-
   int id_medico = 0;
   int id_clinica = 0;
   int id_LR = 0;
@@ -67,25 +65,23 @@ class _MenuFooterPageState extends State<MenuFooterPage> {
   void mostrar_datos() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      NombreCompletoSession =prefs.getString('NombreCompletoSession') ?? 'vacio';
+      NombreCompletoSession =
+          prefs.getString('NombreCompletoSession') ?? 'vacio';
       id_medico = prefs.getInt('id_medico') ?? 0;
       id_clinica = prefs.getInt('id_clinica') ?? 0;
       id_LR = prefs.getInt('id_LR') ?? 0;
       id_info = prefs.getInt('id_info') ?? 0;
     });
   }
+
   Widget build(BuildContext context) {
-    
-    if (id_medico>=1) {
+    if (id_medico >= 1) {
       return _FooterMedico();
-    }
-    else if (id_clinica>=1) {
+    } else if (id_clinica >= 1) {
       return _FooterClinica();
-    }
-    else if (id_LR>=1) {
+    } else if (id_LR >= 1) {
       return _FooterLR();
-    }
-    else{
+    } else {
       return _FooterGeneral();
     }
   }
@@ -153,6 +149,7 @@ class _MenuFooterPageState extends State<MenuFooterPage> {
           ),
         ));
   }
+
   Widget _FooterMedico() {
     return Container(
         decoration: BoxDecoration(
@@ -184,23 +181,26 @@ class _MenuFooterPageState extends State<MenuFooterPage> {
                     onPressed: () {
                       Navigator.pushNamed(context, '/CreditosDeSalud');
                     }),
-                
                 GButton(
                   icon: Icons.medical_information_outlined,
                   text: 'Médicos',
                   onPressed: () {
                     Navigator.of(context).pop();
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => PerfilMedVerificar()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => PerfilMedVerificar()));
                   },
                 ),
-                 GButton(
+                GButton(
                   icon: Icons.notifications_active,
                   text: 'Notificaciones',
                   onPressed: () {
                     Navigator.of(context).pop();
                     Navigator.push(
-                        context, MaterialPageRoute(builder: (context) => PerfilMedVerificar()));
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => PerfilMedVerificar()));
                   },
                 ),
                 GButton(
@@ -209,7 +209,9 @@ class _MenuFooterPageState extends State<MenuFooterPage> {
                   onPressed: () {
                     Navigator.of(context).pop();
                     Navigator.push(
-                        context, MaterialPageRoute(builder: (context) => PerfilMedVerificar()));
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => PerfilMedVerificar()));
                   },
                 )
               ],
@@ -223,6 +225,7 @@ class _MenuFooterPageState extends State<MenuFooterPage> {
           ),
         ));
   }
+
   Widget _FooterClinica() {
     return Container(
         decoration: BoxDecoration(
@@ -254,23 +257,26 @@ class _MenuFooterPageState extends State<MenuFooterPage> {
                     onPressed: () {
                       Navigator.pushNamed(context, '/CreditosDeSalud');
                     }),
-                
                 GButton(
                   icon: Icons.local_hospital_outlined,
                   text: 'Clínicas',
                   onPressed: () {
                     Navigator.of(context).pop();
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => PerfilCliVerificar()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => PerfilCliVerificar()));
                   },
                 ),
-                 GButton(
+                GButton(
                   icon: Icons.notifications_active,
                   text: 'Notificaciones',
                   onPressed: () {
                     Navigator.of(context).pop();
                     Navigator.push(
-                        context, MaterialPageRoute(builder: (context) => PerfilCliVerificar()));
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => PerfilCliVerificar()));
                   },
                 ),
                 GButton(
@@ -279,7 +285,9 @@ class _MenuFooterPageState extends State<MenuFooterPage> {
                   onPressed: () {
                     Navigator.of(context).pop();
                     Navigator.push(
-                        context, MaterialPageRoute(builder: (context) => PerfilCliVerificar()));
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => PerfilCliVerificar()));
                   },
                 )
               ],
@@ -293,6 +301,7 @@ class _MenuFooterPageState extends State<MenuFooterPage> {
           ),
         ));
   }
+
   Widget _FooterLR() {
     return Container(
         decoration: BoxDecoration(
@@ -330,7 +339,9 @@ class _MenuFooterPageState extends State<MenuFooterPage> {
                   onPressed: () {
                     Navigator.of(context).pop();
                     Navigator.push(
-                        context, MaterialPageRoute(builder: (context) => PerfilSolVerificar()));
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => PerfilSolVerificar("")));
                   },
                 ),
                 GButton(
@@ -339,7 +350,9 @@ class _MenuFooterPageState extends State<MenuFooterPage> {
                   onPressed: () {
                     Navigator.of(context).pop();
                     Navigator.push(
-                        context, MaterialPageRoute(builder: (context) => PerfilSolVerificar()));
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => PerfilSolVerificar("")));
                   },
                 ),
                 GButton(
@@ -348,10 +361,11 @@ class _MenuFooterPageState extends State<MenuFooterPage> {
                   onPressed: () {
                     Navigator.of(context).pop();
                     Navigator.push(
-                        context, MaterialPageRoute(builder: (context) => PerfilSolVerificar()));
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => PerfilSolVerificar("")));
                   },
                 ),
-                
               ],
               selectedIndex: _selectedIndex,
               onTabChange: (index) {

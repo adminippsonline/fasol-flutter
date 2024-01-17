@@ -30,11 +30,12 @@ class BuildScreens extends StatelessWidget {
         ),
         backgroundColor: COLOR_PRINCIPAL,
         title:
-            Text("${NombreCompletoSession}" + " ${$id_recibe}" + "${$id_info}",style: TextStyle(
-                          color: Color.fromARGB(255, 255, 255, 255),
-                        )),
+            Text("${NombreCompletoSession}" + " ${$id_recibe}" + "${$id_info}",
+                style: TextStyle(
+                  color: Color.fromARGB(255, 255, 255, 255),
+                )),
       ),
-      drawer: MenuLateralPage(),
+      drawer: MenuLateralPage(""),
       bottomNavigationBar: MenuFooterPage(),
       body: Container(
           padding: EdgeInsets.all(5),

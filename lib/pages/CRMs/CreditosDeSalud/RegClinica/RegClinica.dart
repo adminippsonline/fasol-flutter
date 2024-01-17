@@ -23,7 +23,7 @@ class _RegClinicaState extends State<RegClinica> {
         backgroundColor: COLOR_PRINCIPAL,
         title: const Text('Área de Clínica '),
       ),
-      drawer: MenuLateralPage(),
+      drawer: MenuLateralPage(""),
       bottomNavigationBar: MenuFooterPage(),
       body: GridView.count(
         primary: false,

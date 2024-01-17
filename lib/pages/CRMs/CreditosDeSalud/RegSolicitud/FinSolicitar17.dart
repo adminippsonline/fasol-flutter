@@ -8,7 +8,7 @@ import '../menu_lateral.dart';
 import '../menu_footer.dart';
 import '../../../../../Elementos/validaciones_formularios.dart';
 //estas dos creo son para las apis que se consumen
-import 'package:http/http.dart' as http; 
+import 'package:http/http.dart' as http;
 import 'dart:async';
 //Me parece que es para convertir el json
 import 'dart:convert';
@@ -25,7 +25,8 @@ import 'FinSolicitar19.dart';
 import 'package:intl/intl.dart';
 
 class FinSolicitar17 extends StatefulWidget {
-  const FinSolicitar17({super.key});
+  String idCredito = "";
+  FinSolicitar17(this.idCredito);
 
   @override
   State<FinSolicitar17> createState() => _FinSolicitar17State();
@@ -57,13 +58,14 @@ class _FinSolicitar17State extends State<FinSolicitar17> {
 
   @override
   Widget build(BuildContext context) {
-    return MyCustomFormFinSolicitar17();
+    return MyCustomFormFinSolicitar17(widget.idCredito);
   }
 }
 
 // Create a Form widget.
 class MyCustomFormFinSolicitar17 extends StatefulWidget {
-  const MyCustomFormFinSolicitar17({super.key});
+  String idCredito = "";
+  MyCustomFormFinSolicitar17(this.idCredito);
 
   @override
   MyCustomFormFinSolicitar17State createState() {
@@ -129,14 +131,15 @@ class MyCustomFormFinSolicitar17State
       var bodyEnviar = {
         'Pantalla': Pantalla,
         'id_solicitud': IDSolicitud,
-        'id_credito': IDInfo
+        'id_credito': widget.idCredito,
+        'VerificarIdentidad': 1
       };
-      print(bodyEnviar);
+
       var response = await http
           .post(url, body: bodyEnviar)
           .timeout(const Duration(seconds: 90));
-      print("llego aqui 111***********");
-      print(response.body);
+      dev.log(bodyEnviar.toString());
+      dev.log(response.body);
 
       if (response.body != "0" && response.body != "") {
         var Respuesta = jsonDecode(response.body);
@@ -151,9 +154,9 @@ class MyCustomFormFinSolicitar17State
                   title: Text('Registrado correctamente'),
                 );
               });
-          Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (_) => FinSolicitar17_1()));
-            FocusScope.of(context).unfocus();
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (_) => FinSolicitar17_1(widget.idCredito)));
+          FocusScope.of(context).unfocus();
         } else {
           //print('Error en el registro');
           showDialog(
@@ -212,8 +215,7 @@ class MyCustomFormFinSolicitar17State
   void mostrar_datos() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      NombreCompletoSession =
-          prefs.getString('NombreCompletoSession') ?? '';
+      NombreCompletoSession = prefs.getString('NombreCompletoSession') ?? '';
       id_solicitud = prefs.getInt('id_solicitud') ?? 0;
       id_credito = prefs.getInt('id_credito') ?? 0;
     });
@@ -223,58 +225,55 @@ class MyCustomFormFinSolicitar17State
     IDInfo.text = "$id_credito";
   }
 
-
-
-  @override 
+  @override
   Widget build(BuildContext context) {
     return BuildScreens(
         'Solicitud', '', '', 'Datos de la solicitud', '', _formulario());
-  } 
-
+  }
 
   Widget _formulario() {
     return Form(
-            key: _formKey,
-            child: SingleChildScrollView(
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                   SubitleCards("Verificación de identidad "),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _Pantalla(),
-                    _IDSolicitud(),
-                    _IDInfo(),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Container(
-                        padding: EdgeInsets.only(left: 10.0),
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            //border: Border.all(
+        key: _formKey,
+        child: SingleChildScrollView(
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                SubitleCards("Verificación de identidad "),
+                SizedBox(
+                  height: 20,
+                ),
+                _Pantalla(),
+                _IDSolicitud(),
+                _IDInfo(),
+                SizedBox(
+                  height: 20,
+                ),
+                Container(
+                    padding: EdgeInsets.only(left: 10.0),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        //border: Border.all(
 
-                            //)
-                            ),
-                        child: Text(
-                          "Es importante verificar tu identidad, recibirás un código de autorización que será enviado a tu correo.",
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            fontSize: 17,
-                          ),
-                          textScaleFactor: 1,
-                        )),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _BotonEnviar(),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _Avanzar()
-                  ]),
-            ));
+                        //)
+                        ),
+                    child: Text(
+                      "Es importante verificar tu identidad, recibirás un código de autorización que será enviado a tu correo.",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontSize: 17,
+                      ),
+                      textScaleFactor: 1,
+                    )),
+                SizedBox(
+                  height: 20,
+                ),
+                _BotonEnviar(),
+                SizedBox(
+                  height: 20,
+                ),
+                _Avanzar()
+              ]),
+        ));
   }
 
   Widget _Pantalla() {
@@ -360,6 +359,7 @@ class MyCustomFormFinSolicitar17State
           child: const Text('Siguiente')),
     );
   }
+
   Widget _Avanzar() {
     return Container(
       width: double.infinity,
@@ -372,8 +372,10 @@ class MyCustomFormFinSolicitar17State
         )),
         onTap: () {
           Navigator.of(context).pop();
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => FinSolicitar19()));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => FinSolicitar19(widget.idCredito)));
         },
       ),
     );

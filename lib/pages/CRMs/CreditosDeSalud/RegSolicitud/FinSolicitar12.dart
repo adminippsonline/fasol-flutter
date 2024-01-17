@@ -27,7 +27,8 @@ import 'FinSolicitar13_0.dart';
 import 'package:intl/intl.dart';
 
 class FinSolicitar12 extends StatefulWidget {
-  const FinSolicitar12({super.key});
+  String idCredito = "";
+  FinSolicitar12(this.idCredito);
 
   @override
   State<FinSolicitar12> createState() => _FinSolicitar12State();
@@ -59,13 +60,14 @@ class _FinSolicitar12State extends State<FinSolicitar12> {
 
   @override
   Widget build(BuildContext context) {
-    return MyCustomFormFinSolicitar12();
+    return MyCustomFormFinSolicitar12(widget.idCredito);
   }
 }
 
 // Create a Form widget.
 class MyCustomFormFinSolicitar12 extends StatefulWidget {
-  const MyCustomFormFinSolicitar12({super.key});
+  String idCredito = "";
+  MyCustomFormFinSolicitar12(this.idCredito);
 
   @override
   MyCustomFormFinSolicitar12State createState() {
@@ -288,7 +290,7 @@ class MyCustomFormFinSolicitar12State
   void Ingresar(
       Pantalla,
       IDLR,
-      IDInfo,
+      IDCred,
       TipoDePersona,
       Profesion,
       Ocupacion,
@@ -340,7 +342,7 @@ class MyCustomFormFinSolicitar12State
       var bodyEnviar = {
         'Pantalla': Pantalla,
         'id_solicitud': IDLR,
-        'id_credito': IDInfo,
+        'id_credito': widget.idCredito,
         'TipoDePersona': TipoDePersona,
         'Profesion': Profesion,
         'Ocupacion': Ocupacion,
@@ -381,11 +383,11 @@ class MyCustomFormFinSolicitar12State
       var response = await http
           .post(url, body: bodyEnviar)
           .timeout(const Duration(seconds: 90));
-      print(response.body);
 
       if (response.body != "0" && response.body != "") {
         print(response.body);
         var Respuesta = jsonDecode(response.body);
+
         //print(Respuesta);
         String status = Respuesta['status'];
         if (status == "OK") {
@@ -397,9 +399,20 @@ class MyCustomFormFinSolicitar12State
                   title: Text('Registrado correctamente'),
                 );
               });
-          Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (_) => FinSolicitar13()));
-          FocusScope.of(context).unfocus();
+          if (CargoPolitico == "Si" || EsConyuge == "Si") {
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (_) => FinSolicitar13(widget.idCredito)));
+            FocusScope.of(context).unfocus();
+          } else {
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (_) => FinSolicitar13_0(widget.idCredito)));
+            FocusScope.of(context).unfocus();
+          }
+          // dev.log("mensajeasas");
+          // dev.log(widget.idCredito);
+          // Navigator.of(context).pushReplacement(MaterialPageRoute(
+          //     builder: (_) => FinSolicitar13(widget.idCredito)));
+          // FocusScope.of(context).unfocus();
         } else {
           //print('Error en el registro');
           showDialog(
@@ -514,7 +527,7 @@ class MyCustomFormFinSolicitar12State
 
     if (response.statusCode == 200) {
       var jsonData = json.decode(response.body);
-      dev.log(jsonData.toString());
+
       setState(() {
         _opcionesActividadesEconomicas = jsonData;
       });
@@ -1324,25 +1337,13 @@ class MyCustomFormFinSolicitar12State
 
   List<dynamic> _colonyList = [];
   Future obtenerCP(var codigo) async {
-    dev.log("t");
-    final req = {"CP": codigo};
     var url =
         Uri.parse('https://fasoluciones.mx/api/Solicitud/Catalogos/CP/$codigo');
-
-    var request = await http.MultipartRequest('POST', url);
-    request = jsonToFormData(request, req);
-
-    final response = await request.send();
+    var response = await http.get(url);
     if (response.statusCode == 200) {
-      final responseData =
-          await response.stream.bytesToString(); //response.stream.toBytes();
-      //dev.log(responseData.toString());
+      final dat = json.decode(response.body);
+      var data = json.decode(response.body)['data'][0];
 
-      var responseString = responseData;
-      final dat = json.decode(responseString);
-      dev.log("adata");
-      dev.log(dat.toString());
-      var data = json.decode(responseString)['data'][0];
       setState(() {
         // Colonia.text = data['Estado'].toString();
         MunDel.text = data['MunDel'].toString();
@@ -1366,7 +1367,6 @@ class MyCustomFormFinSolicitar12State
         validator: ObligatorioCP,
         onChanged: (value) {
           if (value.length == 5) {
-            dev.log("algo");
             obtenerCP(value);
           } else if (value.length < 4) {
             _selectedColony = null;
@@ -1423,6 +1423,7 @@ class MyCustomFormFinSolicitar12State
                 )).toList(),
             validator: ObligatorioSelect,
             onChanged: (value) {
+              dev.log(value.toString());
               SelectedListaPais = value;
             },
             onSaved: (value) {
@@ -2102,7 +2103,7 @@ class MyCustomFormFinSolicitar12State
                       );
                     });
               }
-              dev.log(ProfesionRecibe);
+
               String? OcupacionRecibe =
                   dropdownvalueOcupacion.toString(); // SelectedListaOcupacion;
               if (OcupacionRecibe == "") {
@@ -2162,8 +2163,8 @@ class MyCustomFormFinSolicitar12State
               EntCallRecibe = EntCall.text;
               MunDelRecibe = MunDel.text;
               CiudadRecibe = Ciudad.text;
-              ColoniaRecibe = Colonia.text;
-              PaisRecibe = Pais.text;
+              String? ColoniaRecibe = _selectedColony.toString();
+              PaisRecibe = SelectedListaPais.toString();
 
               String? CargoPoliticoRecibe = _opcionesCargoPolitico;
               if (CargoPoliticoRecibe == "" || CargoPoliticoRecibe == null) {
@@ -2194,22 +2195,8 @@ class MyCustomFormFinSolicitar12State
               ApellidoPaternoRecibe = ApellidoPaterno.text;
               ApellidoMaternoRecibe = ApellidoMaterno.text;
 
-/*print(PantallaRecibe);
-print(IDLRRecibe);
-print(IDInfoRecibe);
-print(TipoDePersonaRecibe);
-print(ProfesionRecibe);
-print(OcupacionRecibe);
-print(ActividadEconomicaRecibe);
-print(IngresosRecibe);
-print(GastosMensualesRecibe);
-print(FirmaElectronicaRecibe);
-print(CargoPoliticoRecibe);
-print(EsConyugueRecibe);*/
-
               if (PantallaRecibe == "" ||
                   IDLRRecibe == "" ||
-                  IDInfoRecibe == "" ||
                   TipoDePersonaRecibe == "" ||
                   ProfesionRecibe == "" ||
                   OcupacionRecibe == "" ||
@@ -2227,13 +2214,10 @@ print(EsConyugueRecibe);*/
                       );
                     });
               } else {
-                /*print("--------");
-                print(AntiguedadTiempoRecibe);
-                print("--------");*/
                 Ingresar(
                     PantallaRecibe,
                     IDLRRecibe,
-                    IDInfoRecibe,
+                    widget.idCredito,
                     TipoDePersonaRecibe,
                     ProfesionRecibe,
                     OcupacionRecibe,
@@ -2288,8 +2272,10 @@ print(EsConyugueRecibe);*/
         )),
         onTap: () {
           Navigator.of(context).pop();
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => FinSolicitar13_0()));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => FinSolicitar13_0(widget.idCredito)));
         },
       ),
     );

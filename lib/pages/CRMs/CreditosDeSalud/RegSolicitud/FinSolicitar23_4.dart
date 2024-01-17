@@ -24,7 +24,8 @@ import 'FinSolicitar16.dart';
 import 'package:intl/intl.dart';
 
 class FinSolicitar23_4 extends StatefulWidget {
-  const FinSolicitar23_4({super.key});
+  String idCredito = "";
+  FinSolicitar23_4(this.idCredito);
 
   @override
   State<FinSolicitar23_4> createState() => _FinSolicitar23_4State();
@@ -56,13 +57,14 @@ class _FinSolicitar23_4State extends State<FinSolicitar23_4> {
 
   @override
   Widget build(BuildContext context) {
-    return MyCustomFormFinSolicitar23_4();
+    return MyCustomFormFinSolicitar23_4(widget.idCredito);
   }
 }
 
 // Create a Form widget.
 class MyCustomFormFinSolicitar23_4 extends StatefulWidget {
-  const MyCustomFormFinSolicitar23_4({super.key});
+  String idCredito = "";
+  MyCustomFormFinSolicitar23_4(this.idCredito);
 
   @override
   MyCustomFormFinSolicitar23_4State createState() {
@@ -75,7 +77,6 @@ class MyCustomFormFinSolicitar23_4State
   //el fomrKey para formulario
   final _formKey = GlobalKey<FormState>();
 
-
   //Los controladores para los input
   final Pantalla = TextEditingController();
   final IDClinica = TextEditingController();
@@ -85,10 +86,7 @@ class MyCustomFormFinSolicitar23_4State
   String IDClinicaRecibe = "";
   String IDInfoRecibe = "";
 
-  void Ingresar(
-      Pantalla,
-      IDClinica,
-      IDInfo) async {
+  void Ingresar(Pantalla, IDClinica, IDInfo) async {
     try {
       var url = Uri.https('fasoluciones.mx', 'api/Solicitud/Agregar');
       var response = await http.post(url, body: {
@@ -112,8 +110,8 @@ class MyCustomFormFinSolicitar23_4State
                   title: Text('Registrado correctamente'),
                 );
               });
-          Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (_) => FinSolicitar16()));
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (_) => FinSolicitar16(widget.idCredito)));
           FocusScope.of(context).unfocus();
         } else {
           //print('Error en el registro');
@@ -173,8 +171,7 @@ class MyCustomFormFinSolicitar23_4State
   void mostrar_datos() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      NombreCompletoSession =
-          prefs.getString('NombreCompletoSession') ?? '';
+      NombreCompletoSession = prefs.getString('NombreCompletoSession') ?? '';
       id_solicitud = prefs.getInt('id_solicitud') ?? 0;
       id_credito = prefs.getInt('id_credito') ?? 0;
     });
@@ -184,78 +181,74 @@ class MyCustomFormFinSolicitar23_4State
     IDInfo.text = "$id_credito";
   }
 
-
-
-  @override 
+  @override
   Widget build(BuildContext context) {
     return BuildScreens(
         'Solicitud', '', '', 'Datos de la solicitud', '', _formulario());
-  } 
-
+  }
 
   Widget _formulario() {
     return Form(
-            key: _formKey,
-            child: SingleChildScrollView(
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    SubitleCards("Solicita tu cotización"),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _Pantalla(),
-                    _IDClinica(),
-                    _IDInfo(),
+        key: _formKey,
+        child: SingleChildScrollView(
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                SubitleCards("Solicita tu cotización"),
+                SizedBox(
+                  height: 20,
+                ),
+                _Pantalla(),
+                _IDClinica(),
+                _IDInfo(),
 
-                    Container(
-                        padding: EdgeInsets.only(left: 10.0),
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            //border: Border.all(
-                            //color: Colors.blueAccent
-                            //)
-                            ),
-                        child: Text(
-                          "Para poder continuar con el proceso del crédito es necesario contar con tu cotización médica. Acércate a tu médico para solicitarla. ",
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            fontSize: 17,
-                            //color: Colors.blue
-                          ),
-                          textScaleFactor: 1,
-                        )),
+                Container(
+                    padding: EdgeInsets.only(left: 10.0),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        //border: Border.all(
+                        //color: Colors.blueAccent
+                        //)
+                        ),
+                    child: Text(
+                      "Para poder continuar con el proceso del crédito es necesario contar con tu cotización médica. Acércate a tu médico para solicitarla. ",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontSize: 17,
+                        //color: Colors.blue
+                      ),
+                      textScaleFactor: 1,
+                    )),
 
+                Container(
+                    padding: EdgeInsets.only(left: 10.0),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        //border: Border.all(
+                        //color: Colors.blueAccent
+                        //)
+                        ),
+                    child: Text(
+                      "Cuentas con 30 días para completar el proceso. Tu proceso vence el 00000-00-00 ¡Es posible obtener un financiamiento con nosotros!.",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontSize: 17,
+                        //color: Colors.blue
+                      ),
+                      textScaleFactor: 1,
+                    )),
 
-                    Container(
-                        padding: EdgeInsets.only(left: 10.0),
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            //border: Border.all(
-                            //color: Colors.blueAccent
-                            //)
-                            ),
-                        child: Text( 
-                          "Cuentas con 30 días para completar el proceso. Tu proceso vence el 00000-00-00 ¡Es posible obtener un financiamiento con nosotros!.",
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            fontSize: 17,
-                            //color: Colors.blue
-                          ),
-                          textScaleFactor: 1,
-                        )),
-
-                    _BotonEnviar(),
-                    //_Avanzar
-                    SizedBox(
-                      height: 20,
-                    ),
-                    //_BotonEnviar(),
-                    SizedBox(
-                      height: 20,
-                    ),
-                  ]),
-            ));
+                _BotonEnviar(),
+                //_Avanzar
+                SizedBox(
+                  height: 20,
+                ),
+                //_BotonEnviar(),
+                SizedBox(
+                  height: 20,
+                ),
+              ]),
+        ));
   }
 
   Widget _Pantalla() {
@@ -312,7 +305,6 @@ class MyCustomFormFinSolicitar23_4State
         ));
   }
 
-
   Widget _BotonEnviar() {
     return Container(
       width: double.infinity,
@@ -325,7 +317,7 @@ class MyCustomFormFinSolicitar23_4State
               IDInfoRecibe = IDInfo.text;
               if (PantallaRecibe == "" ||
                   IDClinicaRecibe == "" ||
-                  IDInfoRecibe == "" ) {
+                  IDInfoRecibe == "") {
                 showDialog(
                     context: context,
                     builder: (BuildContext context) {
@@ -334,10 +326,7 @@ class MyCustomFormFinSolicitar23_4State
                       );
                     });
               } else {
-                Ingresar(
-                    PantallaRecibe,
-                    IDClinicaRecibe,
-                    IDInfoRecibe);
+                Ingresar(PantallaRecibe, IDClinicaRecibe, IDInfoRecibe);
               }
             }
           },

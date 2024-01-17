@@ -18,12 +18,12 @@ class _RegMedicoState extends State<RegMedico> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold( 
+    return Scaffold(
       appBar: AppBar(
         backgroundColor: COLOR_PRINCIPAL,
         title: const Text('Área de médicos'),
       ),
-      drawer: MenuLateralPage(),
+      drawer: MenuLateralPage(""),
       bottomNavigationBar: MenuFooterPage(),
       body: GridView.count(
         primary: false,

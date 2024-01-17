@@ -40,7 +40,7 @@ class _RegistroCliState extends State<RegistroCli> {
     //   appBar: AppBar(
     //     title: const Text('Registro de clínica'),
     //   ),
-    //   drawer: MenuLateralPage(),
+    //   drawer: MenuLateralPage(""),
     //   bottomNavigationBar: MenuFooterPage(),
     //   body: const MyCustomFormClinicaRegistro(),
     // );
@@ -121,10 +121,10 @@ class MyCustomFormClinicaRegistroState
                   title: Text('Registrado correctamente'),
                 );
               });*/
-          guardar_datos(id_clinica, 'Clínica', Corr, Cont, Celu);     
+          guardar_datos(id_clinica, 'Clínica', Corr, Cont, Celu);
           Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (_) => PerfilCliVerificar()));
-            FocusScope.of(context).unfocus();
+              MaterialPageRoute(builder: (_) => PerfilCliVerificar()));
+          FocusScope.of(context).unfocus();
         } else {
           //print('Error en el registro');
           showDialog(
@@ -168,8 +168,8 @@ class MyCustomFormClinicaRegistroState
 
   //Esto es iun metodo
   //se usa para guarar dtos es tipo sesiones
-  Future<void> guardar_datos(id_clinica, NombreCompletoSession,
-      CorreoSession, ContrasenaSession, TelefonoSession) async {
+  Future<void> guardar_datos(id_clinica, NombreCompletoSession, CorreoSession,
+      ContrasenaSession, TelefonoSession) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt('id_clinica', id_clinica);
     await prefs.setString('NombreCompletoSession', NombreCompletoSession);
@@ -183,8 +183,7 @@ class MyCustomFormClinicaRegistroState
 
   @override
   Widget build(BuildContext context) {
-    return BuildScreens(
-        'Clínica', '', '', 'Registro', '', _formulario());
+    return BuildScreens('Clínica', '', '', 'Registro', '', _formulario());
   }
 
   Widget _formulario() {

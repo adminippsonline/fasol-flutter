@@ -32,7 +32,8 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:dio/dio.dart';
 
 class FinSolicitar22 extends StatefulWidget {
-  const FinSolicitar22({super.key});
+  String idCredito = "";
+  FinSolicitar22(this.idCredito);
 
   @override
   State<FinSolicitar22> createState() => _FinSolicitar22State();
@@ -64,12 +65,12 @@ class _FinSolicitar22State extends State<FinSolicitar22> {
 
   @override
   Widget build(BuildContext context) {
-    return MyCustomFormFinSolicitar22();
+    return MyCustomFormFinSolicitar22(widget.idCredito);
     // return Scaffold(
     //   appBar: AppBar(
     //     title: Text(NombreCompletoSession),
     //   ),
-    //   drawer: MenuLateralPage(),
+    //   drawer: MenuLateralPage(""),
     //   bottomNavigationBar: MenuFooterPage(),
     //   body: const MyCustomFormFinSolicitar22(),
     // );
@@ -78,7 +79,8 @@ class _FinSolicitar22State extends State<FinSolicitar22> {
 
 // Create a Form widget.
 class MyCustomFormFinSolicitar22 extends StatefulWidget {
-  const MyCustomFormFinSolicitar22({super.key});
+  String idCredito = "";
+  MyCustomFormFinSolicitar22(this.idCredito);
 
   @override
   MyCustomFormFinSolicitar22State createState() {
@@ -99,26 +101,28 @@ class MyCustomFormFinSolicitar22State
   final IDInfo = TextEditingController();
   final TipoComprobante = TextEditingController();
 
-  
-
   String PantallaRecibe = "";
   String IDLRRecibe = "";
   String IDInfoRecibe = "";
-  String TipoComprobanteRecibe = ""; 
+  String TipoComprobanteRecibe = "";
 
-  void Ingresar(Pantalla, IDLR, IDInfo, TipoComprobante) async {
+  void Ingresar(Pantalla, IDLR, IDInfo, TipoComprobante, imagen) async {
+    dev.log("Ingr");
     try {
       var url = Uri.https('fasoluciones.mx', 'api/Solicitud/Agregar');
-      var data={
+      var data = {
         'Pantalla': Pantalla,
         'id_solicitud': IDLR,
-        'id_credito': IDInfo,
-        'TipoComprobante':TipoComprobante
+        'id_credito': widget.idCredito,
+        'TipoCoprovante': TipoComprobante,
+        'AdjuntarArchivo': imagen
       };
-      print(data);
-      var response = await http.post(url, body: data).timeout(const Duration(seconds: 90));
+
+      var response =
+          await http.post(url, body: data).timeout(const Duration(seconds: 90));
       //print("llego aqui 111");
-      //print(response.body);
+      dev.log(response.statusCode.toString());
+      dev.log(response.body.toString());
 
       if (response.body != "0" && response.body != "") {
         var Respuesta = jsonDecode(response.body);
@@ -133,8 +137,8 @@ class MyCustomFormFinSolicitar22State
                   title: Text('Registrado correctamente'),
                 );
               });
-          Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (_) => FinSolicitar22_1()));
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (_) => FinSolicitar22_1(widget.idCredito)));
           FocusScope.of(context).unfocus();
         } else {
           //print('Error en el registro');
@@ -312,21 +316,23 @@ class MyCustomFormFinSolicitar22State
 
       final req = {
         'Pantalla': "FinSolicitar22",
-        'id_solicitud': "$id_solicitud",
-        'id_credito': "$id_credito",
-        'file': globalimageUpdate,
-        'TipoComprobante':TipoComprobante
+        'id_solicitud': IDLR,
+        'id_credito': widget.idCredito,
+        'TipoComprovante': TipoComprobante,
+        'AdjuntarArchivo': globalimageUpdate,
       };
       print(req);
       var url = Uri.https('fasoluciones.mx', 'api/Solicitud/Agregar');
-      var request = await http.MultipartRequest('POST', url);
-      request = jsonToFormData(request, req);
-      final response = await request.send();
-      final responseData = await response.stream.bytesToString();
-      var responseString = responseData;
-      final datos = json.decode(responseString);
-      dev.log("datosasasas");
-      dev.log(datos.toString());
+      var response = await http.post(url, body: req);
+      dev.log(response.statusCode.toString());
+      // var request = await http.MultipartRequest('POST', url);
+      // request = jsonToFormData(request, req);
+      // final response = await request.send();
+      // final responseData = await response.stream.bytesToString();
+      // var responseString = responseData;
+      // final datos = json.decode(responseString);
+      // dev.log("datosasasas");
+      // dev.log(datos.toString());
 
       if (imagen == null) {
         dev.log("esta vacio");
@@ -340,8 +346,8 @@ class MyCustomFormFinSolicitar22State
             });
       } else {
         dev.log("tiene imagen");
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (_) => FinSolicitar22_1()));
+        // Navigator.of(context).pushReplacement(MaterialPageRoute(
+        //     builder: (_) => FinSolicitar22_1(widget.idCredito)));
       }
 
       // await dio
@@ -393,7 +399,7 @@ class MyCustomFormFinSolicitar22State
                     decoration: BoxDecoration(
                         border: Border(
                             bottom: BorderSide(width: 1, color: Colors.grey))),
-                    child: Row( 
+                    child: Row(
                       children: [
                         Expanded(
                           child: Text(
@@ -530,7 +536,8 @@ class MyCustomFormFinSolicitar22State
                 ),
 
                 if (OpcionesTipoComprobante == "CFE" ||
-                    OpcionesTipoComprobante == "Telefonia") // Mostrar el botón si se selecciona la opción 1
+                    OpcionesTipoComprobante ==
+                        "Telefonia") // Mostrar el botón si se selecciona la opción 1
                   ElevatedButton(
                       onPressed: () {
                         opciones(context);
@@ -544,7 +551,6 @@ class MyCustomFormFinSolicitar22State
                 _IDLR(),
                 _IDInfo(),
 
-                  
                 SizedBox(
                   height: 20,
                 ),
@@ -554,28 +560,25 @@ class MyCustomFormFinSolicitar22State
                 if (imagen != null)
                   ElevatedButton(
                       onPressed: () {
-                        subir_imagen(OpcionesTipoComprobante);
+                        TipoComprobanteRecibe = TipoComprobante.text;
+                        //Aubir_imagen(OpcionesTipoComprobante);
+                        IDInfoRecibe = "";
+                        PantallaRecibe = Pantalla.text;
+                        IDLRRecibe = IDLR.text;
+                        Ingresar(PantallaRecibe, IDLRRecibe, IDInfoRecibe,
+                            OpcionesTipoComprobante, globalimageUpdate);
                       },
                       child: Text('Subir Imagen',
-                          style: TextStyle(color: Colors.white))
-                          
-                ),
-                if (OpcionesTipoComprobante == "MismoINE")
-                _BotonEnviar(),
-                
-                  /*ElevatedButton(
+                          style: TextStyle(color: Colors.white))),
+                if (OpcionesTipoComprobante == "MismoINE") _BotonEnviar(),
+
+                /*ElevatedButton(
                       onPressed: () {
                         // subir_imagen();
                         Navigator.of(context).pushReplacement(MaterialPageRoute(
                             builder: (_) => FinSolicitar22_1()));
                       },
                       child: Text("Continuar")),*/
-
-                      
-
-                
-
-                
               ]),
         ));
   }
@@ -647,7 +650,8 @@ class MyCustomFormFinSolicitar22State
 
               String? TipoComprobanteRecibe = OpcionesTipoComprobante;
               print(TipoComprobanteRecibe);
-              if (TipoComprobanteRecibe == "" || TipoComprobanteRecibe == null) {
+              if (TipoComprobanteRecibe == "" ||
+                  TipoComprobanteRecibe == null) {
                 showDialog(
                     context: context,
                     builder: (BuildContext context) {
@@ -661,23 +665,25 @@ class MyCustomFormFinSolicitar22State
 
               if (PantallaRecibe == "" ||
                   IDLRRecibe == "" ||
-                  IDInfoRecibe == ""||
+                  IDInfoRecibe == "" ||
                   TipoComprobanteRecibe == "") {
                 showDialog(
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
                         title: Text('Error: Todos los campos son obligatorios'),
-                      ); 
+                      );
                     });
               } else {
-                Ingresar(PantallaRecibe, IDLRRecibe, IDInfoRecibe, TipoComprobanteRecibe);
+                Ingresar(PantallaRecibe, IDLRRecibe, IDInfoRecibe,
+                    TipoComprobanteRecibe, globalimageUpdate);
               }
             }
           },
           child: const Text('Siguiente')),
     );
   }
+
   Widget _Avanzar() {
     return Container(
       width: double.infinity,
@@ -690,8 +696,10 @@ class MyCustomFormFinSolicitar22State
         )),
         onTap: () {
           Navigator.of(context).pop();
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => FinSolicitar22_1()));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => FinSolicitar22_1(widget.idCredito)));
         },
       ),
     );

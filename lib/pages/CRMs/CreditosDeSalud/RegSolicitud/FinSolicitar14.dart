@@ -27,7 +27,8 @@ import 'FinSolicitar15_negativa.dart';
 import 'package:intl/intl.dart';
 
 class FinSolicitar14 extends StatefulWidget {
-  const FinSolicitar14({super.key});
+  String idCredito = "";
+  FinSolicitar14(this.idCredito);
 
   @override
   State<FinSolicitar14> createState() => _FinSolicitar14State();
@@ -59,13 +60,14 @@ class _FinSolicitar14State extends State<FinSolicitar14> {
 
   @override
   Widget build(BuildContext context) {
-    return MyCustomFormFinSolicitar14();
+    return MyCustomFormFinSolicitar14(widget.idCredito);
   }
 }
 
 // Create a Form widget.
 class MyCustomFormFinSolicitar14 extends StatefulWidget {
-  const MyCustomFormFinSolicitar14({super.key});
+  String idCredito = "";
+  MyCustomFormFinSolicitar14(this.idCredito);
 
   @override
   MyCustomFormFinSolicitar14State createState() {
@@ -150,22 +152,21 @@ class MyCustomFormFinSolicitar14State
       var bodyEnviar = {
         'Pantalla': Pantalla,
         'id_solicitud': IDLR,
-        'id_info': IDInfo,
+        'id_credito': widget.idCredito,
         'CargoPolitico': CargoPolitico,
         'Cargo': Cargo,
         'PeriodoDelCargo': PeriodoDelCargo,
-        'EsConyugue': EsConyugue,
+        'EsConyuge': EsConyugue,
         'PrimerNombre': PrimerNombre,
         'SegundoNombre': SegundoNombre,
         'ApellidoPaterno': ApellidoPaterno,
         'ApellidoMaterno': ApellidoMaterno
       };
-      print(bodyEnviar);
+
       var response = await http
           .post(url, body: bodyEnviar)
           .timeout(const Duration(seconds: 90));
-      print("llego aqui 111");
-      print(response.body);
+      dev.log(response.body);
 
       if (response.body != "0" && response.body != "") {
         var Respuesta = jsonDecode(response.body);
@@ -181,12 +182,12 @@ class MyCustomFormFinSolicitar14State
                 );
               });
           if (CargoPolitico == "Si" || EsConyugue == "Si") {
-            Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (_) => FinSolicitar15_negativa()));
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (_) => FinSolicitar15_negativa(widget.idCredito)));
             FocusScope.of(context).unfocus();
           } else {
-            Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (_) => FinSolicitar15()));
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (_) => FinSolicitar15(widget.idCredito)));
             FocusScope.of(context).unfocus();
           }
         } else {
@@ -247,8 +248,7 @@ class MyCustomFormFinSolicitar14State
   void mostrar_datos() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      NombreCompletoSession =
-          prefs.getString('NombreCompletoSession') ?? '';
+      NombreCompletoSession = prefs.getString('NombreCompletoSession') ?? '';
       id_solicitud = prefs.getInt('id_solicitud') ?? 0;
       id_info = prefs.getInt('id_info') ?? 0;
     });
@@ -258,204 +258,201 @@ class MyCustomFormFinSolicitar14State
     IDInfo.text = "$id_info";
   }
 
-
-
-  @override 
+  @override
   Widget build(BuildContext context) {
     return BuildScreens(
         'Solicitud', '', '', 'Datos de la solicitud', '', _formulario());
-  } 
-
+  }
 
   Widget _formulario() {
     return Form(
-            key: _formKey,
-            child: SingleChildScrollView(
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    SubitleCards("Información del proveedor de recursos "),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _Pantalla(),
-                    _IDLR(),
-                    _IDInfo(),
-                    Container(
-                        padding: EdgeInsets.only(left: 10.0),
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            //border: Border.all(
-                            //color: Colors.blueAccent
-                            //)
-                            ),
-                        child: Text(
-                          "¿La persona que aportará recursos desempeña o ha desempeñado en los últimos 12 meses un cargo público o político en territorio nacional o en un país extranjero? ",
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            fontSize: 17,
-                            //color: Colors.blue
-                          ),
-                          textScaleFactor: 1,
-                        )),
-                    Container(
-                      padding: EdgeInsets.all(10),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: RadioListTile(
-                              title: const Text('Si',
-                                  style: TextStyle(
-                                    fontSize: 17,
-                                    color: Color.fromARGB(255, 126, 126, 126),
-                                  )),
-                              value: "Si",
-                              groupValue: _opcionesCargoPolitico,
-                              onChanged: SeleccionadoCargoPolitico,
-                            ),
-                          ),
-                          Expanded(
-                              child: RadioListTile(
-                            title: const Text('No',
-                                style: TextStyle(
-                                  fontSize: 17,
-                                  color: Color.fromARGB(255, 126, 126, 126),
-                                )),
-                            value: "No",
-                            groupValue: _opcionesCargoPolitico,
-                            onChanged: SeleccionadoCargoPolitico,
-                          )),
-                        ],
+        key: _formKey,
+        child: SingleChildScrollView(
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                SubitleCards("Información del proveedor de recursos "),
+                SizedBox(
+                  height: 20,
+                ),
+                _Pantalla(),
+                _IDLR(),
+                _IDInfo(),
+                Container(
+                    padding: EdgeInsets.only(left: 10.0),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        //border: Border.all(
+                        //color: Colors.blueAccent
+                        //)
+                        ),
+                    child: Text(
+                      "¿La persona que aportará recursos desempeña o ha desempeñado en los últimos 12 meses un cargo público o político en territorio nacional o en un país extranjero? ",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontSize: 17,
+                        //color: Colors.blue
                       ),
-                    ),
-                    if (_siCargoPolitico)
-                      Container(
-                          padding: EdgeInsets.only(left: 1.0),
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                              //border: Border.all(
-                              //color: Colors.blueAccent
-                              //)
+                      textScaleFactor: 1,
+                    )),
+                Container(
+                  padding: EdgeInsets.all(10),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: RadioListTile(
+                          title: const Text('Si',
+                              style: TextStyle(
+                                fontSize: 17,
+                                color: Color.fromARGB(255, 126, 126, 126),
+                              )),
+                          value: "Si",
+                          groupValue: _opcionesCargoPolitico,
+                          onChanged: SeleccionadoCargoPolitico,
+                        ),
+                      ),
+                      Expanded(
+                          child: RadioListTile(
+                        title: const Text('No',
+                            style: TextStyle(
+                              fontSize: 17,
+                              color: Color.fromARGB(255, 126, 126, 126),
+                            )),
+                        value: "No",
+                        groupValue: _opcionesCargoPolitico,
+                        onChanged: SeleccionadoCargoPolitico,
+                      )),
+                    ],
+                  ),
+                ),
+                if (_siCargoPolitico)
+                  Container(
+                      padding: EdgeInsets.only(left: 1.0),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          //border: Border.all(
+                          //color: Colors.blueAccent
+                          //)
+                          ),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: _Cargo(),
                               ),
-                          child: Column(
-                            children: [
-                              Row(
-                                children: <Widget>[
-                                  Expanded(
-                                    child: _Cargo(),
-                                  ),
-                                  Expanded(
-                                    child: _PeriodoDelCargo(),
-                                  ),
-                                ],
+                              Expanded(
+                                child: _PeriodoDelCargo(),
                               ),
                             ],
-                          )),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Container(
-                        padding: EdgeInsets.only(left: 10.0),
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            //border: Border.all(
-                            //color: Colors.blueAccent
-                            //)
-                            ),
-                        child: Text(
-                          "¿La persona que aportará recursos es Cónyuge, Concubino (a), Hijo (a), Hermano (a), Abuelo, Padre, Primo (a) o Nieto (a) de alguna persona que desempeñe o han desempeñado cargo público o político? ",
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            fontSize: 17,
-                            //color: Colors.blue
                           ),
-                          textScaleFactor: 1,
-                        )),
-                    Container(
-                      padding: EdgeInsets.all(10),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: RadioListTile(
-                              title: const Text('Si',
-                                  style: TextStyle(
-                                    fontSize: 17,
-                                    color: Color.fromARGB(255, 126, 126, 126),
-                                  )),
-                              value: "Si",
-                              groupValue: _opcionesEsConyugue,
-                              onChanged: SeleccionadoEsConyugue,
-                            ),
-                          ),
-                          Expanded(
-                              child: RadioListTile(
-                            title: const Text('No',
-                                style: TextStyle(
-                                  fontSize: 17,
-                                  color: Color.fromARGB(255, 126, 126, 126),
-                                )),
-                            value: "No",
-                            groupValue: _opcionesEsConyugue,
-                            onChanged: SeleccionadoEsConyugue,
-                          )),
                         ],
+                      )),
+                SizedBox(
+                  height: 20,
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Container(
+                    padding: EdgeInsets.only(left: 10.0),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        //border: Border.all(
+                        //color: Colors.blueAccent
+                        //)
+                        ),
+                    child: Text(
+                      "¿La persona que aportará recursos es Cónyuge, Concubino (a), Hijo (a), Hermano (a), Abuelo, Padre, Primo (a) o Nieto (a) de alguna persona que desempeñe o han desempeñado cargo público o político? ",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontSize: 17,
+                        //color: Colors.blue
                       ),
-                    ),
-                    if (_siEsConyugue)
-                      Container(
-                          padding: EdgeInsets.only(left: 1.0),
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                              //border: Border.all(
-                              //color: Colors.blueAccent
-                              //)
-                              ),
-                          child: Column(
-                            children: [
-                              Row(
-                                children: <Widget>[
-                                  Expanded(
-                                    child: _PrimerNombre(),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                children: <Widget>[
-                                  Expanded(
-                                    child: _SegundoNombre(),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                children: <Widget>[
-                                  Expanded(
-                                    child: _ApellidoPaterno(),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                children: <Widget>[
-                                  Expanded(
-                                    child: _ApellidoMaterno(),
-                                  ),
-                                ],
+                      textScaleFactor: 1,
+                    )),
+                Container(
+                  padding: EdgeInsets.all(10),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: RadioListTile(
+                          title: const Text('Si',
+                              style: TextStyle(
+                                fontSize: 17,
+                                color: Color.fromARGB(255, 126, 126, 126),
+                              )),
+                          value: "Si",
+                          groupValue: _opcionesEsConyugue,
+                          onChanged: SeleccionadoEsConyugue,
+                        ),
+                      ),
+                      Expanded(
+                          child: RadioListTile(
+                        title: const Text('No',
+                            style: TextStyle(
+                              fontSize: 17,
+                              color: Color.fromARGB(255, 126, 126, 126),
+                            )),
+                        value: "No",
+                        groupValue: _opcionesEsConyugue,
+                        onChanged: SeleccionadoEsConyugue,
+                      )),
+                    ],
+                  ),
+                ),
+                if (_siEsConyugue)
+                  Container(
+                      padding: EdgeInsets.only(left: 1.0),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          //border: Border.all(
+                          //color: Colors.blueAccent
+                          //)
+                          ),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: _PrimerNombre(),
                               ),
                             ],
-                          )),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _BotonEnviar(),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _Avanzar(),
-                    _AvanzarNegativa()
-                  ]),
-            ));
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: _SegundoNombre(),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: _ApellidoPaterno(),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: _ApellidoMaterno(),
+                              ),
+                            ],
+                          ),
+                        ],
+                      )),
+                SizedBox(
+                  height: 20,
+                ),
+                _BotonEnviar(),
+                SizedBox(
+                  height: 20,
+                ),
+                _Avanzar(),
+                _AvanzarNegativa()
+              ]),
+        ));
   }
 
   Widget _Pantalla() {
@@ -667,6 +664,7 @@ class MyCustomFormFinSolicitar14State
                       );
                     });
               } else {
+                dev.log(widget.idCredito);
                 Ingresar(
                     PantallaRecibe,
                     IDLRRecibe,
@@ -685,6 +683,7 @@ class MyCustomFormFinSolicitar14State
           child: const Text('Siguiente')),
     );
   }
+
   Widget _Avanzar() {
     return Container(
       width: double.infinity,
@@ -697,12 +696,15 @@ class MyCustomFormFinSolicitar14State
         )),
         onTap: () {
           Navigator.of(context).pop();
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => FinSolicitar15()));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => FinSolicitar15(widget.idCredito)));
         },
       ),
     );
   }
+
   Widget _AvanzarNegativa() {
     return Container(
       width: double.infinity,
@@ -715,8 +717,11 @@ class MyCustomFormFinSolicitar14State
         )),
         onTap: () {
           Navigator.of(context).pop();
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => FinSolicitar15_negativa()));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      FinSolicitar15_negativa(widget.idCredito)));
         },
       ),
     );

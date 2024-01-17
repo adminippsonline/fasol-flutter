@@ -57,7 +57,7 @@ class _HomePageCreditosDeSaludState extends State<HomePageCreditosDeSalud> {
       appBar: AppBar(
         title: Text("Bienvenido $id_medico $id_info  $NombreCompletoSession"),
       ),
-      drawer: MenuLateralPage(),
+      drawer: MenuLateralPage(""),
       bottomNavigationBar: MenuFooterPage(),
       body: const MyCustomFormHomePageCreditosDeSalud(),
     );

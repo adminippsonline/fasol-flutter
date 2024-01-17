@@ -31,7 +31,7 @@ class _LoginMedState extends State<LoginMed> {
       appBar: AppBar(
         title: const Text('Login medico'),
       ),
-      drawer: MenuLateralPage(),
+      drawer: MenuLateralPage(""),
       bottomNavigationBar: MenuFooterPage(),
       body: const MyCustomForm(),
     );

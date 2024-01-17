@@ -25,7 +25,8 @@ import 'FinSolicitar19.dart';
 import 'package:intl/intl.dart';
 
 class FinSolicitar18 extends StatefulWidget {
-  const FinSolicitar18({super.key});
+  String idCredito = "";
+  FinSolicitar18(this.idCredito);
 
   @override
   State<FinSolicitar18> createState() => _FinSolicitar18State();
@@ -57,13 +58,14 @@ class _FinSolicitar18State extends State<FinSolicitar18> {
 
   @override
   Widget build(BuildContext context) {
-    return MyCustomFormFinSolicitar18();
+    return MyCustomFormFinSolicitar18(widget.idCredito);
   }
 }
 
 // Create a Form widget.
 class MyCustomFormFinSolicitar18 extends StatefulWidget {
-  const MyCustomFormFinSolicitar18({super.key});
+  String idCredito = "";
+  MyCustomFormFinSolicitar18(this.idCredito);
 
   @override
   MyCustomFormFinSolicitar18State createState() {
@@ -187,8 +189,7 @@ class MyCustomFormFinSolicitar18State
   void mostrar_datos() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      NombreCompletoSession =
-          prefs.getString('NombreCompletoSession') ?? '';
+      NombreCompletoSession = prefs.getString('NombreCompletoSession') ?? '';
       id_solicitud = prefs.getInt('id_solicitud') ?? 0;
       id_credito = prefs.getInt('id_credito') ?? 0;
     });
@@ -198,66 +199,64 @@ class MyCustomFormFinSolicitar18State
     IDInfo.text = "$id_credito";
   }
 
-  
-  
-
-  @override 
+  @override
   Widget build(BuildContext context) {
     return BuildScreens(
         'Solicitud', '', '', 'Datos de la solicitud', '', _formulario());
-  } 
-
+  }
 
   Widget _formulario() {
     return Form(
-            key: _formKey,
-            child: SingleChildScrollView(
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    SubitleCards("En este momento estamos verificando tu información de crédito"),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _Pantalla(),
-                    _IDSolicitud(),
-                    _IDInfo(),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Container(
-                        padding: EdgeInsets.only(left: 10.0),
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            //border: Border.all(
+        key: _formKey,
+        child: SingleChildScrollView(
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                SubitleCards(
+                    "En este momento estamos verificando tu información de crédito"),
+                SizedBox(
+                  height: 20,
+                ),
+                _Pantalla(),
+                _IDSolicitud(),
+                _IDInfo(),
+                SizedBox(
+                  height: 20,
+                ),
+                Container(
+                    padding: EdgeInsets.only(left: 10.0),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        //border: Border.all(
 
-                            //)
-                            ),
-                        child: Text(
-                          "En este momento estamos verificando tu información de crédito ",
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            fontSize: 17,
-                          ),
-                          textScaleFactor: 1,
-                        )),
+                        //)
+                        ),
+                    child: Text(
+                      "En este momento estamos verificando tu información de crédito ",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontSize: 17,
+                      ),
+                      textScaleFactor: 1,
+                    )),
 
-                    _SimularSi(),
+                _SimularSi(),
 
-                    SizedBox(
-                      height: 20,
-                    ),_SimularNo(),
+                SizedBox(
+                  height: 20,
+                ),
+                _SimularNo(),
 
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _BotonEnviar(),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    //_Avanzar
-                  ]),
-            ));
+                SizedBox(
+                  height: 20,
+                ),
+                _BotonEnviar(),
+                SizedBox(
+                  height: 20,
+                ),
+                //_Avanzar
+              ]),
+        ));
   }
 
   Widget _Pantalla() {
@@ -357,7 +356,9 @@ class MyCustomFormFinSolicitar18State
         onTap: () {
           Navigator.of(context).pop();
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => FinSolicitar19()));
+              context,
+              MaterialPageRoute(
+                  builder: (context) => FinSolicitar19(widget.idCredito)));
         },
       ),
     );
@@ -375,8 +376,11 @@ class MyCustomFormFinSolicitar18State
         )),
         onTap: () {
           Navigator.of(context).pop();
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => FinSolicitar19_noAprobada()));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      FinSolicitar19_noAprobada(widget.idCredito)));
         },
       ),
     );

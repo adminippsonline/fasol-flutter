@@ -60,7 +60,7 @@ class _FinClinicas17_0State extends State<FinClinicas17_0> {
     //   appBar: AppBar(
     //     title: Text(NombreCompletoSession),
     //   ),
-    //   drawer: MenuLateralPage(),
+    //   drawer: MenuLateralPage(""),
     //   bottomNavigationBar: MenuFooterPage(),
     // );
   }
@@ -219,7 +219,6 @@ class MyCustomFormFinClinicas17_0State
                 ),
                 _BotonIngresar(),
                 _BotonOlvidaste(),
-
                 _Avanzar()
               ]),
         ));
@@ -261,8 +260,6 @@ class MyCustomFormFinClinicas17_0State
         ));
   }
 
-  
-
   Widget _BotonEnviar() {
     return Container(
       width: double.infinity,
@@ -275,8 +272,7 @@ class MyCustomFormFinClinicas17_0State
 
               NombreEmpresaRecibe = NombreEmpresa.text;
 
-              if (PantallaRecibe == "" ||
-                  IDClinicaRecibe == "" ) {
+              if (PantallaRecibe == "" || IDClinicaRecibe == "") {
                 showDialog(
                     context: context,
                     builder: (BuildContext context) {
@@ -285,8 +281,7 @@ class MyCustomFormFinClinicas17_0State
                       );
                     });
               } else {
-                Ingresar(PantallaRecibe, IDClinicaRecibe,
-                    NombreEmpresa);
+                Ingresar(PantallaRecibe, IDClinicaRecibe, NombreEmpresa);
               }
             }
           },
@@ -333,6 +328,7 @@ class MyCustomFormFinClinicas17_0State
       ),
     );
   }
+
   Widget _Avanzar() {
     return Container(
       width: double.infinity,

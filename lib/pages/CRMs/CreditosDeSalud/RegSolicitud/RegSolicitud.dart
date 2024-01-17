@@ -23,7 +23,7 @@ class _RegSolicitudState extends State<RegSolicitud> {
         backgroundColor: COLOR_PRINCIPAL,
         title: const Text('Registro solicitud '),
       ),
-      drawer: MenuLateralPage(),
+      drawer: MenuLateralPage(""),
       bottomNavigationBar: MenuFooterPage(),
       body: GridView.count(
         primary: false,

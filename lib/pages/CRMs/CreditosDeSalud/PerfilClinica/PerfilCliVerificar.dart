@@ -57,7 +57,7 @@ class _PerfilCliVerificarState extends State<PerfilCliVerificar> {
         title: const Text(''),
         backgroundColor: COLOR_PRINCIPAL,
       ),
-      drawer: MenuLateralPage(),
+      drawer: MenuLateralPage(""),
       bottomNavigationBar: MenuFooterPage(),
       body: const MyCustomPerfilCliVerificar(),
     );
@@ -91,142 +91,131 @@ class MyCustomPerfilCliVerificarState
     try {
       var data = {'Correo': Corr, 'Contrasena': Pass, 'id_clinica': '$id_cli'};
       var url = Uri.https('fasoluciones.mx', 'api/Clinica/Verificar');
-      var response = await http.post(url, body: data).timeout(const Duration(seconds: 90));
+      var response =
+          await http.post(url, body: data).timeout(const Duration(seconds: 90));
       if (response.body != "0" && response.body != "") {
-          var Respuesta = jsonDecode(response.body);
-          String Redireccionar = Respuesta['Redireccionar'];
-          String status = Respuesta['status'];
-          
-          if (status == "Error") {
-            //if (Redireccionar == "Verificar") {
-                Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (_) => VerificarCuenta()));
-                FocusScope.of(context).unfocus();
-              //}
+        var Respuesta = jsonDecode(response.body);
+        String Redireccionar = Respuesta['Redireccionar'];
+        String status = Respuesta['status'];
 
-          } 
-          else if (status == "OK") {
-              int id_clinica = Respuesta['id_clinica'];
-              String NombreCompleto = Respuesta['NombreCompleto'] ?? "";
-              if (NombreCompleto == "") {
-                NombreCompleto = "";
-              }
-              guardar_datos(
-                id_clinica,
-                NombreCompleto,
-                Respuesta['data']['Correo'],
-                Pass,
-                Respuesta['data']['Telefono']);
-                if (Redireccionar == "Firmar") {
-                  Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (_) => FinClinicas3()));
-                  FocusScope.of(context).unfocus();
-                } else if(Redireccionar == "PerfilClinica") {
-                   Navigator.of(context).push(
-                      MaterialPageRoute<Null>(builder: (BuildContext context) {
-                    return new PerfilClinicaWebView(
-                        Corr, Pass, id_cli);
-                  }));
-                } else if(Redireccionar == "FinClinicas3") {
-                  Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (_) => FinClinicas3()));
-                  FocusScope.of(context).unfocus();
-                } else if (Redireccionar == "FinClinicas4") {
-                  Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (_) => FinClinicas4()));
-                  FocusScope.of(context).unfocus();
-                } else if (Redireccionar == "FinClinicas4_1") {
-                  Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (_) => FinClinicas4_1()));
-                  FocusScope.of(context).unfocus();
-                } else if (Redireccionar == "FinClinicas5_0") {
-                  Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (_) => FinClinicas5_0()));
-                  FocusScope.of(context).unfocus();
-                } else if (Redireccionar == "FinClinicas5_1") {
-                  Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (_) => FinClinicas5_0()));
-                  FocusScope.of(context).unfocus();
-                } else if (Redireccionar == "FinClinicas5") {
-                  Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (_) => FinClinicas5()));
-                  FocusScope.of(context).unfocus();
-                } else if (Redireccionar == "FinClinicas6") {
-                  Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (_) => FinClinicas6()));
-                  FocusScope.of(context).unfocus();
-                } else if (Redireccionar == "FinClinicas7") {
-                  Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (_) => FinClinicas7()));
-                  FocusScope.of(context).unfocus();
-                } else if (Redireccionar == "FinClinicas8") {
-                  Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (_) => FinClinicas8()));
-                  FocusScope.of(context).unfocus();
-                } else if (Redireccionar == "FinClinicas9") {
-                  Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (_) => FinClinicas9()));
-                  FocusScope.of(context).unfocus();
-                } else if (Redireccionar == "FinClinicas10") {
-                  Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (_) => FinClinicas10()));
-                  FocusScope.of(context).unfocus();
-                } else if (Redireccionar == "FinClinicas14") {
-                  Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (_) => FinClinicas14()));
-                  FocusScope.of(context).unfocus();
-                } else if (Redireccionar == "FinClinicas14_1") {
-                  Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (_) => FinClinicas14_1()));
-                  FocusScope.of(context).unfocus();
-                } else if (Redireccionar == "FinClinicas15") {
-                  Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (_) => FinClinicas15()));
-                  FocusScope.of(context).unfocus();
-                } else if (Redireccionar == "FinClinicas16") {
-                  Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (_) => FinClinicas16()));
-                  FocusScope.of(context).unfocus();
-                } else if (Redireccionar == "FinClinicas17_1") {
-                  Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (_) => FinClinicas17_1()));
-                  FocusScope.of(context).unfocus();
-                } else {
-                  //print(Redireccionar);
-                  Navigator.of(context).push(
-                      MaterialPageRoute<Null>(builder: (BuildContext context) {
-                    return new PerfilClinicaWebView(
-                        Corr, Pass, id_cli);
-                  }));
-                }              
+        if (status == "Error") {
+          //if (Redireccionar == "Verificar") {
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (_) => VerificarCuenta()));
+          FocusScope.of(context).unfocus();
+          //}
+        } else if (status == "OK") {
+          int id_clinica = Respuesta['id_clinica'];
+          String NombreCompleto = Respuesta['NombreCompleto'] ?? "";
+          if (NombreCompleto == "") {
+            NombreCompleto = "";
           }
-          else{
-            showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: Text('Error en el login'),
-                  );
-                });
-            /*Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (_) => PerfilCliVerificar()));
-          FocusScope.of(context).unfocus();  */  
-
-          } 
-      } 
-      else{
-         showDialog(
+          guardar_datos(id_clinica, NombreCompleto, Respuesta['data']['Correo'],
+              Pass, Respuesta['data']['Telefono']);
+          if (Redireccionar == "Firmar") {
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (_) => FinClinicas3()));
+            FocusScope.of(context).unfocus();
+          } else if (Redireccionar == "PerfilClinica") {
+            Navigator.of(context)
+                .push(MaterialPageRoute<Null>(builder: (BuildContext context) {
+              return new PerfilClinicaWebView(Corr, Pass, id_cli);
+            }));
+          } else if (Redireccionar == "FinClinicas3") {
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (_) => FinClinicas3()));
+            FocusScope.of(context).unfocus();
+          } else if (Redireccionar == "FinClinicas4") {
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (_) => FinClinicas4()));
+            FocusScope.of(context).unfocus();
+          } else if (Redireccionar == "FinClinicas4_1") {
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (_) => FinClinicas4_1()));
+            FocusScope.of(context).unfocus();
+          } else if (Redireccionar == "FinClinicas5_0") {
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (_) => FinClinicas5_0()));
+            FocusScope.of(context).unfocus();
+          } else if (Redireccionar == "FinClinicas5_1") {
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (_) => FinClinicas5_0()));
+            FocusScope.of(context).unfocus();
+          } else if (Redireccionar == "FinClinicas5") {
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (_) => FinClinicas5()));
+            FocusScope.of(context).unfocus();
+          } else if (Redireccionar == "FinClinicas6") {
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (_) => FinClinicas6()));
+            FocusScope.of(context).unfocus();
+          } else if (Redireccionar == "FinClinicas7") {
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (_) => FinClinicas7()));
+            FocusScope.of(context).unfocus();
+          } else if (Redireccionar == "FinClinicas8") {
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (_) => FinClinicas8()));
+            FocusScope.of(context).unfocus();
+          } else if (Redireccionar == "FinClinicas9") {
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (_) => FinClinicas9()));
+            FocusScope.of(context).unfocus();
+          } else if (Redireccionar == "FinClinicas10") {
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (_) => FinClinicas10()));
+            FocusScope.of(context).unfocus();
+          } else if (Redireccionar == "FinClinicas14") {
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (_) => FinClinicas14()));
+            FocusScope.of(context).unfocus();
+          } else if (Redireccionar == "FinClinicas14_1") {
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (_) => FinClinicas14_1()));
+            FocusScope.of(context).unfocus();
+          } else if (Redireccionar == "FinClinicas15") {
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (_) => FinClinicas15()));
+            FocusScope.of(context).unfocus();
+          } else if (Redireccionar == "FinClinicas16") {
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (_) => FinClinicas16()));
+            FocusScope.of(context).unfocus();
+          } else if (Redireccionar == "FinClinicas17_1") {
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (_) => FinClinicas17_1()));
+            FocusScope.of(context).unfocus();
+          } else {
+            //print(Redireccionar);
+            Navigator.of(context)
+                .push(MaterialPageRoute<Null>(builder: (BuildContext context) {
+              return new PerfilClinicaWebView(Corr, Pass, id_cli);
+            }));
+          }
+        } else {
+          showDialog(
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
-                  title: Text("Error en el login"),
+                  title: Text('Error en el login'),
                 );
               });
           /*Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (_) => PerfilCliVerificar()));
-          FocusScope.of(context).unfocus();  */  
-
-      } 
+          FocusScope.of(context).unfocus();  */
+        }
+      } else {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text("Error en el login"),
+              );
+            });
+        /*Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (_) => PerfilCliVerificar()));
+          FocusScope.of(context).unfocus();  */
+      }
     } on TimeoutException catch (e) {
       //print('Tardo muco la conexion');
       showDialog(
@@ -236,10 +225,10 @@ class MyCustomPerfilCliVerificarState
               title: Text('La conexión tardo mucho'),
             );
           });
-          Navigator.of(context).push(
-              MaterialPageRoute<Null>(builder: (BuildContext context) {
-            return new PerfilCliVerificar();
-          }));
+      Navigator.of(context)
+          .push(MaterialPageRoute<Null>(builder: (BuildContext context) {
+        return new PerfilCliVerificar();
+      }));
     } on Error catch (e) {
       //print('http error');
       showDialog(
@@ -249,17 +238,17 @@ class MyCustomPerfilCliVerificarState
               title: Text('Error: HTTP://'),
             );
           });
-           Navigator.of(context).push(
-              MaterialPageRoute<Null>(builder: (BuildContext context) {
-            return new PerfilCliVerificar();
-          }));
+      Navigator.of(context)
+          .push(MaterialPageRoute<Null>(builder: (BuildContext context) {
+        return new PerfilCliVerificar();
+      }));
     }
   }
 
   //Esto es iun metodo
   //se usa para guarar dtos es tipo sesiones
-  Future<void> guardar_datos(id_clinica, NombreCompletoSession,
-      CorreoSession, ContrasenaSession, TelefonoSession) async {
+  Future<void> guardar_datos(id_clinica, NombreCompletoSession, CorreoSession,
+      ContrasenaSession, TelefonoSession) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt('id_clinica', id_clinica);
     await prefs.setString('NombreCompletoSession', NombreCompletoSession);
@@ -282,7 +271,7 @@ class MyCustomPerfilCliVerificarState
     var CorreoSession = await prefs.getString('CorreoSession');
     var ContrasenaSession = await prefs.getString('ContrasenaSession');
     var TelefonoSession = await prefs.getString('TelefonoSession');
- 
+
     Ingresar(CorreoSession, ContrasenaSession, id_clinica);
   }
 

@@ -25,7 +25,8 @@ import 'FinSolicitar20.dart';
 import 'package:intl/intl.dart';
 
 class FinSolicitar19 extends StatefulWidget {
-  const FinSolicitar19({super.key});
+  String idCredito = "";
+  FinSolicitar19(this.idCredito);
 
   @override
   State<FinSolicitar19> createState() => _FinSolicitar19State();
@@ -57,13 +58,14 @@ class _FinSolicitar19State extends State<FinSolicitar19> {
 
   @override
   Widget build(BuildContext context) {
-    return MyCustomFormFinSolicitar19();
+    return MyCustomFormFinSolicitar19(widget.idCredito);
   }
 }
 
 // Create a Form widget.
 class MyCustomFormFinSolicitar19 extends StatefulWidget {
-  const MyCustomFormFinSolicitar19({super.key});
+  String idCredito = "";
+  MyCustomFormFinSolicitar19(this.idCredito);
 
   @override
   MyCustomFormFinSolicitar19State createState() {
@@ -96,7 +98,7 @@ class MyCustomFormFinSolicitar19State
       var bodyEnviar = {
         'Pantalla': Pantalla,
         'id_solicitud': IDSolicitud,
-        'id_credito': IDInfo
+        'id_credito': widget.idCredito
       };
       print(bodyEnviar);
       var response = await http
@@ -118,9 +120,9 @@ class MyCustomFormFinSolicitar19State
                   title: Text('Registrado correctamente'),
                 );
               });
-          Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (_) => FinSolicitar20()));
-            FocusScope.of(context).unfocus();
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (_) => FinSolicitar20(widget.idCredito)));
+          FocusScope.of(context).unfocus();
         } else {
           //print('Error en el registro');
           showDialog(
@@ -179,8 +181,7 @@ class MyCustomFormFinSolicitar19State
   void mostrar_datos() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      NombreCompletoSession =
-          prefs.getString('NombreCompletoSession') ?? '';
+      NombreCompletoSession = prefs.getString('NombreCompletoSession') ?? '';
       id_solicitud = prefs.getInt('id_solicitud') ?? 0;
       id_credito = prefs.getInt('id_credito') ?? 0;
     });
@@ -190,57 +191,55 @@ class MyCustomFormFinSolicitar19State
     IDInfo.text = "$id_credito";
   }
 
-
-  @override 
+  @override
   Widget build(BuildContext context) {
     return BuildScreens(
         'Solicitud', '', '', 'Datos de la solicitud', '', _formulario());
-  } 
-
+  }
 
   Widget _formulario() {
     return Form(
-            key: _formKey,
-            child: SingleChildScrollView(
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    SubitleCards("Felicidades"),
-                    SizedBox(
-                      height: 20,
-                    ),  
-                    _Pantalla(),
-                    _IDSolicitud(),
-                    _IDInfo(),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Container(
-                        padding: EdgeInsets.only(left: 10.0),
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            //border: Border.all(
+        key: _formKey,
+        child: SingleChildScrollView(
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                SubitleCards("Felicidades"),
+                SizedBox(
+                  height: 20,
+                ),
+                _Pantalla(),
+                _IDSolicitud(),
+                _IDInfo(),
+                SizedBox(
+                  height: 20,
+                ),
+                Container(
+                    padding: EdgeInsets.only(left: 10.0),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        //border: Border.all(
 
-                            //)
-                            ),
-                        child: Text(
-                          "Gracias a tu excelente historial crediticio tu solicitud ha sido pre-aprobada y tienes un credito disponible con nosotros ",
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            fontSize: 17,
-                          ),
-                          textScaleFactor: 1,
-                        )),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _BotonEnviar(),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _Avanzar()
-                  ]),
-            ));
+                        //)
+                        ),
+                    child: Text(
+                      "Gracias a tu excelente historial crediticio tu solicitud ha sido pre-aprobada y tienes un credito disponible con nosotros ",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontSize: 17,
+                      ),
+                      textScaleFactor: 1,
+                    )),
+                SizedBox(
+                  height: 20,
+                ),
+                _BotonEnviar(),
+                SizedBox(
+                  height: 20,
+                ),
+                _Avanzar()
+              ]),
+        ));
   }
 
   Widget _Pantalla() {
@@ -326,6 +325,7 @@ class MyCustomFormFinSolicitar19State
           child: const Text('Siguiente')),
     );
   }
+
   Widget _Avanzar() {
     return Container(
       width: double.infinity,
@@ -338,8 +338,10 @@ class MyCustomFormFinSolicitar19State
         )),
         onTap: () {
           Navigator.of(context).pop();
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => FinSolicitar20()));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => FinSolicitar20(widget.idCredito)));
         },
       ),
     );

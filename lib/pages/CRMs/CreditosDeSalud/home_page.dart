@@ -65,7 +65,7 @@ class _HomePageCreditosDeSaludState extends State<HomePageCreditosDeSalud> {
                 color: TITULO_TEXT_BOTON_ENTRAR)),
         backgroundColor: COLOR_PRINCIPAL,
       ),
-      drawer: MenuLateralPage(),
+      drawer: MenuLateralPage(""),
       bottomNavigationBar: MenuFooterPage(),
       body: const MyCustomFormHomePageCreditosDeSalud(),
     );
@@ -484,7 +484,7 @@ class MyCustomFormHomePageCreditosDeSaludState
                 width: double.infinity,
                 decoration: const BoxDecoration(),
                 child: const Text(
-                  "¿Cuánto dinero necesitas??",
+                  "¿Cuánto dinero necesitas?",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 22,

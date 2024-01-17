@@ -57,7 +57,7 @@ class _FinClinicas9State extends State<FinClinicas9> {
     //   appBar: AppBar(
     //     title: Text(NombreCompletoSession),
     //   ),
-    //   drawer: MenuLateralPage(),
+    //   drawer: MenuLateralPage(""),
     //   bottomNavigationBar: MenuFooterPage(),
     // );
   }
@@ -107,14 +107,15 @@ class MyCustomFormFinClinicas9State extends State<MyCustomFormFinClinicas9> {
   void Ingresar(Pantalla, IDClinica, Completo, CunatosFaltan) async {
     try {
       var url = Uri.https('fasoluciones.mx', 'api/Clinica/Agregar');
-      var data={
+      var data = {
         'Pantalla': Pantalla,
         'id_clinica': IDClinica,
         'Completo': Completo,
         'Cuantos': CunatosFaltan
       };
       print(data);
-      var response = await http.post(url, body: data).timeout(const Duration(seconds: 90));
+      var response =
+          await http.post(url, body: data).timeout(const Duration(seconds: 90));
       //print("llego aqui 111");
       print(response.body);
 
@@ -204,8 +205,7 @@ class MyCustomFormFinClinicas9State extends State<MyCustomFormFinClinicas9> {
   Widget build(BuildContext context) {
     return BuildScreens(
         'Clínica', '', '', 'Datos de la clínica', '', _formulario());
-  } 
-
+  }
 
   Widget _formulario() {
     return Form(
@@ -215,10 +215,8 @@ class MyCustomFormFinClinicas9State extends State<MyCustomFormFinClinicas9> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 // headerTop("Clínica",
-                SubitleCards(
-                    'Datos del órgano de administración '),
-                SubitleCards(
-                    'de la sociedad'),
+                SubitleCards('Datos del órgano de administración '),
+                SubitleCards('de la sociedad'),
                 SizedBox(
                   height: 20,
                 ),
@@ -326,9 +324,6 @@ class MyCustomFormFinClinicas9State extends State<MyCustomFormFinClinicas9> {
         ));
   }
 
-
-  
-
   Widget _CuantosFaltan() {
     return Container(
       padding: EdgeInsets.all(10),
@@ -369,10 +364,10 @@ class MyCustomFormFinClinicas9State extends State<MyCustomFormFinClinicas9> {
               }
               CuantosFaltanRecibe = CuantosFaltan.text;
               print("***");
-                print(PantallaRecibe);
-                print(IDClinicaRecibe);
-                print(CompletoRecibe);
-              print("***");  
+              print(PantallaRecibe);
+              print(IDClinicaRecibe);
+              print(CompletoRecibe);
+              print("***");
               if (PantallaRecibe == "" ||
                   IDClinicaRecibe == "" ||
                   CompletoRecibe == "") {
@@ -384,14 +379,15 @@ class MyCustomFormFinClinicas9State extends State<MyCustomFormFinClinicas9> {
                       );
                     });
               } else {
-                Ingresar(PantallaRecibe, IDClinicaRecibe,
-                    CompletoRecibe, CuantosFaltanRecibe);
+                Ingresar(PantallaRecibe, IDClinicaRecibe, CompletoRecibe,
+                    CuantosFaltanRecibe);
               }
             }
           },
           child: const Text('Siguiente')),
     );
   }
+
   Widget _Avanzar() {
     return Container(
       width: double.infinity,

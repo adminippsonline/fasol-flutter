@@ -47,7 +47,7 @@ class _PerfilMedVerificarState extends State<PerfilMedVerificar> {
         title: const Text(''),
         backgroundColor: COLOR_PRINCIPAL,
       ),
-      drawer: MenuLateralPage(),
+      drawer: MenuLateralPage(""),
       bottomNavigationBar: MenuFooterPage(),
       body: const MyCustomPerfilMedVerificar(),
     );
@@ -81,108 +81,98 @@ class MyCustomPerfilMedVerificarState
     try {
       var data = {'Correo': Corr, 'Contrasena': Pass, 'id_medico': '$id_med'};
       var url = Uri.https('fasoluciones.mx', 'api/Medico/Verificar');
-      var response = await http.post(url, body: data).timeout(const Duration(seconds: 90));
+      var response =
+          await http.post(url, body: data).timeout(const Duration(seconds: 90));
       if (response.body != "0" && response.body != "") {
-          print(response.body);
-          var Respuesta = jsonDecode(response.body);
-          String Redireccionar = Respuesta['Redireccionar'];
-          String status = Respuesta['status'];          
-          if (status == "Error") {
-            //if (Redireccionar == "Verificar") {
-                Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (_) => VerificarCuenta()));
-                FocusScope.of(context).unfocus();
-              //}
-
-          } 
-          else if (status == "OK") {
-              int id_medico = Respuesta['id_medico'];
-              String NombreCompleto = Respuesta['NombreCompleto'] ?? "";
-              if (NombreCompleto == "") {
-                NombreCompleto = "";
-              }
-              guardar_datos(
-                id_medico,
-                NombreCompleto,
-                Respuesta['data']['Correo'],
-                Pass,
-                Respuesta['data']['Telefono']);
-                //print("llego aqui");
-                if (Redireccionar == "Firmar") {
-                  Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (_) => FinRegMedico30()));
-                  FocusScope.of(context).unfocus();
-                } else if(Redireccionar == "PerfilMedico") {
-                   Navigator.of(context).push(
-                      MaterialPageRoute<Null>(builder: (BuildContext context) {
-                    return new PerfilMedicoWebView(
-                        Corr, Pass, id_med);
-                  }));
-                } else if (Redireccionar == "FinRegMedico30") {
-                  Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (_) => FinRegMedico30()));
-                  FocusScope.of(context).unfocus();
-                } else if (Redireccionar == "FinRegMedico30_1") {
-                  Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (_) => FinRegMedico30_1()));
-                  FocusScope.of(context).unfocus();
-                } else if (Redireccionar == "FinRegMedico33") {
-                  Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (_) => FinRegMedico33()));
-                  FocusScope.of(context).unfocus();
-                } else if (Redireccionar == "FinRegMedico33_1") {
-                  Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (_) => FinRegMedico33_1()));
-                  FocusScope.of(context).unfocus();
-                } else if (Redireccionar == "FinRegMedico34") {
-                  Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (_) => FinRegMedico34()));
-                  FocusScope.of(context).unfocus();
-                } else if (Redireccionar == "FinRegMedico35") {
-                  Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (_) => FinRegMedico35_INE()));
-                  FocusScope.of(context).unfocus();
-                } else if (Redireccionar == "FinRegMedico36") {
-                  Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (_) => FinRegMedico36()));
-                  FocusScope.of(context).unfocus();
-                } else {
-                  //print(Redireccionar);
-                  Navigator.of(context).push(
-                      MaterialPageRoute<Null>(builder: (BuildContext context) {
-                    return new PerfilMedicoWebView(
-                        CorreoSession, ContrasenaSession,id_medico);
-                  }));
-                }                
+        print(response.body);
+        var Respuesta = jsonDecode(response.body);
+        String Redireccionar = Respuesta['Redireccionar'];
+        String status = Respuesta['status'];
+        if (status == "Error") {
+          //if (Redireccionar == "Verificar") {
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (_) => VerificarCuenta()));
+          FocusScope.of(context).unfocus();
+          //}
+        } else if (status == "OK") {
+          int id_medico = Respuesta['id_medico'];
+          String NombreCompleto = Respuesta['NombreCompleto'] ?? "";
+          if (NombreCompleto == "") {
+            NombreCompleto = "";
           }
-          else{
-            //print('Error en el registro');
-            showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: Text('Error en el login'),
-                  );
-                });
-            /*Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (_) => PerfilMedVerificar()));
-          FocusScope.of(context).unfocus();*/    
-
-          } 
-          
-      } 
-      else{
-         showDialog(
+          guardar_datos(id_medico, NombreCompleto, Respuesta['data']['Correo'],
+              Pass, Respuesta['data']['Telefono']);
+          //print("llego aqui");
+          if (Redireccionar == "Firmar") {
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (_) => FinRegMedico30()));
+            FocusScope.of(context).unfocus();
+          } else if (Redireccionar == "PerfilMedico") {
+            Navigator.of(context)
+                .push(MaterialPageRoute<Null>(builder: (BuildContext context) {
+              return new PerfilMedicoWebView(Corr, Pass, id_med);
+            }));
+          } else if (Redireccionar == "FinRegMedico30") {
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (_) => FinRegMedico30()));
+            FocusScope.of(context).unfocus();
+          } else if (Redireccionar == "FinRegMedico30_1") {
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (_) => FinRegMedico30_1()));
+            FocusScope.of(context).unfocus();
+          } else if (Redireccionar == "FinRegMedico33") {
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (_) => FinRegMedico33()));
+            FocusScope.of(context).unfocus();
+          } else if (Redireccionar == "FinRegMedico33_1") {
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (_) => FinRegMedico33_1()));
+            FocusScope.of(context).unfocus();
+          } else if (Redireccionar == "FinRegMedico34") {
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (_) => FinRegMedico34()));
+            FocusScope.of(context).unfocus();
+          } else if (Redireccionar == "FinRegMedico35") {
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (_) => FinRegMedico35_INE()));
+            FocusScope.of(context).unfocus();
+          } else if (Redireccionar == "FinRegMedico36") {
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (_) => FinRegMedico36()));
+            FocusScope.of(context).unfocus();
+          } else {
+            //print(Redireccionar);
+            Navigator.of(context)
+                .push(MaterialPageRoute<Null>(builder: (BuildContext context) {
+              return new PerfilMedicoWebView(
+                  CorreoSession, ContrasenaSession, id_medico);
+            }));
+          }
+        } else {
+          //print('Error en el registro');
+          showDialog(
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
-                  title: Text("Error en el login"),
+                  title: Text('Error en el login'),
                 );
               });
           /*Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (_) => PerfilMedVerificar()));
-          FocusScope.of(context).unfocus(); */  
-      } 
+          FocusScope.of(context).unfocus();*/
+        }
+      } else {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text("Error en el login"),
+              );
+            });
+        /*Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (_) => PerfilMedVerificar()));
+          FocusScope.of(context).unfocus(); */
+      }
     } on TimeoutException catch (e) {
       showDialog(
           context: context,
@@ -191,10 +181,10 @@ class MyCustomPerfilMedVerificarState
               title: Text('La conexión tardo mucho'),
             );
           });
-          Navigator.of(context).push(
-              MaterialPageRoute<Null>(builder: (BuildContext context) {
-            return new PerfilMedVerificar();
-          }));
+      Navigator.of(context)
+          .push(MaterialPageRoute<Null>(builder: (BuildContext context) {
+        return new PerfilMedVerificar();
+      }));
     } on Error catch (e) {
       showDialog(
           context: context,
@@ -203,17 +193,17 @@ class MyCustomPerfilMedVerificarState
               title: Text('Error: HTTP://'),
             );
           });
-           Navigator.of(context).push(
-              MaterialPageRoute<Null>(builder: (BuildContext context) {
-            return new PerfilMedVerificar();
-          }));
+      Navigator.of(context)
+          .push(MaterialPageRoute<Null>(builder: (BuildContext context) {
+        return new PerfilMedVerificar();
+      }));
     }
   }
 
   //Esto es iun metodo
   //se usa para guarar dtos es tipo sesiones
-  Future<void> guardar_datos(id_medico, NombreCompletoSession,
-      CorreoSession, ContrasenaSession, TelefonoSession) async {
+  Future<void> guardar_datos(id_medico, NombreCompletoSession, CorreoSession,
+      ContrasenaSession, TelefonoSession) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt('id_medico', id_medico);
     await prefs.setString('NombreCompletoSession', NombreCompletoSession);

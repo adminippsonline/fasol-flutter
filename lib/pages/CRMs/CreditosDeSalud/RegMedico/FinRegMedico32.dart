@@ -60,7 +60,7 @@ class _FinRegMedico32State extends State<FinRegMedico32> {
     //   appBar: AppBar(
     //     title: Text(NombreCompletoSession),
     //   ),
-    //   drawer: MenuLateralPage(),
+    //   drawer: MenuLateralPage(""),
     //   bottomNavigationBar: MenuFooterPage(),
     //   body: const MyCustomFormFinRegMedico32(),
     // );

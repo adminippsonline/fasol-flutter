@@ -35,7 +35,7 @@ class _FinRegMedico30State extends State<FinRegMedico30> {
       appBar: AppBar(
         title: const Text('Información personal'),
       ),
-      drawer: MenuLateralPage(),
+      drawer: MenuLateralPage(""),
       bottomNavigationBar: MenuFooterPage(),
       body: const MyCustomFormFinRegMedico30(),
     );

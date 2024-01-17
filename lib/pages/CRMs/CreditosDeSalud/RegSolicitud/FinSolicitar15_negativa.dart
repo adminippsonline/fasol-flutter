@@ -24,10 +24,12 @@ import 'FinSolicitar16.dart';
 import 'package:intl/intl.dart';
 
 class FinSolicitar15_negativa extends StatefulWidget {
-  const FinSolicitar15_negativa({super.key});
+  String idCredito = "";
+  FinSolicitar15_negativa(this.idCredito);
 
   @override
-  State<FinSolicitar15_negativa> createState() => _FinSolicitar15_negativaState();
+  State<FinSolicitar15_negativa> createState() =>
+      _FinSolicitar15_negativaState();
 }
 
 class _FinSolicitar15_negativaState extends State<FinSolicitar15_negativa> {
@@ -56,13 +58,14 @@ class _FinSolicitar15_negativaState extends State<FinSolicitar15_negativa> {
 
   @override
   Widget build(BuildContext context) {
-    return MyCustomFormFinSolicitar15_negativa();
+    return MyCustomFormFinSolicitar15_negativa(widget.idCredito);
   }
 }
 
 // Create a Form widget.
 class MyCustomFormFinSolicitar15_negativa extends StatefulWidget {
-  const MyCustomFormFinSolicitar15_negativa({super.key});
+  String idCredito = "";
+  MyCustomFormFinSolicitar15_negativa(this.idCredito);
 
   @override
   MyCustomFormFinSolicitar15_negativaState createState() {
@@ -75,7 +78,6 @@ class MyCustomFormFinSolicitar15_negativaState
   //el fomrKey para formulario
   final _formKey = GlobalKey<FormState>();
 
-
   //Los controladores para los input
   final Pantalla = TextEditingController();
   final IDClinica = TextEditingController();
@@ -85,10 +87,7 @@ class MyCustomFormFinSolicitar15_negativaState
   String IDClinicaRecibe = "";
   String IDInfoRecibe = "";
 
-  void Ingresar(
-      Pantalla,
-      IDClinica,
-      IDInfo) async {
+  void Ingresar(Pantalla, IDClinica, IDInfo) async {
     try {
       var url = Uri.https('fasoluciones.mx', 'api/Solicitud/Agregar');
       var response = await http.post(url, body: {
@@ -112,8 +111,8 @@ class MyCustomFormFinSolicitar15_negativaState
                   title: Text('Registrado correctamente'),
                 );
               });
-          Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (_) => FinSolicitar16()));
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (_) => FinSolicitar16(widget.idCredito)));
           FocusScope.of(context).unfocus();
         } else {
           //print('Error en el registro');
@@ -173,8 +172,7 @@ class MyCustomFormFinSolicitar15_negativaState
   void mostrar_datos() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      NombreCompletoSession =
-          prefs.getString('NombreCompletoSession') ?? '';
+      NombreCompletoSession = prefs.getString('NombreCompletoSession') ?? '';
       id_solicitud = prefs.getInt('id_solicitud') ?? 0;
       id_credito = prefs.getInt('id_credito') ?? 0;
     });
@@ -184,79 +182,73 @@ class MyCustomFormFinSolicitar15_negativaState
     IDInfo.text = "$id_credito";
   }
 
-
-
-  @override 
+  @override
   Widget build(BuildContext context) {
     return BuildScreens(
         'Solicitud', '', '', 'Datos de la solicitud', '', _formulario());
-  } 
-
+  }
 
   Widget _formulario() {
     return Form(
-            key: _formKey,
-            child: SingleChildScrollView(
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    SubitleCards("Estimado Cliente:"),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _Pantalla(),
-                    _IDClinica(),
-                    _IDInfo(),
+        key: _formKey,
+        child: SingleChildScrollView(
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                SubitleCards("Estimado Cliente:"),
+                SizedBox(
+                  height: 20,
+                ),
+                _Pantalla(),
+                _IDClinica(),
+                _IDInfo(),
 
-                    Container(
-                        padding: EdgeInsets.only(left: 10.0),
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            //border: Border.all(
-                            //color: Colors.blueAccent
-                            //)
-                            ),
-                        child: Text(
-                          "Fasol Soluciones agradece tu preferencia y el intéres en nuestro producto Credi-Salud",
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            fontSize: 17,
-                            //color: Colors.blue
-                          ),
-                          textScaleFactor: 1,
-                        )),
+                Container(
+                    padding: EdgeInsets.only(left: 10.0),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        //border: Border.all(
+                        //color: Colors.blueAccent
+                        //)
+                        ),
+                    child: Text(
+                      "Fasol Soluciones agradece tu preferencia y el intéres en nuestro producto Credi-Salud",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontSize: 17,
+                        //color: Colors.blue
+                      ),
+                      textScaleFactor: 1,
+                    )),
 
+                Container(
+                    padding: EdgeInsets.only(left: 10.0),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        //border: Border.all(
+                        //color: Colors.blueAccent
+                        //)
+                        ),
+                    child: Text(
+                      "Sin embargo, por las variables presentadas durante tu proceso de solicitud no es posible otorgarte el financiamiento.",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontSize: 17,
+                        //color: Colors.blue
+                      ),
+                      textScaleFactor: 1,
+                    )),
 
-                    Container(
-                        padding: EdgeInsets.only(left: 10.0),
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            //border: Border.all(
-                            //color: Colors.blueAccent
-                            //)
-                            ),
-                        child: Text( 
-                          "Sin embargo, por las variables presentadas durante tu proceso de solicitud no es posible otorgarte el financiamiento.",
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            fontSize: 17,
-                            //color: Colors.blue
-                          ),
-                          textScaleFactor: 1,
-                        )),
-
-
-
-                    SizedBox(
-                      height: 20,
-                    ),
-                    //_BotonEnviar(),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    //_Avanzar
-                  ]),
-            ));
+                SizedBox(
+                  height: 20,
+                ),
+                //_BotonEnviar(),
+                SizedBox(
+                  height: 20,
+                ),
+                //_Avanzar
+              ]),
+        ));
   }
 
   Widget _Pantalla() {
@@ -313,7 +305,6 @@ class MyCustomFormFinSolicitar15_negativaState
         ));
   }
 
-
   Widget _BotonEnviar() {
     return Container(
       width: double.infinity,
@@ -326,7 +317,7 @@ class MyCustomFormFinSolicitar15_negativaState
               IDInfoRecibe = IDInfo.text;
               if (PantallaRecibe == "" ||
                   IDClinicaRecibe == "" ||
-                  IDInfoRecibe == "" ) {
+                  IDInfoRecibe == "") {
                 showDialog(
                     context: context,
                     builder: (BuildContext context) {
@@ -335,10 +326,7 @@ class MyCustomFormFinSolicitar15_negativaState
                       );
                     });
               } else {
-                Ingresar(
-                    PantallaRecibe,
-                    IDClinicaRecibe,
-                    IDInfoRecibe);
+                Ingresar(PantallaRecibe, IDClinicaRecibe, IDInfoRecibe);
               }
             }
           },

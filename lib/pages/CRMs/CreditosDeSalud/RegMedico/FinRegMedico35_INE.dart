@@ -78,7 +78,7 @@ class _FinRegMedico35_INEState extends State<FinRegMedico35_INE> {
     //   appBar: AppBar(
     //     title: Text(NombreCompletoSession),
     //   ),
-    //   drawer: MenuLateralPage(),
+    //   drawer: MenuLateralPage(""),
     //   bottomNavigationBar: MenuFooterPage(),
     //   body: const MyCustomFormFinRegMedico35(),
     // );

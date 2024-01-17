@@ -26,7 +26,8 @@ import 'package:intl/intl.dart';
 import '../modelos/model_cp.dart';
 
 class FinSolicitar15 extends StatefulWidget {
-  const FinSolicitar15({super.key});
+  String idCredito = "";
+  FinSolicitar15(this.idCredito);
 
   @override
   State<FinSolicitar15> createState() => _FinSolicitar15State();
@@ -58,13 +59,14 @@ class _FinSolicitar15State extends State<FinSolicitar15> {
 
   @override
   Widget build(BuildContext context) {
-    return MyCustomFormFinSolicitar15();
+    return MyCustomFormFinSolicitar15(widget.idCredito);
   }
 }
 
 // Create a Form widget.
 class MyCustomFormFinSolicitar15 extends StatefulWidget {
-  const MyCustomFormFinSolicitar15({super.key});
+  String idCredito = "";
+  MyCustomFormFinSolicitar15(this.idCredito);
 
   @override
   MyCustomFormFinSolicitar15State createState() {
@@ -186,10 +188,10 @@ class MyCustomFormFinSolicitar15State
       AntiguedadTiempo) async {
     try {
       var url = Uri.https('fasoluciones.mx', 'api/Solicitud/Agregar');
-      var response = await http.post(url, body: {
+      var bodyEnviar = {
         'Pantalla': Pantalla,
         'id_solicitud': idLR,
-        'id_credito': IDInfo,
+        'id_credito': widget.idCredito,
         'CP': CP,
         'Pais': Pais,
         'Ciudad': Ciudad,
@@ -203,46 +205,49 @@ class MyCustomFormFinSolicitar15State
         'TipodeVivienda': TipodeVivienda,
         'Antiguedad': Antiguedad,
         'AntiguedadTiempo': AntiguedadTiempo
-      }).timeout(const Duration(seconds: 90));
-      //print("llego aqui 111");
-      //print(response.body);
+      };
+      var response = await http
+          .post(url, body: bodyEnviar)
+          .timeout(const Duration(seconds: 90));
 
-      if (response.body != "0" && response.body != "") {
-        var Respuesta = jsonDecode(response.body);
-        print(Respuesta);
-        String status = Respuesta['status'];
-        if (status == "OK") {
-          //print('si existe aqui -----');
-          showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: Text('Registrado correctamente'),
-                );
-              });
-          Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (_) => FinSolicitar16()));
-          FocusScope.of(context).unfocus();
-        } else {
-          //print('Error en el registro');
-          showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: Text('Error en el registro'),
-                );
-              });
-        }
-      } else {
-        //print('Error en el registro');
-        showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text("Error en el registro"),
-              );
-            });
-      }
+      dev.log(response.body);
+
+      // if (response.body != "0" && response.body != "") {
+      //   var Respuesta = jsonDecode(response.body);
+      //   print(Respuesta);
+      //   String status = Respuesta['status'];
+      //   if (status == "OK") {
+      //     //print('si existe aqui -----');
+      //     showDialog(
+      //         context: context,
+      //         builder: (BuildContext context) {
+      //           return AlertDialog(
+      //             title: Text('Registrado correctamente'),
+      //           );
+      //         });
+      //     Navigator.of(context).pushReplacement(MaterialPageRoute(
+      //         builder: (_) => FinSolicitar16(widget.idCredito)));
+      //     FocusScope.of(context).unfocus();
+      //   } else {
+      //     //print('Error en el registro');
+      //     showDialog(
+      //         context: context,
+      //         builder: (BuildContext context) {
+      //           return AlertDialog(
+      //             title: Text('Error en el registro'),
+      //           );
+      //         });
+      //   }
+      // } else {
+      //   //print('Error en el registro');
+      //   showDialog(
+      //       context: context,
+      //       builder: (BuildContext context) {
+      //         return AlertDialog(
+      //           title: Text("Error en el registro"),
+      //         );
+      //       });
+      // }
     } on TimeoutException catch (e) {
       //print('Tardo muco la conexion');
       showDialog(
@@ -320,21 +325,11 @@ class MyCustomFormFinSolicitar15State
     final req = {"CP": codigo};
     var url =
         Uri.parse('https://fasoluciones.mx/api/Solicitud/Catalogos/CP/$codigo');
-
-    var request = await http.MultipartRequest('POST', url);
-    request = jsonToFormData(request, req);
-
-    final response = await request.send();
+    var response = await http.get(url);
     if (response.statusCode == 200) {
-      final responseData =
-          await response.stream.bytesToString(); //response.stream.toBytes();
-      //dev.log(responseData.toString());
-
-      var responseString = responseData;
-      final dat = json.decode(responseString);
-      dev.log("adata");
-      dev.log(dat.toString());
-      var data = json.decode(responseString)['data'][0];
+      final dat = json.decode(response.body);
+      var data = json.decode(response.body)['data'][0];
+      dev.log(data.toString());
       setState(() {
         // Colonia.text = data['Estado'].toString();
         MunDel.text = data['MunDel'].toString();
@@ -346,64 +341,6 @@ class MyCustomFormFinSolicitar15State
             List<String>.from(dat['data'].map((address) => address['Colonia']));
       });
       setState(() {});
-      // List<Data> coloniaList = data.map((item) => Data.fromJson(item)).toList();
-
-      // setState(() {
-      //   colonias = coloniaList;
-      // });
-      // List<dynamic> colonias = jsonData;
-      // colonias.addAll(jsonData.map((item) => Data(
-      //     idCP: item['id_cp'],
-      //     cP: item["CP"],
-      //     colonia: item["Colonia"],
-      //     dTipoAsenta: item["dtipoasenta"],
-      //     munDel: item["MunDel"],
-      //     estado: item["Estado"],
-      //     ciudad: item["Ciudad"],
-      //     dCP: item["d_CP"],
-      //     cEstado: item["c_estado"],
-      //     cOficina: item["c_oficina"],
-      //     cCP: item["c_CP"],
-      //     cTipoAsenta: item["c_tipo_asenta"],
-      //     cMnpio: item["c_mnpio"],
-      //     idAsentaCpcons: item["id_asenta_cpcons"],
-      //     dZona: item["d_zona"],
-      //     cCveCiudad: item["c_cve_ciudad"])));
-      // dev.log("al");
-      // dev.log(colonias.toString());
-      // dev.log("messages");
-      // dev.log(jsonData["data"].toString());
-      // List obten = jsonData["data"];
-      // var colonia, munDel, estado, ciudad;
-      // //dev.log(obten.toString());
-      // var cpData = obten.toList();
-      // dev.log(cpData.toString());
-      // dev.log("message");
-      // dev.log(cpData.toString());
-
-      //List listcolonias = List<String>.from(obten["Colonia"]);
-
-      // for (var a in obten) {
-      //   setState(() {
-      //     _coloniaf.add(a["Colonia"].toString());
-      //     colonia = a["Colonia"].toString();
-      //     munDel = a["MunDel"].toString();
-      //     estado = a["Estado"].toString();
-      //     ciudad = a["Ciudad"].toString();
-      //     Colonia.text = colonia;
-      //     MunDel.text = munDel;
-      //     Estado.text = estado;
-      //     Ciudad.text = ciudad;
-      //   });
-      // }
-      // setState(() {
-      //   _coloniaf.clear();
-      // });
-      // if (codigo = !codigo) {
-      //   setState(() {
-      //     _coloniaf.clear();
-      //   });
-      // }
     } else {
       throw Exception('Error al obtener las opciones');
     }
@@ -1031,7 +968,7 @@ class MyCustomFormFinSolicitar15State
               }
               EstadoRecibe = Estado.text;
               MunDelRecibe = MunDel.text;
-              ColoniaRecibe = Colonia.text;
+              String? ColoniaRecibe = _selectedColony;
               String? TipodeViviendaRecibe = SelectedListaTipodeVivienda;
               if (TipodeViviendaRecibe == "") {
                 showDialog(
@@ -1129,8 +1066,10 @@ class MyCustomFormFinSolicitar15State
         )),
         onTap: () {
           Navigator.of(context).pop();
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => FinSolicitar16()));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => FinSolicitar16(widget.idCredito)));
         },
       ),
     );

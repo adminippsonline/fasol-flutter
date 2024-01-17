@@ -28,7 +28,8 @@ import 'package:intl/intl.dart';
 //enum OpcionesGenero { Masculino, Femenino }
 
 class FinSolicitar11 extends StatefulWidget {
-  const FinSolicitar11({super.key});
+  String idCredito = "";
+  FinSolicitar11(this.idCredito);
 
   @override
   State<FinSolicitar11> createState() => _FinSolicitar11State();
@@ -51,8 +52,7 @@ class _FinSolicitar11State extends State<FinSolicitar11> {
   void mostrar_datos() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      NombreCompletoSession =
-          prefs.getString('NombreCompletoSession') ?? '';
+      NombreCompletoSession = prefs.getString('NombreCompletoSession') ?? '';
       id_solicitud = prefs.getInt('id_solicitud') ?? 0;
       id_credito = prefs.getInt('id_credito') ?? 0;
     });
@@ -60,13 +60,14 @@ class _FinSolicitar11State extends State<FinSolicitar11> {
 
   @override
   Widget build(BuildContext context) {
-    return MyCustomFormFinSolicitar11();
+    return MyCustomFormFinSolicitar11(widget.idCredito);
   }
 }
 
 // Create a Form widget.
 class MyCustomFormFinSolicitar11 extends StatefulWidget {
-  const MyCustomFormFinSolicitar11({super.key});
+  String idCredito = "";
+  MyCustomFormFinSolicitar11(this.idCredito);
 
   @override
   MyCustomFormFinSolicitar11State createState() {
@@ -184,7 +185,7 @@ class MyCustomFormFinSolicitar11State
   void Ingresar(
       Pantalla,
       IDLR,
-      IDInfo,
+      IDCred,
       PrimerNombre,
       SegundoNombre,
       PrimerApellido,
@@ -203,7 +204,7 @@ class MyCustomFormFinSolicitar11State
       var response = await http.post(url, body: {
         'Pantalla': Pantalla,
         'id_solicitud': IDLR,
-        'id_credito': IDInfo,
+        'id_credito': IDCred,
         'PrimerNombre': PrimerNombre,
         'SegundoNombre': SegundoNombre,
         'PrimerApellido': PrimerApellido,
@@ -235,8 +236,8 @@ class MyCustomFormFinSolicitar11State
                 );
               });
           guardar_datos(PrimerNombre);
-          Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (_) => FinSolicitar12()));
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (_) => FinSolicitar12(widget.idCredito)));
           FocusScope.of(context).unfocus();
         } else {
           //print('Error en el registro');
@@ -329,108 +330,107 @@ class MyCustomFormFinSolicitar11State
   }
 
   @override
-  @override 
+  @override
   Widget build(BuildContext context) {
     return BuildScreens(
         'Solicitud', '', '', 'Datos de la solicitud', '', _formulario());
-  } 
+  }
 
   Widget _formulario() {
     return Form(
-            key: _formKey,
-            child: SingleChildScrollView(
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    SubitleCards("Información personal"),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _Pantalla(),
-                    _IDLR(),
-                    _IDInfo(),
-                    _PrimerNombre(),
-                    _SegundoNombre(),
-                    _PrimerApellido(),
-                    _SegundoApellido(),
-                    
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Container(
-                        padding: EdgeInsets.only(left: 10.0),
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            //border: Border.all(
-                            //color: Colors.blueAccent
-                            //)
-                            ),
-                        child: Text(
-                          "Genero",
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            fontSize: 17,
-                            //color: Colors.blue
-                          ),
-                          textScaleFactor: 1,
-                        )),
-                    Container(
-                      padding: EdgeInsets.all(10),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: RadioListTile(
-                                contentPadding: EdgeInsets.all(0.0),
-                                value: "Masculino",
-                                groupValue: OpcionesGenero,
-                                //dense: true,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(5.0)),
-                                title: Text("Masculino"),
-                                onChanged: (val) {
-                                  setState(() {
-                                    OpcionesGenero = val;
-                                  });
-                                }),
-                          ),
-                          Expanded(
-                              child: RadioListTile(
-                                  contentPadding: EdgeInsets.all(0.0),
-                                  value: "Femenino",
-                                  groupValue: OpcionesGenero,
-                                  //dense: true,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(5.0)),
-                                  title: Text("Femenino"),
-                                  onChanged: (val) {
-                                    setState(() {
-                                      OpcionesGenero = val;
-                                    });
-                                  })),
-                        ],
+        key: _formKey,
+        child: SingleChildScrollView(
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                SubitleCards("Información personal"),
+                SizedBox(
+                  height: 20,
+                ),
+                _Pantalla(),
+                _IDLR(),
+                _IDInfo(),
+                _PrimerNombre(),
+                _SegundoNombre(),
+                _PrimerApellido(),
+                _SegundoApellido(),
+                SizedBox(
+                  height: 20,
+                ),
+                Container(
+                    padding: EdgeInsets.only(left: 10.0),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        //border: Border.all(
+                        //color: Colors.blueAccent
+                        //)
+                        ),
+                    child: Text(
+                      "Genero",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontSize: 17,
+                        //color: Colors.blue
                       ),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _FechaDeNacimiento(),
-                    _PaisDeNacimiento(),
-                    _EstadoDeNacimiento(),
-                    _Nacionalidad(),
-                    _CURP(),
-                    _RFC(),
-                    _EstadoCivil(),
-                    _NivelAcademico(),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _BotonEnviar(),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _Avanzar()
-                  ]),
-            ));
+                      textScaleFactor: 1,
+                    )),
+                Container(
+                  padding: EdgeInsets.all(10),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: RadioListTile(
+                            contentPadding: EdgeInsets.all(0.0),
+                            value: "Masculino",
+                            groupValue: OpcionesGenero,
+                            //dense: true,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5.0)),
+                            title: Text("Masculino"),
+                            onChanged: (val) {
+                              setState(() {
+                                OpcionesGenero = val;
+                              });
+                            }),
+                      ),
+                      Expanded(
+                          child: RadioListTile(
+                              contentPadding: EdgeInsets.all(0.0),
+                              value: "Femenino",
+                              groupValue: OpcionesGenero,
+                              //dense: true,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5.0)),
+                              title: Text("Femenino"),
+                              onChanged: (val) {
+                                setState(() {
+                                  OpcionesGenero = val;
+                                });
+                              })),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                _FechaDeNacimiento(),
+                _PaisDeNacimiento(),
+                _EstadoDeNacimiento(),
+                _Nacionalidad(),
+                _CURP(),
+                _RFC(),
+                _EstadoCivil(),
+                _NivelAcademico(),
+                SizedBox(
+                  height: 20,
+                ),
+                _BotonEnviar(),
+                SizedBox(
+                  height: 20,
+                ),
+                _Avanzar()
+              ]),
+        ));
   }
 
   /*String? _validarGenero(String? value) {
@@ -626,7 +626,7 @@ class MyCustomFormFinSolicitar11State
           });
       dev.log("El usuario es menor de edad");
     }
-  } 
+  }
 
   Widget _PaisDeNacimiento() {
     return Container(
@@ -797,7 +797,7 @@ class MyCustomFormFinSolicitar11State
     );
   }
 
-  Widget _CURP() {  
+  Widget _CURP() {
     return Container(
       padding: EdgeInsets.all(10),
       child: TextFormField(
@@ -1042,22 +1042,22 @@ class MyCustomFormFinSolicitar11State
                       );
                     });
               }
-print(PantallaRecibe);
-print(IDLRRecibe);
-print(IDInfoRecibe);
-print(PrimerNombreRecibe);
-print(PrimerApellidoRecibe);
-print(SegundoApellidoRecibe);
-print(GeneroRecibe);
-print(GeneroRecibe);
-print(FechaDeNacimientoRecibe);
-print(PaisDeNacimientoRecibe);
-print(EstadoDeNacimientoRecibe);
-print(NacionalidadRecibe);
-print(CURPRecibe);
-print(RFCRecibe);
-print(EstadoCivilRecibe);
-print(NivelAcademicoRecibe);
+              print(PantallaRecibe);
+              print(IDLRRecibe);
+              print(IDInfoRecibe);
+              print(PrimerNombreRecibe);
+              print(PrimerApellidoRecibe);
+              print(SegundoApellidoRecibe);
+              print(GeneroRecibe);
+              print(GeneroRecibe);
+              print(FechaDeNacimientoRecibe);
+              print(PaisDeNacimientoRecibe);
+              print(EstadoDeNacimientoRecibe);
+              print(NacionalidadRecibe);
+              print(CURPRecibe);
+              print(RFCRecibe);
+              print(EstadoCivilRecibe);
+              print(NivelAcademicoRecibe);
 
               if (PantallaRecibe == "" ||
                   IDLRRecibe == "" ||
@@ -1083,10 +1083,11 @@ print(NivelAcademicoRecibe);
                       );
                     });
               } else {
+                dev.log(widget.idCredito);
                 Ingresar(
                     PantallaRecibe,
                     IDLRRecibe,
-                    IDInfoRecibe,
+                    widget.idCredito,
                     PrimerNombreRecibe,
                     SegundoNombreRecibe,
                     PrimerApellidoRecibe,
@@ -1106,6 +1107,7 @@ print(NivelAcademicoRecibe);
           child: const Text('Siguiente')),
     );
   }
+
   Widget _Avanzar() {
     return Container(
       width: double.infinity,
@@ -1118,8 +1120,10 @@ print(NivelAcademicoRecibe);
         )),
         onTap: () {
           Navigator.of(context).pop();
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => FinSolicitar12()));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => FinSolicitar12(widget.idCredito)));
         },
       ),
     );

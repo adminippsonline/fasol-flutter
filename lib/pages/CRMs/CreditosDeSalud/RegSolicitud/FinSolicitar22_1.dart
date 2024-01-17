@@ -32,7 +32,8 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:dio/dio.dart';
 
 class FinSolicitar22_1 extends StatefulWidget {
-  const FinSolicitar22_1({super.key});
+  String idCredito = "";
+  FinSolicitar22_1(this.idCredito);
 
   @override
   State<FinSolicitar22_1> createState() => _FinSolicitar22_1State();
@@ -64,13 +65,14 @@ class _FinSolicitar22_1State extends State<FinSolicitar22_1> {
 
   @override
   Widget build(BuildContext context) {
-    return MyCustomFormFinSolicitar22_1();
+    return MyCustomFormFinSolicitar22_1(widget.idCredito);
   }
 }
 
 // Create a Form widget.
 class MyCustomFormFinSolicitar22_1 extends StatefulWidget {
-  const MyCustomFormFinSolicitar22_1({super.key});
+  String idCredito = "";
+  MyCustomFormFinSolicitar22_1(this.idCredito);
 
   @override
   MyCustomFormFinSolicitar22_1State createState() {
@@ -116,8 +118,8 @@ class MyCustomFormFinSolicitar22_1State
                   title: Text('Registrado correctamente'),
                 );
               });
-          Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (_) => FinSolicitar22_1()));
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (_) => FinSolicitar22_1(widget.idCredito)));
           FocusScope.of(context).unfocus();
         } else {
           //print('Error en el registro');
@@ -286,14 +288,17 @@ class MyCustomFormFinSolicitar22_1State
       final req = {
         'Pantalla': "FinSolicitar22_1",
         'id_solicitud': "$id_solicitud",
-        'id_credito': "$id_credito",
-        'file': globalimageUpdate
+        'id_credito': widget.idCredito,
+        'Selfie': globalimageUpdate
       };
+      dev.log(id_solicitud.toString());
 
       var url = Uri.https('fasoluciones.mx', 'api/Solicitud/Agregar');
       var request = await http.MultipartRequest('POST', url);
       request = jsonToFormData(request, req);
       final response = await request.send();
+      dev.log(response.statusCode.toString());
+
       final responseData = await response.stream.bytesToString();
       var responseString = responseData;
       final datos = json.decode(responseString);
@@ -312,8 +317,8 @@ class MyCustomFormFinSolicitar22_1State
             });
       } else {
         dev.log("tiene imagen");
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (_) => FinSolicitar23()));
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (_) => FinSolicitar23(widget.idCredito)));
       }
     } catch (e) {
       dev.log("as");
@@ -414,59 +419,61 @@ class MyCustomFormFinSolicitar22_1State
     return Form(
         key: _formKey,
         child: SingleChildScrollView(
-          child: Column(mainAxisAlignment: MainAxisAlignment.start, 
-          children: <Widget>[
-             SubitleCards('Selfie'),
-            SizedBox(height: 20),
-        
-            Container(
-              child: Align(
-                alignment: Alignment.topRight,
-                child: Column(children: const <Widget>[
-                  Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                          'Tómate una selfie con tu INE a la altura de la barbilla, cuida que se vea visible. ')),
-                  SizedBox(height: 10),
-                  Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                          'Tu foto debe ser una muy buena calidad ')),
-                  SizedBox(height: 10),
-                  /*Align(
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                SubitleCards('Selfie'),
+                SizedBox(height: 20),
+
+                Container(
+                  child: Align(
+                    alignment: Alignment.topRight,
+                    child: Column(children: const <Widget>[
+                      Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                              'Tómate una selfie con tu INE a la altura de la barbilla, cuida que se vea visible. ')),
+                      SizedBox(height: 10),
+                      Align(
+                          alignment: Alignment.centerLeft,
+                          child:
+                              Text('Tu foto debe ser una muy buena calidad ')),
+                      SizedBox(height: 10),
+                      /*Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
                           '* Evita reflejos del sol y luces (lámparas o focos)')),
                           */
-                ]),
-              ),
-            ),
+                    ]),
+                  ),
+                ),
 
-            _Pantalla(),
-            _IDLR(),
-            _IDInfo(),
-            ElevatedButton(
-                onPressed: () {
-                  opciones(context);
-                },
-                child: Text('Selecciona una imagen',
-                    style: TextStyle(color: Colors.white))),
+                _Pantalla(),
+                _IDLR(),
+                _IDInfo(),
+                ElevatedButton(
+                    onPressed: () {
+                      opciones(context);
+                    },
+                    child: Text('Selecciona una imagen',
+                        style: TextStyle(color: Colors.white))),
 
-            SizedBox(
-              height: 20,
-            ),
-            //imagen == null
-            //imagen==null ? Center()
-            imagen == null ? Center() : Image.file(imagen!),
-            ElevatedButton(
-                onPressed: () {
-                  dev.log("entrando");
-                  subir_imagen();
-                },
-                child: Text('Siguiente', style: TextStyle(color: Colors.white))),
-            //_BotonEnviar(),
-            _Avanzar()
-          ]),
+                SizedBox(
+                  height: 20,
+                ),
+                //imagen == null
+                //imagen==null ? Center()
+                imagen == null ? Center() : Image.file(imagen!),
+                ElevatedButton(
+                    onPressed: () {
+                      dev.log("entrando");
+                      subir_imagen();
+                    },
+                    child: Text('Siguiente',
+                        style: TextStyle(color: Colors.white))),
+                //_BotonEnviar(),
+                _Avanzar()
+              ]),
         ));
   }
 
@@ -553,6 +560,7 @@ class MyCustomFormFinSolicitar22_1State
           child: const Text('Siguiente')),
     );
   }
+
   Widget _Avanzar() {
     return Container(
       width: double.infinity,
@@ -565,8 +573,10 @@ class MyCustomFormFinSolicitar22_1State
         )),
         onTap: () {
           Navigator.of(context).pop();
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => FinSolicitar23()));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => FinSolicitar23(widget.idCredito)));
         },
       ),
     );

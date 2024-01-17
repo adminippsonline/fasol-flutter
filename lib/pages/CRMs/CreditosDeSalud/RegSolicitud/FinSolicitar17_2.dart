@@ -25,7 +25,8 @@ import 'FinSolicitar18.dart';
 import 'package:intl/intl.dart';
 
 class FinSolicitar17_2 extends StatefulWidget {
-  const FinSolicitar17_2({super.key});
+  String idCredito = "";
+  FinSolicitar17_2(this.idCredito);
 
   @override
   State<FinSolicitar17_2> createState() => _FinSolicitar17_2State();
@@ -57,13 +58,14 @@ class _FinSolicitar17_2State extends State<FinSolicitar17_2> {
 
   @override
   Widget build(BuildContext context) {
-    return MyCustomFormFinSolicitar17_2();
+    return MyCustomFormFinSolicitar17_2(widget.idCredito);
   }
 }
 
 // Create a Form widget.
 class MyCustomFormFinSolicitar17_2 extends StatefulWidget {
-  const MyCustomFormFinSolicitar17_2({super.key});
+  String idCredito = "";
+  MyCustomFormFinSolicitar17_2(this.idCredito);
 
   @override
   MyCustomFormFinSolicitar17_2State createState() {
@@ -147,9 +149,9 @@ class MyCustomFormFinSolicitar17_2State
                   title: Text('Registrado correctamente'),
                 );
               });
-          Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (_) => FinSolicitar18()));
-            FocusScope.of(context).unfocus();
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (_) => FinSolicitar18(widget.idCredito)));
+          FocusScope.of(context).unfocus();
         } else {
           //print('Error en el registro');
           showDialog(
@@ -208,8 +210,7 @@ class MyCustomFormFinSolicitar17_2State
   void mostrar_datos() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      NombreCompletoSession =
-          prefs.getString('NombreCompletoSession') ?? '';
+      NombreCompletoSession = prefs.getString('NombreCompletoSession') ?? '';
       id_solicitud = prefs.getInt('id_solicitud') ?? 0;
       id_credito = prefs.getInt('id_credito') ?? 0;
     });
@@ -219,162 +220,157 @@ class MyCustomFormFinSolicitar17_2State
     IDInfo.text = "$id_credito";
   }
 
-
-
-  @override 
+  @override
   Widget build(BuildContext context) {
     return BuildScreens(
         'Solicitud', '', '', 'Datos de la solicitud', '', _formulario());
-  } 
-
+  }
 
   Widget _formulario() {
     return Form(
-            key: _formKey,
-            child: SingleChildScrollView(
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    SubitleCards("Autorización de consulta "),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _Pantalla(),
-                    _IDSolicitud(),
-                    _IDInfo(),
-                    Container(
-                        padding: EdgeInsets.only(left: 10.0),
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            //border: Border.all(
-                            //color: Colors.blueAccent
-                            //)
-                            ),
-                        child: Text(
-                          "Autorizo expresamente a Fasol Soluciones S.A. de C.V., SOFOM E.N.R, para que lleve a cabo Investigaciones, sobre mi comportamiento Crediticio en SIC que estime conveniente.",
-                          textAlign: TextAlign.justify,
-                          style: TextStyle(
-                            fontSize: 17,
-                            //color: Colors.blue
-                          ),
-                          textScaleFactor: 1,
-                        )),
-                    Container(
-                        padding: EdgeInsets.only(left: 10.0),
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            //border: Border.all(
-                            //color: Colors.blueAccent
-                            //)
-                            ),
-                        child: Text(
-                          "Conozco la naturaleza y alcance de la información que se solicitará, del uso que se le dará y que se podrá realizar consultas periódicas de mi historial crediticio, consiento que esta autorización tenga vigencia de 3 años contados a partir de hoy, y en su caso mientras mantengamos relación jurídica. ",
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            fontSize: 17,
-                            //color: Colors.blue
-                          ),
-                          textScaleFactor: 1,
-                        )),
-                    Container(
-                      padding: EdgeInsets.all(10),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: RadioListTile(
-                              title: const Text('Si autorizo',
-                                  style: TextStyle(
-                                    fontSize: 17,
-                                    color: Color.fromARGB(255, 126, 126, 126),
-                                  )),
-                              value: "Si autorizo",
-                              groupValue: _opcionesAutorizacionConsulta,
-                              onChanged: SeleccionadoAutorizacionConsulta,
-                            ),
-                          ),
-                        ],
+        key: _formKey,
+        child: SingleChildScrollView(
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                SubitleCards("Autorización de consulta "),
+                SizedBox(
+                  height: 20,
+                ),
+                _Pantalla(),
+                _IDSolicitud(),
+                _IDInfo(),
+                Container(
+                    padding: EdgeInsets.only(left: 10.0),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        //border: Border.all(
+                        //color: Colors.blueAccent
+                        //)
+                        ),
+                    child: Text(
+                      "Autorizo expresamente a Fasol Soluciones S.A. de C.V., SOFOM E.N.R, para que lleve a cabo Investigaciones, sobre mi comportamiento Crediticio en SIC que estime conveniente.",
+                      textAlign: TextAlign.justify,
+                      style: TextStyle(
+                        fontSize: 17,
+                        //color: Colors.blue
                       ),
-                    ),
-                    if (_siAutorizacionConsulta)
-                      Container(
-                          padding: EdgeInsets.only(left: 1.0),
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                              //border: Border.all(
-                              //color: Colors.blueAccent
-                              //)
-                              ),
-                          child: Column(
-                                
-                                mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Container(
-                        padding: EdgeInsets.only(left: 10.0),
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            //border: Border.all(
-
-                            //)
-                            ),
-                        child: Text(
-                          "Ingresa una vez más tu código para confirmar que aceptas",
-                          textAlign: TextAlign.justify,
-                          style: TextStyle(
-                            fontSize: 17,
+                      textScaleFactor: 1,
+                    )),
+                Container(
+                    padding: EdgeInsets.only(left: 10.0),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        //border: Border.all(
+                        //color: Colors.blueAccent
+                        //)
+                        ),
+                    child: Text(
+                      "Conozco la naturaleza y alcance de la información que se solicitará, del uso que se le dará y que se podrá realizar consultas periódicas de mi historial crediticio, consiento que esta autorización tenga vigencia de 3 años contados a partir de hoy, y en su caso mientras mantengamos relación jurídica. ",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontSize: 17,
+                        //color: Colors.blue
+                      ),
+                      textScaleFactor: 1,
+                    )),
+                Container(
+                  padding: EdgeInsets.all(10),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: RadioListTile(
+                          title: const Text('Si autorizo',
+                              style: TextStyle(
+                                fontSize: 17,
+                                color: Color.fromARGB(255, 126, 126, 126),
+                              )),
+                          value: "Si autorizo",
+                          groupValue: _opcionesAutorizacionConsulta,
+                          onChanged: SeleccionadoAutorizacionConsulta,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                if (_siAutorizacionConsulta)
+                  Container(
+                      padding: EdgeInsets.only(left: 1.0),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          //border: Border.all(
+                          //color: Colors.blueAccent
+                          //)
                           ),
-                          textScaleFactor: 1,
-                        )),
-                              Row(
-                                children: <Widget>[
-                                  Expanded(
-                                    child: _Uno(),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Container(
+                              padding: EdgeInsets.only(left: 10.0),
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                  //border: Border.all(
+
+                                  //)
                                   ),
-                                  Expanded(
-                                    child: _Dos(),
-                                  ),
-                                  Expanded(
-                                    child: _Tres(),
-                                  ),
-                                  Expanded(
-                                    child: _Cuatro(),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          )),
-                    Container(
-                      padding: EdgeInsets.all(10),
-                      child: Row(
-                        children: [
-                          Expanded(
-                              child: RadioListTile(
-                            title: const Text('No',
+                              child: Text(
+                                "Ingresa una vez más tu código para confirmar que aceptas",
+                                textAlign: TextAlign.justify,
                                 style: TextStyle(
                                   fontSize: 17,
-                                  color: Color.fromARGB(255, 126, 126, 126),
-                                )),
-                            value: "No",
-                            groupValue: _opcionesAutorizacionConsulta,
-                            onChanged: SeleccionadoAutorizacionConsulta,
-                          )),
+                                ),
+                                textScaleFactor: 1,
+                              )),
+                          Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: _Uno(),
+                              ),
+                              Expanded(
+                                child: _Dos(),
+                              ),
+                              Expanded(
+                                child: _Tres(),
+                              ),
+                              Expanded(
+                                child: _Cuatro(),
+                              ),
+                            ],
+                          ),
                         ],
-                      ),
-                    ),
-                    
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _BotonEnviar(),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    //_Avanzar
-                  ]),
-            ));
+                      )),
+                Container(
+                  padding: EdgeInsets.all(10),
+                  child: Row(
+                    children: [
+                      Expanded(
+                          child: RadioListTile(
+                        title: const Text('No',
+                            style: TextStyle(
+                              fontSize: 17,
+                              color: Color.fromARGB(255, 126, 126, 126),
+                            )),
+                        value: "No",
+                        groupValue: _opcionesAutorizacionConsulta,
+                        onChanged: SeleccionadoAutorizacionConsulta,
+                      )),
+                    ],
+                  ),
+                ),
+
+                SizedBox(
+                  height: 20,
+                ),
+                _BotonEnviar(),
+                SizedBox(
+                  height: 20,
+                ),
+                //_Avanzar
+              ]),
+        ));
   }
 
   Widget _Pantalla() {

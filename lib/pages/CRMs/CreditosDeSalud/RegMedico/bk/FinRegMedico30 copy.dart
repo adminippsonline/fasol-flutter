@@ -144,7 +144,7 @@ class _FinRegMedico30State extends State<FinRegMedico30> {
       appBar: AppBar(
         title: Text(tituloPrincipal),
       ),
-      drawer: MenuLateralPage(),
+      drawer: MenuLateralPage(""),
       bottomNavigationBar: MenuFooterPage(),
       body: SafeArea(
           child: SingleChildScrollView(

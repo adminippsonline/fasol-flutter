@@ -28,7 +28,8 @@ import 'package:intl/intl.dart';
 //enum OpcionesGenero { Masculino, Femenino }
 
 class FinSolicitar23_1 extends StatefulWidget {
-  const FinSolicitar23_1({super.key});
+  String idCredito = "";
+  FinSolicitar23_1(this.idCredito);
 
   @override
   State<FinSolicitar23_1> createState() => _FinSolicitar23_1State();
@@ -51,8 +52,7 @@ class _FinSolicitar23_1State extends State<FinSolicitar23_1> {
   void mostrar_datos() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      NombreCompletoSession =
-          prefs.getString('NombreCompletoSession') ?? '';
+      NombreCompletoSession = prefs.getString('NombreCompletoSession') ?? '';
       id_solicitud = prefs.getInt('id_solicitud') ?? 0;
       id_credito = prefs.getInt('id_credito') ?? 0;
     });
@@ -60,13 +60,14 @@ class _FinSolicitar23_1State extends State<FinSolicitar23_1> {
 
   @override
   Widget build(BuildContext context) {
-    return MyCustomFormFinSolicitar23_1();
+    return MyCustomFormFinSolicitar23_1(widget.idCredito);
   }
 }
 
 // Create a Form widget.
 class MyCustomFormFinSolicitar23_1 extends StatefulWidget {
-  const MyCustomFormFinSolicitar23_1({super.key});
+  String idCredito = "";
+  MyCustomFormFinSolicitar23_1(this.idCredito);
 
   @override
   MyCustomFormFinSolicitar23_1State createState() {
@@ -78,18 +79,13 @@ class MyCustomFormFinSolicitar23_1State
     extends State<MyCustomFormFinSolicitar23_1> {
   var MasccaraCelular = new MaskTextInputFormatter(
       mask: '## #### ####', filter: {"#": RegExp(r'[0-9]')});
-  
+
   //el fomrKey para formulario
   final _formKey = GlobalKey<FormState>();
 
- 
-  final List<String> ListaTipoDeReferencia = [
-    'Familiares',
-    'Personales'
-  ];
+  final List<String> ListaTipoDeReferencia = ['Familiares', 'Personales'];
   String? SelectedTipoDeReferencia;
 
- 
   final Pantalla = TextEditingController();
   final IDLR = TextEditingController();
   final IDInfo = TextEditingController();
@@ -111,24 +107,15 @@ class MyCustomFormFinSolicitar23_1State
   String SegundoApellidoRecibe = "";
   String TipoDeReferenciaRecibe = "";
   String TelefonoRecibe = "";
-  
 
-  void Ingresar(
-      Pantalla,
-      IDLR,
-      IDInfo,
-      PrimerNombre,
-      SegundoNombre,
-      PrimerApellido,
-      SegundoApellido,
-      TipoDeReferencia,
-      Telefono) async {
+  void Ingresar(Pantalla, IDLR, IDInfo, PrimerNombre, SegundoNombre,
+      PrimerApellido, SegundoApellido, TipoDeReferencia, Telefono) async {
     try {
       var url = Uri.https('fasoluciones.mx', 'api/Solicitud/Agregar');
       var response = await http.post(url, body: {
         'Pantalla': Pantalla,
         'id_solicitud': IDLR,
-        'id_credito': IDInfo,
+        'id_credito': widget.idCredito,
         'PrimerNombre': PrimerNombre,
         'SegundoNombre': SegundoNombre,
         'PrimerApellido': PrimerApellido,
@@ -137,7 +124,6 @@ class MyCustomFormFinSolicitar23_1State
         'Telefono': Telefono,
       }).timeout(const Duration(seconds: 90));
       //print("llego aqui 111");
-      //print(response.body);
 
       if (response.body != "0" && response.body != "") {
         var Respuesta = jsonDecode(response.body);
@@ -247,43 +233,43 @@ class MyCustomFormFinSolicitar23_1State
   }
 
   @override
-  @override 
+  @override
   Widget build(BuildContext context) {
     return BuildScreens(
         'Solicitud', '', '', 'Referencias personales', '', _formulario());
-  } 
+  }
 
   Widget _formulario() {
     return Form(
-            key: _formKey,
-            child: SingleChildScrollView(
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    SubitleCards("Por favor, proporciona una referencia, ya sea familiar o personal "),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _Pantalla(),
-                    _IDLR(),
-                    _IDInfo(),
-                    _PrimerNombre(),
-                    _SegundoNombre(),
-                    _PrimerApellido(),
-                    _SegundoApellido(),
-                    
-                    _TipoDeReferencia(),
-                    _Telefono(),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _BotonEnviar(),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _Avanzar()
-                  ]),
-            ));
+        key: _formKey,
+        child: SingleChildScrollView(
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                SubitleCards(
+                    "Por favor, proporciona una referencia, ya sea familiar o personal "),
+                SizedBox(
+                  height: 20,
+                ),
+                _Pantalla(),
+                _IDLR(),
+                _IDInfo(),
+                _PrimerNombre(),
+                _SegundoNombre(),
+                _PrimerApellido(),
+                _SegundoApellido(),
+                _TipoDeReferencia(),
+                _Telefono(),
+                SizedBox(
+                  height: 20,
+                ),
+                _BotonEnviar(),
+                SizedBox(
+                  height: 20,
+                ),
+                _Avanzar()
+              ]),
+        ));
   }
 
   Widget _Pantalla() {
@@ -484,8 +470,6 @@ class MyCustomFormFinSolicitar23_1State
     );
   }
 
-
-
   Widget _BotonEnviar() {
     return Container(
       width: double.infinity,
@@ -501,7 +485,7 @@ class MyCustomFormFinSolicitar23_1State
               SegundoNombreRecibe = SegundoNombre.text;
               PrimerApellidoRecibe = PrimerApellido.text;
               SegundoApellidoRecibe = SegundoApellido.text;
-              
+
               String? TipoDeReferenciaRecibe = SelectedTipoDeReferencia;
               if (TipoDeReferenciaRecibe == "") {
                 showDialog(
@@ -513,15 +497,14 @@ class MyCustomFormFinSolicitar23_1State
                     });
               }
               TelefonoRecibe = Telefono.text;
-print(PantallaRecibe);
-print(IDLRRecibe);
-print(IDInfoRecibe);
-print(PrimerNombreRecibe);
-print(PrimerApellidoRecibe);
-print(SegundoApellidoRecibe);
-print(TipoDeReferenciaRecibe);
-print(TelefonoRecibe);
-
+              print(PantallaRecibe);
+              print(IDLRRecibe);
+              print(IDInfoRecibe);
+              print(PrimerNombreRecibe);
+              print(PrimerApellidoRecibe);
+              print(SegundoApellidoRecibe);
+              print(TipoDeReferenciaRecibe);
+              print(TelefonoRecibe);
 
               if (PantallaRecibe == "" ||
                   IDLRRecibe == "" ||
@@ -555,6 +538,7 @@ print(TelefonoRecibe);
           child: const Text('Siguiente')),
     );
   }
+
   Widget _Avanzar() {
     return Container(
       width: double.infinity,

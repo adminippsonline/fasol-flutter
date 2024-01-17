@@ -73,7 +73,7 @@ class _FinClinicas5_1_VideoState extends State<FinClinicas5_1_Video> {
     //   appBar: AppBar(
     //     title: Text(NombreCompletoSession),
     //   ),
-    //   drawer: MenuLateralPage(),
+    //   drawer: MenuLateralPage(""),
     //   bottomNavigationBar: MenuFooterPage(),
     //   body: const MyCustomFormFinClinicas5_1(),
     // );

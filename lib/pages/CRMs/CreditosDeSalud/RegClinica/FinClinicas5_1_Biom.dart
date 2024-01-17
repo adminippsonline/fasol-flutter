@@ -64,7 +64,6 @@ class _FinClinicas5_1_BiomState extends State<FinClinicas5_1_Biom> {
       NombreCompletoSession =
           prefs.getString('NombreCompletoSession') ?? 'vacio';
       id_clinica = prefs.getInt('id_clinica') ?? 0;
-      
     });
   }
 
@@ -75,7 +74,7 @@ class _FinClinicas5_1_BiomState extends State<FinClinicas5_1_Biom> {
     //   appBar: AppBar(
     //     title: Text(NombreCompletoSession),
     //   ),
-    //   drawer: MenuLateralPage(),
+    //   drawer: MenuLateralPage(""),
     //   bottomNavigationBar: MenuFooterPage(),
     //   body: const MyCustomFormFinClinicas5_1(),
     // );
@@ -101,8 +100,6 @@ class MyCustomFormFinClinicas5_1_BiomState
   final _plugin = FadMultisignPlugin();
   final _fadBioPlugin = FadBio();
 
-
-
   String getPublicKey() {
     return "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA5PxZ3DLj+zP6T6HFgzzk\nM77LdzP3fojBoLasw7EfzvLMnJNUlyRb5m8e5QyyJxI+wRjsALHvFgLzGwxM8ehz\nDqqBZed+f4w33GgQXFZOS4AOvyPbALgCYoLehigLAbbCNTkeY5RDcmmSI/sbp+s6\nmAiAKKvCdIqe17bltZ/rfEoL3gPKEfLXeN549LTj3XBp0hvG4loQ6eC1E1tRzSkf\nGJD4GIVvR+j12gXAaftj3ahfYxioBH7F7HQxzmWkwDyn3bqU54eaiB7f0ftsPpWM\nceUaqkL2DZUvgN0efEJjnWy5y1/Gkq5GGWCROI9XG/SwXJ30BbVUehTbVcD70+ZF\n8QIDAQAB\n-----END PUBLIC KEY-----";
   }
@@ -125,7 +122,6 @@ class MyCustomFormFinClinicas5_1_BiomState
       _fadResponse = fadResponse;
     });
   }
-
 
   //Los controladores para los input
   final Pantalla = TextEditingController();
@@ -264,8 +260,6 @@ class MyCustomFormFinClinicas5_1_BiomState
         'Información Personal', '', _formulario());
   }
 
-  
-  
   jsonToFormData(http.MultipartRequest request, Map<String, dynamic> data) {
     for (var key in data.keys) {
       request.fields[key] = data[key].toString();
@@ -309,42 +303,42 @@ class MyCustomFormFinClinicas5_1_BiomState
                 _Pantalla(),
                 _IDClinica(),
                 SizedBox(height: 30),
-                if (_fadResponse=="") 
-                ElevatedButton(
-                  onPressed: () {
-                    initFace();
-                  },
-                  child: const Text('Tomar mi selfie'),
-                ),
+                if (_fadResponse == "")
+                  ElevatedButton(
+                    onPressed: () {
+                      initFace();
+                    },
+                    child: const Text('Tomar mi selfie'),
+                  ),
 
-                if (_fadResponse!="") 
-                ElevatedButton(
-                  onPressed: () {
-                    initFace();
-                  },
-                  child: const Text('Actulizar mi selfie'),
-                ),
+                if (_fadResponse != "")
+                  ElevatedButton(
+                    onPressed: () {
+                      initFace();
+                    },
+                    child: const Text('Actulizar mi selfie'),
+                  ),
                 SizedBox(
                   height: 20,
                 ),
-                if (_fadResponse!="") 
-                Container(
-                    padding: EdgeInsets.only(left: 10.0),
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                        //border: Border.all(
-                        //color: Colors.blueAccent
-                        //)
+                if (_fadResponse != "")
+                  Container(
+                      padding: EdgeInsets.only(left: 10.0),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          //border: Border.all(
+                          //color: Colors.blueAccent
+                          //)
+                          ),
+                      child: Text(
+                        "Listo, puedes avanzar",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 17,
+                          //color: Colors.blue
                         ),
-                    child: Text(
-                      "Listo, puedes avanzar",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 17,
-                        //color: Colors.blue
-                      ),
-                      textScaleFactor: 1,
-                    )),
+                        textScaleFactor: 1,
+                      )),
                 //const Text(
                 //'Resultado',
                 //),
@@ -360,76 +354,67 @@ class MyCustomFormFinClinicas5_1_BiomState
                 //     ),
                 //   ),
                 // ),
-                
+
                 Container(
                   width: double.infinity,
                   padding: EdgeInsets.all(10),
                   child: ElevatedButton(
-                    onPressed: () {
-                      
-
-                      if (_fadResponse == "") {
-                        showDialog(
+                      onPressed: () {
+                        if (_fadResponse == "") {
+                          showDialog(
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
                                   title: Text('Error: Toma tu selfie'),
                                 );
-                              }); 
-                      }
-                      else{
-                        String ine = "";
-                        var bytes;
-                        var res = json.decode(_fadResponse);
-                        //dev.log(res['faceB64'].toString());
-                        var respuesta = res['faceB64'].toString();
-                        String imagen = respuesta;
-                        globalimageUpdate = imagen;
-                        dev.log("imag");
-                        dev.log(globalimageUpdate);
-
-                        setState(() {
+                              });
+                        } else {
+                          String ine = "";
+                          var bytes;
+                          var res = json.decode(_fadResponse);
+                          //dev.log(res['faceB64'].toString());
+                          var respuesta = res['faceB64'].toString();
                           String imagen = respuesta;
                           globalimageUpdate = imagen;
-                          //print(globalimageUpdate);
-                          PantallaRecibe = Pantalla.text;
-                          IDClinicaRecibe = IDClinica.text;
-                          Ingresar(PantallaRecibe, IDClinicaRecibe);
+                          dev.log("imag");
+                          dev.log(globalimageUpdate);
 
+                          setState(() {
+                            String imagen = respuesta;
+                            globalimageUpdate = imagen;
+                            //print(globalimageUpdate);
+                            PantallaRecibe = Pantalla.text;
+                            IDClinicaRecibe = IDClinica.text;
+                            Ingresar(PantallaRecibe, IDClinicaRecibe);
+                          });
 
+                          // for (var j in res['documents']) {
+                          //   dev.log(j['captures']['ineAnverso.png'].toString());
+                          //   //  ine = j['data'].toString();
+                          //   //bytes = base64Encode(j['captures']);
+                          //   // setState(() {
+                          //   //   ine = j['data'].toString();
+                          //   // });
 
-                        });
+                          //   var bytes =
+                          //       File(j['captures']['ineAnverso.png']).readAsBytes();
+                          //   dev.log(bytes.toString());
 
-                        
+                          //   // base64Encode(j['captures']['ineAnverso.png']);
+                          //   // enviarINE(bytes, id_clinica, id_info);
 
-                        // for (var j in res['documents']) {
-                        //   dev.log(j['captures']['ineAnverso.png'].toString());
-                        //   //  ine = j['data'].toString();
-                        //   //bytes = base64Encode(j['captures']);
-                        //   // setState(() {
-                        //   //   ine = j['data'].toString();
-                        //   // });
+                          //   //ESTE ES EL BUENO
+                          //   //enviarINE(j['data'].toString(), id_clinica, id_info);
+                          // }
 
-                        //   var bytes =
-                        //       File(j['captures']['ineAnverso.png']).readAsBytes();
-                        //   dev.log(bytes.toString());
-
-                        //   // base64Encode(j['captures']['ineAnverso.png']);
-                        //   // enviarINE(bytes, id_clinica, id_info);
-
-                        //   //ESTE ES EL BUENO
-                        //   //enviarINE(j['data'].toString(), id_clinica, id_info);
-                        // }
-
-                        // var resp = _fadResponse.toString();
-                        // var respuesta = json.encode(_fadResponse);
-                        // dev.log("obtebiendo");
-                        // dev.log(respuesta);
-                      }
-                    },
-                    child: Text("Siguiente")),
-
-                ),    
+                          // var resp = _fadResponse.toString();
+                          // var respuesta = json.encode(_fadResponse);
+                          // dev.log("obtebiendo");
+                          // dev.log(respuesta);
+                        }
+                      },
+                      child: Text("Siguiente")),
+                ),
                 SizedBox(
                   height: 20,
                 ),
@@ -479,18 +464,12 @@ class MyCustomFormFinClinicas5_1_BiomState
         ));
   }
 
-  
-
   Widget _BotonEnviar() {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(10),
       child: ElevatedButton(
-          
-          onPressed: () { 
-             
-            
-
+          onPressed: () {
             var res = json.decode(_fadResponse);
             //dev.log(res['faceB64'].toString());
             var respuesta = res['faceB64'].toString();
@@ -507,8 +486,7 @@ class MyCustomFormFinClinicas5_1_BiomState
               PantallaRecibe = Pantalla.text;
               IDClinicaRecibe = IDClinica.text;
 
-              if (PantallaRecibe == "" ||
-                  IDClinicaRecibe == "") {
+              if (PantallaRecibe == "" || IDClinicaRecibe == "") {
                 showDialog(
                     context: context,
                     builder: (BuildContext context) {

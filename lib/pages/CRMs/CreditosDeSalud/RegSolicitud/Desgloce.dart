@@ -73,23 +73,21 @@ class _DesgloceState extends State<Desgloce> {
   }
 
   void Enviar() async {
-    print("**");
-    print(id_LR);
-    print("**");
-
     if (id_LR >= 1) {
-      Navigator.of(context)
-          .pushReplacement(MaterialPageRoute(builder: (_) => FinSolicitar10()));
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => FinSolicitar10(idCredito)));
       FocusScope.of(context).unfocus();
     } else {
-      Navigator.of(context)
-          .pushReplacement(MaterialPageRoute(builder: (_) => RegistroSol()));
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => RegistroSol(idCredito)));
       FocusScope.of(context).unfocus();
     }
   }
 
   Map<String, dynamic> apiResponse = {};
   Map<String, dynamic> jsonData = {};
+  String idCredito = "";
+
   Future<void> mostrarDesglose() async {
     dev.log(widget.CantidadGET);
     dev.log(widget.PeriodoGET);
@@ -102,10 +100,12 @@ class _DesgloceState extends State<Desgloce> {
 
       if (response.statusCode == 200) {
         jsonData = json.decode(response.body);
+        idCredito = jsonData['id_credito'];
+        dev.log(idCredito);
         Map<String, dynamic> data = jsonData['data'];
+
         setState(() {
           apiResponse = data;
-          dev.log(apiResponse.toString());
         });
         // setState(() {
         //   apiResponse = json.decode(response.body);
@@ -285,7 +285,7 @@ class _DesgloceState extends State<Desgloce> {
         backgroundColor: COLOR_PRINCIPAL,
         title: Text("Fasol Crédito y Préstamos Personales"),
       ),
-      drawer: MenuLateralPage(),
+      drawer: MenuLateralPage(idCredito),
       bottomNavigationBar: MenuFooterPage(),
       //body: Center(child: _builTable(),),
       body: Column(
@@ -364,19 +364,19 @@ class _DesgloceState extends State<Desgloce> {
                   ]),
                   DataRow(cells: [
                     DataCell(Text("Tasa promedio")),
-                    DataCell(Text(TasaPromedioSession))
+                    DataCell(Text('${apiResponse["TasaPromedio"]}')),
                   ]),
                   DataRow(cells: [
                     DataCell(Text("Cat promedio")),
-                    DataCell(Text(CatPromedioSession))
+                    DataCell(Text('${apiResponse["CatPromedio"]}')),
                   ]),
                   DataRow(cells: [
                     DataCell(Text("Comisión por apertura")),
-                    DataCell(Text(ComisionPorAperturaSession))
+                    DataCell(Text('${apiResponse["ComisionPorApertura"]}'))
                   ]),
                   DataRow(cells: [
                     DataCell(Text("Comisión pago tardío")),
-                    DataCell(Text(ComisionPorTardioSession))
+                    DataCell(Text('${apiResponse["ComisionPagoTardio"]}'))
                   ])
                 ]),
           ),

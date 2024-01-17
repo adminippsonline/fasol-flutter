@@ -22,7 +22,8 @@ import 'FinSolicitar13_1.dart';
 import 'package:intl/intl.dart';
 
 class FinSolicitar13_0 extends StatefulWidget {
-  const FinSolicitar13_0({super.key});
+  String idCredito = "";
+  FinSolicitar13_0(this.idCredito);
 
   @override
   State<FinSolicitar13_0> createState() => _FinSolicitar13_0State();
@@ -54,13 +55,14 @@ class _FinSolicitar13_0State extends State<FinSolicitar13_0> {
 
   @override
   Widget build(BuildContext context) {
-    return MyCustomFormFinSolicitar13_0();
+    return MyCustomFormFinSolicitar13_0(widget.idCredito);
   }
 }
 
 // Create a Form widget.
 class MyCustomFormFinSolicitar13_0 extends StatefulWidget {
-  const MyCustomFormFinSolicitar13_0({super.key});
+  String idCredito = "";
+  MyCustomFormFinSolicitar13_0(this.idCredito);
 
   @override
   MyCustomFormFinSolicitar13_0State createState() {
@@ -104,7 +106,7 @@ class MyCustomFormFinSolicitar13_0State
       var response = await http.post(url, body: {
         'Pantalla': Pantalla,
         'id_solicitud': IDLR,
-        'id_credito': IDInfo,
+        'id_credito': widget.idCredito,
         'InstitucionBancaria': InstitucionBancaria,
         'NumeroDeCuenta': NumeroDeCuenta,
         'ClaveInterbancaria': ClaveInterbancaria
@@ -117,6 +119,7 @@ class MyCustomFormFinSolicitar13_0State
         print(Respuesta);
         String status = Respuesta['status'];
         if (status == "OK") {
+          dev.log(response.body);
           //print('si existe aqui -----');
           showDialog(
               context: context,
@@ -125,8 +128,8 @@ class MyCustomFormFinSolicitar13_0State
                   title: Text('Registrado correctamente'),
                 );
               });
-          Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (_) => FinSolicitar13_1()));
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (_) => FinSolicitar13_1(widget.idCredito)));
           FocusScope.of(context).unfocus();
         } else {
           //print('Error en el registro');
@@ -200,8 +203,8 @@ class MyCustomFormFinSolicitar13_0State
   }
 
   Future obtenerInstitucionesBancarios() async {
-    final response = await http
-        .get(Uri.parse('https://fasoluciones.mx/api/Solicitud/Catalogos/Bancos'));
+    final response = await http.get(
+        Uri.parse('https://fasoluciones.mx/api/Solicitud/Catalogos/Bancos'));
 
     if (response.statusCode == 200) {
       var jsonData = json.decode(response.body);
@@ -220,7 +223,7 @@ class MyCustomFormFinSolicitar13_0State
         'Solicitud', '', '', 'Datos de la solicitud', '', _formulario());
   }
 
-  Widget _formulario() { 
+  Widget _formulario() {
     return Form(
         key: _formKey,
         child: SingleChildScrollView(
@@ -371,8 +374,8 @@ class MyCustomFormFinSolicitar13_0State
             ),
             items: _opcionesBancarios.map((item) {
               return DropdownMenuItem(
-                  value: item['NombreBanco'].toString(),
-                  child: Text(item['NombreBanco'].toString()));
+                  value: item['nombrebanco'].toString(),
+                  child: Text(item['nombrebanco'].toString()));
             }).toList(),
             validator: ObligatorioSelect,
             onChanged: (value) {
@@ -435,7 +438,7 @@ class MyCustomFormFinSolicitar13_0State
             isDense: false,
             contentPadding: EdgeInsets.all(10),
             hintText: ''),
-      ), 
+      ),
     );
   }
 
@@ -494,6 +497,7 @@ class MyCustomFormFinSolicitar13_0State
           child: const Text('Siguiente')),
     );
   }
+
   Widget _Avanzar() {
     return Container(
       width: double.infinity,
@@ -506,8 +510,10 @@ class MyCustomFormFinSolicitar13_0State
         )),
         onTap: () {
           Navigator.of(context).pop();
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => FinSolicitar13_1()));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => FinSolicitar13_1(widget.idCredito)));
         },
       ),
     );

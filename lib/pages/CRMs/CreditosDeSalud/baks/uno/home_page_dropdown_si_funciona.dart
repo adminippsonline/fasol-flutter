@@ -58,7 +58,7 @@ class _HomePageCreditosDeSaludState extends State<HomePageCreditosDeSalud> {
       appBar: AppBar(
         title: Text("Bienvenido $id_medico $id_info  $NombreCompletoSession"),
       ),
-      drawer: MenuLateralPage(),
+      drawer: MenuLateralPage(""),
       bottomNavigationBar: MenuFooterPage(),
       body: const MyCustomFormHomePageCreditosDeSalud(),
     );
@@ -77,14 +77,13 @@ class MyCustomFormHomePageCreditosDeSalud extends StatefulWidget {
 
 class MyCustomFormHomePageCreditosDeSaludState
     extends State<MyCustomFormHomePageCreditosDeSalud> {
- 
   List categoryItemlist = [];
 
   Future getAllCategory() async {
-    var baseUrl = "https://fasoluciones.mx/ApiApp/Catalogos/Profesion.php"; 
+    var baseUrl = "https://fasoluciones.mx/ApiApp/Catalogos/Profesion.php";
 
     http.Response response = await http.get(Uri.parse(baseUrl));
-    print(response); 
+    print(response);
     if (response.statusCode == 200) {
       var jsonData = json.decode(response.body);
       setState(() {

@@ -59,7 +59,7 @@ class _FinClinicas3State extends State<FinClinicas3> {
     //   appBar: AppBar(
     //     title: Text(NombreCompletoSession),
     //   ),
-    //   drawer: MenuLateralPage(),
+    //   drawer: MenuLateralPage(""),
     //   bottomNavigationBar: MenuFooterPage(),
     //   body: const MyCustomFormFinClinicas3(),
     // );
@@ -151,7 +151,7 @@ class MyCustomFormFinClinicas3State extends State<MyCustomFormFinClinicas3> {
     try {
       //print("Paso par aca");
       var url = Uri.https('fasoluciones.mx', 'api/Clinica/Agregar');
-      var data={
+      var data = {
         'Pantalla': Pantalla,
         'id_clinica': IDClinica,
         'DenominacionORazonSocial': DenominacionORazonSocial,
@@ -171,7 +171,8 @@ class MyCustomFormFinClinicas3State extends State<MyCustomFormFinClinicas3> {
         'TelefonoEmpresampresa': Telefono
       };
       //print(data);
-      var response = await http.post(url, body: data).timeout(const Duration(seconds: 90));
+      var response =
+          await http.post(url, body: data).timeout(const Duration(seconds: 90));
       //print("llego aqui 111--");
       //print(response.body);
 
@@ -434,8 +435,6 @@ class MyCustomFormFinClinicas3State extends State<MyCustomFormFinClinicas3> {
           ),
         ));
   }
-
-  
 
   Widget _DenominacionORazonSocial() {
     return Container(
@@ -893,7 +892,6 @@ class MyCustomFormFinClinicas3State extends State<MyCustomFormFinClinicas3> {
                       );
                     });
               } else {
-                
                 Ingresar(
                     PantallaRecibe,
                     IDClinicaRecibe,
@@ -918,6 +916,7 @@ class MyCustomFormFinClinicas3State extends State<MyCustomFormFinClinicas3> {
           child: const Text('Siguiente')),
     );
   }
+
   Widget _Avanzar() {
     return Container(
       width: double.infinity,
@@ -930,8 +929,8 @@ class MyCustomFormFinClinicas3State extends State<MyCustomFormFinClinicas3> {
         )),
         onTap: () {
           Navigator.of(context).pop();
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => FinClinicas4()));
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => FinClinicas4()));
         },
       ),
     );

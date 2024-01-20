@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_demo/pages/CRMs/CreditosDeSalud/baks/home_pageConImagen.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import '../../home_page.dart';
 
@@ -16,7 +17,7 @@ void main() => runApp(MaterialApp(
     theme: ThemeData(
       primaryColor: Colors.grey[800],
     ),
-    home: HomePage()));
+    home: HomePageCreditosDeSalud()));
 
 class MenuFooterPage extends StatefulWidget {
   const MenuFooterPage({super.key});

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:developer' as dev;
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'includes/colors/colors.dart';
 import 'headers.dart';
 import 'menu_lateral.dart';
@@ -33,7 +34,7 @@ class HomePageCreditosDeSalud extends StatefulWidget {
 
 class _HomePageCreditosDeSaludState extends State<HomePageCreditosDeSalud> {
   //se usa para mostrar los datos del estado
-  int id_medico = 0;
+  int id_solicitud = 0;
   int id_info = 0;
   String NombreCompletoSession = "";
   String CorreoSession = "";
@@ -50,7 +51,7 @@ class _HomePageCreditosDeSaludState extends State<HomePageCreditosDeSalud> {
     setState(() {
       NombreCompletoSession =
           prefs.getString('NombreCompletoSession') ?? 'vacio';
-      id_medico = prefs.getInt('id_medico') ?? 0;
+      id_solicitud = prefs.getInt('id_solicitud') ?? 0;
       id_info = prefs.getInt('id_info') ?? 0;
     });
   }
@@ -372,11 +373,6 @@ class MyCustomFormHomePageCreditosDeSaludState
                     ],
                   ),
                 ),
-                // Text(
-                //   'Quincenas: ${_currentValue.toInt()}',
-                //   style: TextStyle(fontSize: 24.0),
-                // ),
-                // Text('Índice del Plazo Seleccionado: $indicePlazoSeleccionado'),
               ],
             );
           } else if (plazosSnapshot.hasError) {
@@ -443,8 +439,6 @@ class MyCustomFormHomePageCreditosDeSaludState
                             color: Colors.white,
                             fontWeight: FontWeight.bold),
                       ),
-                      Text(
-                          'Índice del Plazo Seleccionado: $indicePlazoSeleccionado'),
                     ],
                   ),
                 ),
@@ -484,7 +478,7 @@ class MyCustomFormHomePageCreditosDeSaludState
                 width: double.infinity,
                 decoration: const BoxDecoration(),
                 child: const Text(
-                  "¿Cuánto dinero necesitas?",
+                  "¿Cuánto dinero necesita?s?",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 22,
@@ -552,22 +546,14 @@ class MyCustomFormHomePageCreditosDeSaludState
           textBaseline: TextBaseline.alphabetic,
           children: [
             Text(
-              _cantidadMinima.toString(),
+              '\$${NumberFormat('#,###').format(value)}',
               style: const TextStyle(
                   fontSize: 25.0,
                   color: Colors.white,
                   fontWeight: FontWeight.bold),
             ),
-            const SizedBox(width: 1),
             const Text(
-              ",000",
-              style: TextStyle(
-                  fontSize: 25.0,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold),
-            ),
-            const Text(
-              "mxn ",
+              " MXN ",
               style:
                   TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             )
@@ -578,13 +564,14 @@ class MyCustomFormHomePageCreditosDeSaludState
         padding: const EdgeInsets.only(left: 20.0, right: 20.0),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
-          children: const [
+          children: [
             Expanded(
-              child: Text("Min 20,000"),
+              child: Text(
+                  "Min \$${NumberFormat('#,###').format(arraySaltos.first)}"),
             ),
             Expanded(
               child: Text(
-                "Max 200,000",
+                "Max \$${NumberFormat('#,###').format(arraySaltos.last)}",
                 textAlign: TextAlign.right,
                 style: TextStyle(),
               ),
@@ -614,7 +601,7 @@ class MyCustomFormHomePageCreditosDeSaludState
         divisions: arraySaltos.length >= 2 ? arraySaltos.length - 1 : 1,
         label: arraySaltos.isEmpty ? '' : value.toString(),
       ),
-      Text('${arraySaltosIndex.indexOf(value.toInt())}')
+      //Text('${arraySaltosIndex.indexOf(value.toInt())}')
     ]);
   }
 

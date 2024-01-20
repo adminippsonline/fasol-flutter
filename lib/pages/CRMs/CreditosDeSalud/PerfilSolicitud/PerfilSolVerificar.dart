@@ -109,140 +109,126 @@ class MyCustomPerfilSolVerificarState
       var response =
           await http.post(url, body: data).timeout(const Duration(seconds: 90));
       if (response.body != "0" && response.body != "") {
-        print(response.body);
+        //print(response.body);
         var Respuesta = jsonDecode(response.body);
         String Redireccionar = Respuesta['Redireccionar'];
         String status = Respuesta['status'];
 
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (_) => FinSolicitar10(widget.idCredito)));
-        FocusScope.of(context).unfocus();
-
-        /*if (status == "Error") {
-            //if (Redireccionar == "Verificar") {
-                Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (_) => VerificarCuenta()));
-                FocusScope.of(context).unfocus();
-              //}
-
-          } 
-          else if (status == "OK") {
-              int id_solicitud = Respuesta['id_solicitud'];
-              int id_credito = Respuesta['id_credito'];
-              String NombreCompleto = Respuesta['NombreCompleto'] ?? "";
-              if (NombreCompleto == "") {
-                NombreCompleto = "";
-              }
-              guardar_datos(
-                id_solicitud,
-                id_credito,
-                NombreCompleto,
-                Respuesta['data']['Correo'],
-                Pass,
-                Respuesta['data']['Telefono']);
-                //print("llego aqui");
-
-                Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (_) => FinSolicitar10()));
-                      FocusScope.of(context).unfocus();
-
-                if(id_credito>=1){
-                  
-                    if (Redireccionar == "Verificar") {
-                      Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (_) => VerificarCuenta()));
-                      FocusScope.of(context).unfocus();
-                    } else if (Redireccionar == "FinSolicitar10") {
-                      Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (_) => FinSolicitar10()));
-                      FocusScope.of(context).unfocus();
-                    } else if (Redireccionar == "FinSolicitar11") {
-                      Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (_) => FinSolicitar11()));
-                      FocusScope.of(context).unfocus();
-                    } else if (Redireccionar == "FinSolicitar12") {
-                      Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (_) => FinSolicitar12()));
-                      FocusScope.of(context).unfocus();
-                    } else if (Redireccionar == "FinSolicitar13_1") {
-                      Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (_) => FinSolicitar13_1()));
-                      FocusScope.of(context).unfocus();
-                    } else if (Redireccionar == "FinSolicitar14") {
-                      Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (_) => FinSolicitar14("")));
-                      FocusScope.of(context).unfocus();
-                    }else if (Redireccionar == "FinSolicitar15") {
-                      Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (_) => FinSolicitar15("")));
-                      FocusScope.of(context).unfocus();
-                    } else if (Redireccionar == "FinSolicitar16") {
-                      Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (_) => FinSolicitar16()));
-                      FocusScope.of(context).unfocus();
-                    }else if (Redireccionar == "FinSolicitar17") {
-                      Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (_) => FinSolicitar17()));
-                      FocusScope.of(context).unfocus();
-                    }else if (Redireccionar == "FinSolicitar19") {
-                      Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (_) => FinSolicitar19()));
-                      FocusScope.of(context).unfocus();
-                    }else if (Redireccionar == "FinSolicitar20") {
-                      Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (_) => FinSolicitar20()));
-                      FocusScope.of(context).unfocus();
-                    }else if (Redireccionar == "FinSolicitar21") {
-                      Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (_) => FinSolicitar20()));
-                      FocusScope.of(context).unfocus();
-                    }else if (Redireccionar == "FinSolicitar22_1") {
-                      Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (_) => FinSolicitar22_1()));
-                      FocusScope.of(context).unfocus();
-                    }else if (Redireccionar == "FinSolicitar23") {
-                      Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (_) => FinSolicitar23()));
-                      FocusScope.of(context).unfocus();
-                    }else if (Redireccionar == "FinSolicitar23_0") {
-                      Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (_) => FinSolicitar23_0()));
-                      FocusScope.of(context).unfocus();
-                    }else if (Redireccionar == "FinSolicitar23_1") {
-                      Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (_) => FinSolicitar23_1()));
-                      FocusScope.of(context).unfocus();
-                    }else {
-                      //print(Redireccionar);
-                      Navigator.of(context).push(
-                          MaterialPageRoute<Null>(builder: (BuildContext context) {
-                        return new PerfilSolicitudWebView( 
-                            CorreoSession, ContrasenaSession,id_solicitud);
-                      }));
-                    } 
-                  
-                }
-                else{
-                  //print("notiene credito");
-                  Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (_) => HomePage()));
-                  FocusScope.of(context).unfocus();
-                     
-                }
+        //print(status);
+        //print(Redireccionar);
+        if (status == "Error") {
+          if (Redireccionar == "Verificar") {
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (_) => VerificarCuenta()));
+            FocusScope.of(context).unfocus();
+          } else if (Redireccionar == "Calculadora") {
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (_) => HomePageCreditosDeSalud()));
+            FocusScope.of(context).unfocus();
           }
-          else{
-            //print('Error en el registro');
-            showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: Text('Error en el login'),
-                  );
-                });
-            //Navigator.of(context).pushReplacement(
-              //MaterialPageRoute(builder: (_) => PerfilSolVerificar()));
-            //FocusScope.of(context).unfocus();    
-          } */
+        } else if (status == "OK") {
+          int id_solicitud = Respuesta['id_solicitud'];
+          int id_credito = Respuesta['id_credito'];
+          String NombreCompleto = Respuesta['NombreCompleto'] ?? "";
+          if (NombreCompleto == "") {
+            NombreCompleto = "";
+          }
+          guardar_datos(id_solicitud, id_credito, NombreCompleto,
+              Respuesta['data']['Correo'], Pass, Respuesta['data']['Telefono']);
+          print("llego aqui");
+
+          /*Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(builder: (_) => FinSolicitar10(widget.idCredito)));
+                      FocusScope.of(context).unfocus();*/
+          //print(id_credito);
+          if (id_credito >= 1) {
+            if (Redireccionar == "FinSolicitar10") {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (_) => FinSolicitar10(widget.idCredito)));
+              FocusScope.of(context).unfocus();
+            } else if (Redireccionar == "FinSolicitar11") {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (_) => FinSolicitar11(widget.idCredito)));
+              FocusScope.of(context).unfocus();
+            } else if (Redireccionar == "FinSolicitar12") {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (_) => FinSolicitar12(widget.idCredito)));
+              FocusScope.of(context).unfocus();
+            } else if (Redireccionar == "FinSolicitar13_1") {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (_) => FinSolicitar13_1(widget.idCredito)));
+              FocusScope.of(context).unfocus();
+            } else if (Redireccionar == "FinSolicitar14") {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (_) => FinSolicitar14(widget.idCredito)));
+              FocusScope.of(context).unfocus();
+            } else if (Redireccionar == "FinSolicitar15") {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (_) => FinSolicitar15(widget.idCredito)));
+              FocusScope.of(context).unfocus();
+            } else if (Redireccionar == "FinSolicitar16") {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (_) => FinSolicitar16(widget.idCredito)));
+              FocusScope.of(context).unfocus();
+            } else if (Redireccionar == "FinSolicitar17") {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (_) => FinSolicitar17(widget.idCredito)));
+              FocusScope.of(context).unfocus();
+            } else if (Redireccionar == "FinSolicitar19") {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (_) => FinSolicitar19(widget.idCredito)));
+              FocusScope.of(context).unfocus();
+            } else if (Redireccionar == "FinSolicitar20") {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (_) => FinSolicitar20(widget.idCredito)));
+              FocusScope.of(context).unfocus();
+            } else if (Redireccionar == "FinSolicitar21") {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (_) => FinSolicitar20(widget.idCredito)));
+              FocusScope.of(context).unfocus();
+            } else if (Redireccionar == "FinSolicitar22_1") {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (_) => FinSolicitar22_1(widget.idCredito)));
+              FocusScope.of(context).unfocus();
+            } else if (Redireccionar == "FinSolicitar23") {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (_) => FinSolicitar23(widget.idCredito)));
+              FocusScope.of(context).unfocus();
+            } else if (Redireccionar == "FinSolicitar23_0") {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (_) => FinSolicitar23_0(widget.idCredito)));
+              FocusScope.of(context).unfocus();
+            } else if (Redireccionar == "FinSolicitar23_1") {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (_) => FinSolicitar23_1(widget.idCredito)));
+              FocusScope.of(context).unfocus();
+            } else {
+              //print(Redireccionar);
+              Navigator.of(context).push(
+                  MaterialPageRoute<Null>(builder: (BuildContext context) {
+                return new PerfilSolicitudWebView(
+                    CorreoSession, ContrasenaSession, id_solicitud);
+              }));
+            }
+          } else {
+            //print("notiene credito");
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (_) => HomePageCreditosDeSalud()));
+            FocusScope.of(context).unfocus();
+          }
+        } else {
+          //print('Error en el registro');
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text('Error en el login'),
+                );
+              });
+          //Navigator.of(context).pushReplacement(
+          //MaterialPageRoute(builder: (_) => PerfilSolVerificar()));
+          //FocusScope.of(context).unfocus();
+        }
       } else {
         showDialog(
             context: context,

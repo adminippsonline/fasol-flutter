@@ -9,7 +9,7 @@ class MyApp extends StatelessWidget {
   // rutas disponibles en la app.
   // cada widget es una página diferente.
   final _routes = {
-    '/': (context) => const HomePage(),
+    '/': (context) => const HomePageCreditosDeSalud(),
 
     '/CreditosDeSalud': (context) => const HomePageCreditosDeSalud(),
     '/CerrarSesion': (context) => const CerrarSesion(),
